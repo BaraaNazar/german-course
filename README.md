@@ -19,7 +19,7 @@ A complete, self-contained German learning system covering **A1 (absolute beginn
 - **32 reading comprehension stories** with multiple-choice questions
 - **Flashcards** with spaced repetition (Again / Hard / Good / Easy)
 - **MCQ quizzes** (10 / 25 / 50 questions)
-- **7 milestones** from "First Words" (50 words) to "Master" (3,000+ words)
+- **7 milestones** from "First Words" (50 words) to "Master" (5,000+ words)
 - **Audio pronunciation** via native German text-to-speech
 - Progress tracked in your browser (no account needed)
 
