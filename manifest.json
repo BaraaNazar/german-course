@@ -1,0 +1,32 @@
+{
+  "name": "Deutschkurs A1–C2",
+  "short_name": "Deutschkurs",
+  "description": "Interactive German learning platform: 5,000 words, flashcards, quizzes, stories",
+  "start_url": "/german-course/",
+  "scope": "/german-course/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f4f5fa",
+  "theme_color": "#141414",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Vocab Trainer",
+      "short_name": "Words",
+      "description": "Practice 5,000 German words",
+      "url": "/german-course/vocab/index.html"
+    },
+    {
+      "name": "Lessons",
+      "short_name": "Lessons",
+      "url": "/german-course/index.html"
+    }
+  ]
+}
