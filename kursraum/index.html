@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deutsch A1–C2 · Curriculum-Index</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+body{padding-bottom:60px}
+.hero{background:linear-gradient(120deg,#161926,#2b1114 60%,#4a1218);color:#fff;border-radius:18px;padding:26px 28px;margin:26px auto 20px;max-width:1080px}
+.hero h1{margin:0;font-size:26px}
+.hero .sub{color:#b9bfce;margin-top:4px}
+.hero .meta{margin-top:14px;display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:#d9dde8}
+.hero .meta b{color:#fff}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.cur-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px}
+.bar-row{display:flex;align-items:center;gap:12px;margin:7px 0}
+.bar-row .lv{width:34px;font-weight:800;font-size:14px}
+.bar-row .progress{flex:1;margin-top:0}
+.bar-row .pct{width:110px;text-align:right;font-size:12.5px;font-weight:700;color:var(--muted);font-family:ui-monospace,Menlo,monospace}
+.cur-pos .big{font-size:18px;font-weight:800;margin:4px 0}
+.lvl-sec{margin:34px 0 10px}
+.lvl-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lvl-badge{background:var(--ink);color:#fff;border-radius:12px;padding:8px 18px;font-weight:800;font-size:19px}
+.lvl-name{font-weight:800;font-size:18px}
+.lvl-status{margin-left:auto;font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.summary{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:14px 0}
+.sum-item{background:#f7f8fc;border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:13.5px}
+.sum-item b{display:block;font-size:15px}
+.abilities{margin:6px 0 0;padding-left:20px;font-size:13.5px;color:var(--muted);columns:2;column-gap:28px}
+@media(max-width:760px){.abilities{columns:1}}
+.mod-block{margin:16px 0}
+.mod-title{font-weight:800;font-size:15.5px;padding:10px 14px;background:#eef0f6;border-radius:10px 10px 0 0;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.unit-block{border:1px solid var(--border);border-top:none;border-radius:0}
+.unit-block:last-child{border-radius:0 0 10px 10px;margin-bottom:10px}
+.unit-head{background:#f7f8fc;padding:9px 14px;font-weight:800;font-size:13.5px;display:flex;justify-content:space-between;gap:10px}
+.unit-head .muted{font-weight:600;font-size:12px}
+.lesson-row{display:flex;align-items:center;gap:11px;padding:8px 14px;border-top:1px solid #eef0f5;font-size:13.5px}
+.lesson-row a{color:inherit;text-decoration:none;font-weight:700}
+.lesson-row a:hover{color:var(--primary)}
+.lesson-row .st{width:24px;text-align:center;flex:0 0 24px;font-weight:800}
+.st-done{color:var(--good)}
+.st-num{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:24px;
+  border-radius:7px;font:800 11.5px ui-monospace,Menlo,monospace;letter-spacing:.03em}
+.k-done{background:var(--flag-black);color:var(--gold);border:1px solid #000}
+.k-cur{background:var(--flag-red);color:#fff;border:1px solid #B00000;animation:pulse 1.6s infinite}
+.k-open{background:var(--surface);color:var(--flag-red);border:1.5px solid var(--flag-red)}
+.k-lock{background:var(--surface-3);color:var(--muted);border:1px solid var(--border-2)}
+.st-cur{color:var(--gold);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.st-lock{color:#b6bcc7}
+.lesson-row .lid{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:var(--muted);flex:0 0 110px}
+.lesson-row .lt{font-weight:600}
+.lesson-row.cur .lt{font-weight:800}
+.pill{display:inline-block;border-radius:999px;padding:1px 9px;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-left:auto;flex:0 0 auto}
+.pill-review{background:#fff4d6;color:#8a6100}
+.pill-exam{background:#111827;color:#fff}
+.pill-done{background:var(--good-bg);color:var(--good)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.exam-row{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:10px;background:#fbfbfd;border:1.5px dashed #d4d9e3;font-size:14px;font-weight:700;margin:12px 0}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🇩🇪 Deutsch A1 → C2</h1>
+  <div class="sub">Dein persönlicher Kurs · Curriculum-Index · Lehrwerk: <b style="color:#fff">teach</b>-Engine</div>
+  <div class="meta">
+    <span><b id="m-total">–</b> Lektionen geplant</span>
+    <span><b>25</b> Module</span>
+    <span><b>6</b> Level + Prüfungen</span>
+    <span>Mission: <b>echte Kommunikation bis C2</b></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="cur-card cur-pos">
+    <div class="steptitle">Aktueller Stand</div>
+    <div class="big">Level: <span class="lvl-badge" style="padding:2px 12px;font-size:15px">A1</span></div>
+    <div class="big">Aktuelle Klasse: <span id="cur-lesson">–</span></div>
+    <p class="small muted" style="margin:4px 0">Nächste Wiederholung: Vokabeln aus A1-M1-U1-L1 — nach Abschluss (+1 / +3 / +7 / +14 / +30 Tage · siehe <a href="../learning-records/REVIEW-SCHEDULE.md">REVIEW-SCHEDULE</a>)</p>
+    <a class="btn btn-primary" id="cur-link" href="lessons/A1-M1-U1-L1.html">▶ Weiter lernen</a>
+    <span class="small muted" style="margin-left:10px">Track 1 map: <a href="CURRICULUM.md">CURRICULUM-INTERAKTIV.md</a></span>
+  </div>
+
+  <div class="cur-card">
+    <div class="steptitle">German Journey — Fortschritt</div>
+    <div id="bars"></div>
+    <div class="legend">
+      <span class="st-num k-done">L1</span> abgeschlossen &nbsp; <span class="st-num k-cur">L2</span> aktuell &nbsp; <span class="st-num k-open">L3</span> verfügbar &nbsp; <span class="st-num k-lock">L4</span> geplant
+    </div>
+  </div>
+
+  <div id="tree"></div>
+
+  <div class="foot-note">Index pflegen: nach jeder abgeschlossenen Lektion Status hier aktualisieren (COMPLETED-Liste im Quelltext).<br>
+  📚 Primärquellen & Ressourcen: <a href="../RESOURCES.md">RESOURCES.md</a> · Lernziele: <a href="../MISSION.md">MISSION.md</a> · Konventionen: <a href="../NOTES.md">NOTES.md</a> · <b>Track 2 · Textkurs:</b> <a href="../textkurs/CURRICULUM.md">Map</a> · <a href="../textkurs/index.html">Lektionen A1–C2</a> · <a href="../reference/grammar-a1.html">Grammatik-Referenz A1</a></div>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- Lernstatus (nach jeder Lektion aktualisieren) ---------- */
+const COMPLETED = [];                       // "A1-M1-U1-L1", ...
+const CURRENT = "A1-M1-U1-L1";
+const FILES = {"A1-M1-U1-L1": "lessons/A1-M1-U1-L1.html", "A1-M1-U1-L2": "lessons/A1-M1-U1-L2.html", "A1-M1-U1-L3": "lessons/A1-M1-U1-L3.html", "A1-M1-U1-L4": "lessons/A1-M1-U1-L4.html", "A1-M1-U1-L5": "lessons/A1-M1-U1-L5.html", "A1-M1-U1-L6": "lessons/A1-M1-U1-L6.html", "A1-M1-U1-L7": "lessons/A1-M1-U1-L7.html", "A1-M1-U1-L8": "lessons/A1-M1-U1-L8.html", "A1-M1-U2-L1": "lessons/A1-M1-U2-L1.html", "A1-M1-U2-L2": "lessons/A1-M1-U2-L2.html", "A1-M1-U2-L3": "lessons/A1-M1-U2-L3.html", "A1-M1-U2-L4": "lessons/A1-M1-U2-L4.html", "A1-M1-U2-L5": "lessons/A1-M1-U2-L5.html", "A1-M1-U2-L6": "lessons/A1-M1-U2-L6.html", "A1-M1-U2-L7": "lessons/A1-M1-U2-L7.html", "A1-M1-U2-L8": "lessons/A1-M1-U2-L8.html", "A1-M2-U3-L1": "lessons/A1-M2-U3-L1.html", "A1-M2-U3-L2": "lessons/A1-M2-U3-L2.html", "A1-M2-U3-L3": "lessons/A1-M2-U3-L3.html", "A1-M2-U3-L4": "lessons/A1-M2-U3-L4.html", "A1-M2-U3-L5": "lessons/A1-M2-U3-L5.html", "A1-M2-U3-L6": "lessons/A1-M2-U3-L6.html", "A1-M2-U3-L7": "lessons/A1-M2-U3-L7.html", "A1-M2-U3-L8": "lessons/A1-M2-U3-L8.html", "A1-M2-U4-L1": "lessons/A1-M2-U4-L1.html", "A1-M2-U4-L2": "lessons/A1-M2-U4-L2.html", "A1-M2-U4-L3": "lessons/A1-M2-U4-L3.html", "A1-M2-U4-L4": "lessons/A1-M2-U4-L4.html", "A1-M2-U4-L5": "lessons/A1-M2-U4-L5.html", "A1-M2-U4-L6": "lessons/A1-M2-U4-L6.html", "A1-M2-U4-L7": "lessons/A1-M2-U4-L7.html", "A1-M2-U4-L8": "lessons/A1-M2-U4-L8.html", "A1-M3-U5-L1": "lessons/A1-M3-U5-L1.html", "A1-M3-U5-L2": "lessons/A1-M3-U5-L2.html", "A1-M3-U5-L3": "lessons/A1-M3-U5-L3.html", "A1-M3-U5-L4": "lessons/A1-M3-U5-L4.html", "A1-M3-U5-L5": "lessons/A1-M3-U5-L5.html", "A1-M3-U5-L6": "lessons/A1-M3-U5-L6.html", "A1-M3-U5-L7": "lessons/A1-M3-U5-L7.html", "A1-M3-U5-L8": "lessons/A1-M3-U5-L8.html", "A1-M3-U6-L1": "lessons/A1-M3-U6-L1.html", "A1-M3-U6-L2": "lessons/A1-M3-U6-L2.html", "A1-M3-U6-L3": "lessons/A1-M3-U6-L3.html", "A1-M3-U6-L4": "lessons/A1-M3-U6-L4.html", "A1-M3-U6-L5": "lessons/A1-M3-U6-L5.html", "A1-M3-U6-L6": "lessons/A1-M3-U6-L6.html", "A1-M3-U6-L7": "lessons/A1-M3-U6-L7.html", "A1-M3-U6-L8": "lessons/A1-M3-U6-L8.html", "A1-M4-U7-L1": "lessons/A1-M4-U7-L1.html", "A1-M4-U7-L2": "lessons/A1-M4-U7-L2.html", "A1-M4-U7-L3": "lessons/A1-M4-U7-L3.html", "A1-M4-U7-L4": "lessons/A1-M4-U7-L4.html", "A1-M4-U7-L5": "lessons/A1-M4-U7-L5.html", "A1-M4-U7-L6": "lessons/A1-M4-U7-L6.html", "A1-M4-U7-L7": "lessons/A1-M4-U7-L7.html", "A1-M4-U7-L8": "lessons/A1-M4-U7-L8.html", "A1-M4-U8-L1": "lessons/A1-M4-U8-L1.html", "A1-M4-U8-L2": "lessons/A1-M4-U8-L2.html", "A1-M4-U8-L3": "lessons/A1-M4-U8-L3.html", "A1-M4-U8-L4": "lessons/A1-M4-U8-L4.html", "A1-M4-U8-L5": "lessons/A1-M4-U8-L5.html", "A1-M4-U8-L6": "lessons/A1-M4-U8-L6.html", "A1-M4-U8-L7": "lessons/A1-M4-U8-L7.html", "A1-M4-U8-L8": "lessons/A1-M4-U8-L8.html", "A2-M1-U1-L1": "lessons/A2-M1-U1-L1.html", "A2-M1-U1-L2": "lessons/A2-M1-U1-L2.html", "A2-M1-U1-L3": "lessons/A2-M1-U1-L3.html", "A2-M1-U1-L4": "lessons/A2-M1-U1-L4.html", "A2-M1-U1-L5": "lessons/A2-M1-U1-L5.html", "A2-M1-U1-L6": "lessons/A2-M1-U1-L6.html", "A2-M1-U1-L7": "lessons/A2-M1-U1-L7.html", "A2-M1-U1-L8": "lessons/A2-M1-U1-L8.html", "A2-M1-U2-L1": "lessons/A2-M1-U2-L1.html", "A2-M1-U2-L2": "lessons/A2-M1-U2-L2.html", "A2-M1-U2-L3": "lessons/A2-M1-U2-L3.html", "A2-M1-U2-L4": "lessons/A2-M1-U2-L4.html", "A2-M1-U2-L5": "lessons/A2-M1-U2-L5.html", "A2-M1-U2-L6": "lessons/A2-M1-U2-L6.html", "A2-M1-U2-L7": "lessons/A2-M1-U2-L7.html", "A2-M1-U2-L8": "lessons/A2-M1-U2-L8.html", "A2-M2-U3-L1": "lessons/A2-M2-U3-L1.html", "A2-M2-U3-L2": "lessons/A2-M2-U3-L2.html", "A2-M2-U3-L3": "lessons/A2-M2-U3-L3.html", "A2-M2-U3-L4": "lessons/A2-M2-U3-L4.html", "A2-M2-U3-L5": "lessons/A2-M2-U3-L5.html", "A2-M2-U3-L6": "lessons/A2-M2-U3-L6.html", "A2-M2-U3-L7": "lessons/A2-M2-U3-L7.html", "A2-M2-U3-L8": "lessons/A2-M2-U3-L8.html", "A2-M2-U4-L1": "lessons/A2-M2-U4-L1.html", "A2-M2-U4-L2": "lessons/A2-M2-U4-L2.html", "A2-M2-U4-L3": "lessons/A2-M2-U4-L3.html", "A2-M2-U4-L4": "lessons/A2-M2-U4-L4.html", "A2-M2-U4-L5": "lessons/A2-M2-U4-L5.html", "A2-M2-U4-L6": "lessons/A2-M2-U4-L6.html", "A2-M2-U4-L7": "lessons/A2-M2-U4-L7.html", "A2-M2-U4-L8": "lessons/A2-M2-U4-L8.html", "A2-M3-U5-L1": "lessons/A2-M3-U5-L1.html", "A2-M3-U5-L2": "lessons/A2-M3-U5-L2.html", "A2-M3-U5-L3": "lessons/A2-M3-U5-L3.html", "A2-M3-U5-L4": "lessons/A2-M3-U5-L4.html", "A2-M3-U5-L5": "lessons/A2-M3-U5-L5.html", "A2-M3-U5-L6": "lessons/A2-M3-U5-L6.html", "A2-M3-U5-L7": "lessons/A2-M3-U5-L7.html", "A2-M3-U5-L8": "lessons/A2-M3-U5-L8.html", "A2-M3-U6-L1": "lessons/A2-M3-U6-L1.html", "A2-M3-U6-L2": "lessons/A2-M3-U6-L2.html", "A2-M3-U6-L3": "lessons/A2-M3-U6-L3.html", "A2-M3-U6-L4": "lessons/A2-M3-U6-L4.html", "A2-M3-U6-L5": "lessons/A2-M3-U6-L5.html", "A2-M3-U6-L6": "lessons/A2-M3-U6-L6.html", "A2-M3-U6-L7": "lessons/A2-M3-U6-L7.html", "A2-M3-U6-L8": "lessons/A2-M3-U6-L8.html", "A2-M4-U7-L1": "lessons/A2-M4-U7-L1.html", "A2-M4-U7-L2": "lessons/A2-M4-U7-L2.html", "A2-M4-U7-L3": "lessons/A2-M4-U7-L3.html", "A2-M4-U7-L4": "lessons/A2-M4-U7-L4.html", "A2-M4-U7-L5": "lessons/A2-M4-U7-L5.html", "A2-M4-U7-L6": "lessons/A2-M4-U7-L6.html", "A2-M4-U7-L7": "lessons/A2-M4-U7-L7.html", "A2-M4-U7-L8": "lessons/A2-M4-U7-L8.html", "A2-M4-U8-L1": "lessons/A2-M4-U8-L1.html", "A2-M4-U8-L2": "lessons/A2-M4-U8-L2.html", "A2-M4-U8-L3": "lessons/A2-M4-U8-L3.html", "A2-M4-U8-L4": "lessons/A2-M4-U8-L4.html", "A2-M4-U8-L5": "lessons/A2-M4-U8-L5.html", "A2-M4-U8-L6": "lessons/A2-M4-U8-L6.html", "A2-M4-U8-L7": "lessons/A2-M4-U8-L7.html", "A2-M4-U8-L8": "lessons/A2-M4-U8-L8.html", "B1-M1-U1-L1": "lessons/B1-M1-U1-L1.html", "B1-M1-U1-L2": "lessons/B1-M1-U1-L2.html", "B1-M1-U1-L3": "lessons/B1-M1-U1-L3.html", "B1-M1-U1-L4": "lessons/B1-M1-U1-L4.html", "B1-M1-U1-L5": "lessons/B1-M1-U1-L5.html", "B1-M1-U1-L6": "lessons/B1-M1-U1-L6.html", "B1-M1-U1-L7": "lessons/B1-M1-U1-L7.html", "B1-M1-U1-L8": "lessons/B1-M1-U1-L8.html", "B1-M1-U2-L1": "lessons/B1-M1-U2-L1.html", "B1-M1-U2-L2": "lessons/B1-M1-U2-L2.html", "B1-M1-U2-L3": "lessons/B1-M1-U2-L3.html", "B1-M1-U2-L4": "lessons/B1-M1-U2-L4.html", "B1-M1-U2-L5": "lessons/B1-M1-U2-L5.html", "B1-M1-U2-L6": "lessons/B1-M1-U2-L6.html", "B1-M1-U2-L7": "lessons/B1-M1-U2-L7.html", "B1-M1-U2-L8": "lessons/B1-M1-U2-L8.html", "B1-M1-U3-L1": "lessons/B1-M1-U3-L1.html", "B1-M1-U3-L2": "lessons/B1-M1-U3-L2.html", "B1-M1-U3-L3": "lessons/B1-M1-U3-L3.html", "B1-M1-U3-L4": "lessons/B1-M1-U3-L4.html", "B1-M1-U3-L5": "lessons/B1-M1-U3-L5.html", "B1-M1-U3-L6": "lessons/B1-M1-U3-L6.html", "B1-M1-U3-L7": "lessons/B1-M1-U3-L7.html", "B1-M1-U3-L8": "lessons/B1-M1-U3-L8.html", "B1-M2-U4-L1": "lessons/B1-M2-U4-L1.html", "B1-M2-U4-L2": "lessons/B1-M2-U4-L2.html", "B1-M2-U4-L3": "lessons/B1-M2-U4-L3.html", "B1-M2-U4-L4": "lessons/B1-M2-U4-L4.html", "B1-M2-U4-L5": "lessons/B1-M2-U4-L5.html", "B1-M2-U4-L6": "lessons/B1-M2-U4-L6.html", "B1-M2-U4-L7": "lessons/B1-M2-U4-L7.html", "B1-M2-U4-L8": "lessons/B1-M2-U4-L8.html", "B1-M2-U5-L1": "lessons/B1-M2-U5-L1.html", "B1-M2-U5-L2": "lessons/B1-M2-U5-L2.html", "B1-M2-U5-L3": "lessons/B1-M2-U5-L3.html", "B1-M2-U5-L4": "lessons/B1-M2-U5-L4.html", "B1-M2-U5-L5": "lessons/B1-M2-U5-L5.html", "B1-M2-U5-L6": "lessons/B1-M2-U5-L6.html", "B1-M2-U5-L7": "lessons/B1-M2-U5-L7.html", "B1-M2-U5-L8": "lessons/B1-M2-U5-L8.html", "B1-M2-U6-L1": "lessons/B1-M2-U6-L1.html", "B1-M2-U6-L2": "lessons/B1-M2-U6-L2.html", "B1-M2-U6-L3": "lessons/B1-M2-U6-L3.html", "B1-M2-U6-L4": "lessons/B1-M2-U6-L4.html", "B1-M2-U6-L5": "lessons/B1-M2-U6-L5.html", "B1-M2-U6-L6": "lessons/B1-M2-U6-L6.html", "B1-M2-U6-L7": "lessons/B1-M2-U6-L7.html", "B1-M2-U6-L8": "lessons/B1-M2-U6-L8.html", "B1-M3-U7-L1": "lessons/B1-M3-U7-L1.html", "B1-M3-U7-L2": "lessons/B1-M3-U7-L2.html", "B1-M3-U7-L3": "lessons/B1-M3-U7-L3.html", "B1-M3-U7-L4": "lessons/B1-M3-U7-L4.html", "B1-M3-U7-L5": "lessons/B1-M3-U7-L5.html", "B1-M3-U7-L6": "lessons/B1-M3-U7-L6.html", "B1-M3-U7-L7": "lessons/B1-M3-U7-L7.html", "B1-M3-U7-L8": "lessons/B1-M3-U7-L8.html", "B1-M3-U8-L1": "lessons/B1-M3-U8-L1.html", "B1-M3-U8-L2": "lessons/B1-M3-U8-L2.html", "B1-M3-U8-L3": "lessons/B1-M3-U8-L3.html", "B1-M3-U8-L4": "lessons/B1-M3-U8-L4.html", "B1-M3-U8-L5": "lessons/B1-M3-U8-L5.html", "B1-M3-U8-L6": "lessons/B1-M3-U8-L6.html", "B1-M3-U8-L7": "lessons/B1-M3-U8-L7.html", "B1-M3-U8-L8": "lessons/B1-M3-U8-L8.html", "B1-M3-U9-L1": "lessons/B1-M3-U9-L1.html", "B1-M3-U9-L2": "lessons/B1-M3-U9-L2.html", "B1-M3-U9-L3": "lessons/B1-M3-U9-L3.html", "B1-M3-U9-L4": "lessons/B1-M3-U9-L4.html", "B1-M3-U9-L5": "lessons/B1-M3-U9-L5.html", "B1-M3-U9-L6": "lessons/B1-M3-U9-L6.html", "B1-M3-U9-L7": "lessons/B1-M3-U9-L7.html", "B1-M3-U9-L8": "lessons/B1-M3-U9-L8.html", "B1-M4-U10-L1": "lessons/B1-M4-U10-L1.html", "B1-M4-U10-L2": "lessons/B1-M4-U10-L2.html", "B1-M4-U10-L3": "lessons/B1-M4-U10-L3.html", "B1-M4-U10-L4": "lessons/B1-M4-U10-L4.html", "B1-M4-U10-L5": "lessons/B1-M4-U10-L5.html", "B1-M4-U10-L6": "lessons/B1-M4-U10-L6.html", "B1-M4-U10-L7": "lessons/B1-M4-U10-L7.html", "B1-M4-U10-L8": "lessons/B1-M4-U10-L8.html", "B1-M4-U11-L1": "lessons/B1-M4-U11-L1.html", "B1-M4-U11-L2": "lessons/B1-M4-U11-L2.html", "B1-M4-U11-L3": "lessons/B1-M4-U11-L3.html", "B1-M4-U11-L4": "lessons/B1-M4-U11-L4.html", "B1-M4-U11-L5": "lessons/B1-M4-U11-L5.html", "B1-M4-U11-L6": "lessons/B1-M4-U11-L6.html", "B1-M4-U11-L7": "lessons/B1-M4-U11-L7.html", "B1-M4-U11-L8": "lessons/B1-M4-U11-L8.html", "B1-M4-U12-L1": "lessons/B1-M4-U12-L1.html", "B1-M4-U12-L2": "lessons/B1-M4-U12-L2.html", "B1-M4-U12-L3": "lessons/B1-M4-U12-L3.html", "B1-M4-U12-L4": "lessons/B1-M4-U12-L4.html", "B1-M4-U12-L5": "lessons/B1-M4-U12-L5.html", "B1-M4-U12-L6": "lessons/B1-M4-U12-L6.html", "B1-M4-U12-L7": "lessons/B1-M4-U12-L7.html", "B1-M4-U12-L8": "lessons/B1-M4-U12-L8.html", "B2-M1-U1-L1": "lessons/B2-M1-U1-L1.html", "B2-M1-U1-L2": "lessons/B2-M1-U1-L2.html", "B2-M1-U1-L3": "lessons/B2-M1-U1-L3.html", "B2-M1-U1-L4": "lessons/B2-M1-U1-L4.html", "B2-M1-U1-L5": "lessons/B2-M1-U1-L5.html", "B2-M1-U1-L6": "lessons/B2-M1-U1-L6.html", "B2-M1-U1-L7": "lessons/B2-M1-U1-L7.html", "B2-M1-U1-L8": "lessons/B2-M1-U1-L8.html", "B2-M1-U2-L1": "lessons/B2-M1-U2-L1.html", "B2-M1-U2-L2": "lessons/B2-M1-U2-L2.html", "B2-M1-U2-L3": "lessons/B2-M1-U2-L3.html", "B2-M1-U2-L4": "lessons/B2-M1-U2-L4.html", "B2-M1-U2-L5": "lessons/B2-M1-U2-L5.html", "B2-M1-U2-L6": "lessons/B2-M1-U2-L6.html", "B2-M1-U2-L7": "lessons/B2-M1-U2-L7.html", "B2-M1-U2-L8": "lessons/B2-M1-U2-L8.html", "B2-M1-U3-L1": "lessons/B2-M1-U3-L1.html", "B2-M1-U3-L2": "lessons/B2-M1-U3-L2.html", "B2-M1-U3-L3": "lessons/B2-M1-U3-L3.html", "B2-M1-U3-L4": "lessons/B2-M1-U3-L4.html", "B2-M1-U3-L5": "lessons/B2-M1-U3-L5.html", "B2-M1-U3-L6": "lessons/B2-M1-U3-L6.html", "B2-M1-U3-L7": "lessons/B2-M1-U3-L7.html", "B2-M1-U3-L8": "lessons/B2-M1-U3-L8.html", "B2-M2-U4-L1": "lessons/B2-M2-U4-L1.html", "B2-M2-U4-L2": "lessons/B2-M2-U4-L2.html", "B2-M2-U4-L3": "lessons/B2-M2-U4-L3.html", "B2-M2-U4-L4": "lessons/B2-M2-U4-L4.html", "B2-M2-U4-L5": "lessons/B2-M2-U4-L5.html", "B2-M2-U4-L6": "lessons/B2-M2-U4-L6.html", "B2-M2-U4-L7": "lessons/B2-M2-U4-L7.html", "B2-M2-U4-L8": "lessons/B2-M2-U4-L8.html", "B2-M2-U5-L1": "lessons/B2-M2-U5-L1.html", "B2-M2-U5-L2": "lessons/B2-M2-U5-L2.html", "B2-M2-U5-L3": "lessons/B2-M2-U5-L3.html", "B2-M2-U5-L4": "lessons/B2-M2-U5-L4.html", "B2-M2-U5-L5": "lessons/B2-M2-U5-L5.html", "B2-M2-U5-L6": "lessons/B2-M2-U5-L6.html", "B2-M2-U5-L7": "lessons/B2-M2-U5-L7.html", "B2-M2-U5-L8": "lessons/B2-M2-U5-L8.html", "B2-M2-U6-L1": "lessons/B2-M2-U6-L1.html", "B2-M2-U6-L2": "lessons/B2-M2-U6-L2.html", "B2-M2-U6-L3": "lessons/B2-M2-U6-L3.html", "B2-M2-U6-L4": "lessons/B2-M2-U6-L4.html", "B2-M2-U6-L5": "lessons/B2-M2-U6-L5.html", "B2-M2-U6-L6": "lessons/B2-M2-U6-L6.html", "B2-M2-U6-L7": "lessons/B2-M2-U6-L7.html", "B2-M2-U6-L8": "lessons/B2-M2-U6-L8.html", "B2-M3-U7-L1": "lessons/B2-M3-U7-L1.html", "B2-M3-U7-L2": "lessons/B2-M3-U7-L2.html", "B2-M3-U7-L3": "lessons/B2-M3-U7-L3.html", "B2-M3-U7-L4": "lessons/B2-M3-U7-L4.html", "B2-M3-U7-L5": "lessons/B2-M3-U7-L5.html", "B2-M3-U7-L6": "lessons/B2-M3-U7-L6.html", "B2-M3-U7-L7": "lessons/B2-M3-U7-L7.html", "B2-M3-U7-L8": "lessons/B2-M3-U7-L8.html", "B2-M3-U8-L1": "lessons/B2-M3-U8-L1.html", "B2-M3-U8-L2": "lessons/B2-M3-U8-L2.html", "B2-M3-U8-L3": "lessons/B2-M3-U8-L3.html", "B2-M3-U8-L4": "lessons/B2-M3-U8-L4.html", "B2-M3-U8-L5": "lessons/B2-M3-U8-L5.html", "B2-M3-U8-L6": "lessons/B2-M3-U8-L6.html", "B2-M3-U8-L7": "lessons/B2-M3-U8-L7.html", "B2-M3-U8-L8": "lessons/B2-M3-U8-L8.html", "B2-M3-U9-L1": "lessons/B2-M3-U9-L1.html", "B2-M3-U9-L2": "lessons/B2-M3-U9-L2.html", "B2-M3-U9-L3": "lessons/B2-M3-U9-L3.html", "B2-M3-U9-L4": "lessons/B2-M3-U9-L4.html", "B2-M3-U9-L5": "lessons/B2-M3-U9-L5.html", "B2-M3-U9-L6": "lessons/B2-M3-U9-L6.html", "B2-M3-U9-L7": "lessons/B2-M3-U9-L7.html", "B2-M3-U9-L8": "lessons/B2-M3-U9-L8.html", "B2-M4-U10-L1": "lessons/B2-M4-U10-L1.html", "B2-M4-U10-L2": "lessons/B2-M4-U10-L2.html", "B2-M4-U10-L3": "lessons/B2-M4-U10-L3.html", "B2-M4-U10-L4": "lessons/B2-M4-U10-L4.html", "B2-M4-U10-L5": "lessons/B2-M4-U10-L5.html", "B2-M4-U10-L6": "lessons/B2-M4-U10-L6.html", "B2-M4-U10-L7": "lessons/B2-M4-U10-L7.html", "B2-M4-U10-L8": "lessons/B2-M4-U10-L8.html", "B2-M4-U11-L1": "lessons/B2-M4-U11-L1.html", "B2-M4-U11-L2": "lessons/B2-M4-U11-L2.html", "B2-M4-U11-L3": "lessons/B2-M4-U11-L3.html", "B2-M4-U11-L4": "lessons/B2-M4-U11-L4.html", "B2-M4-U11-L5": "lessons/B2-M4-U11-L5.html", "B2-M4-U11-L6": "lessons/B2-M4-U11-L6.html", "B2-M4-U11-L7": "lessons/B2-M4-U11-L7.html", "B2-M4-U11-L8": "lessons/B2-M4-U11-L8.html", "B2-M4-U12-L1": "lessons/B2-M4-U12-L1.html", "B2-M4-U12-L2": "lessons/B2-M4-U12-L2.html", "B2-M4-U12-L3": "lessons/B2-M4-U12-L3.html", "B2-M4-U12-L4": "lessons/B2-M4-U12-L4.html", "B2-M4-U12-L5": "lessons/B2-M4-U12-L5.html", "B2-M4-U12-L6": "lessons/B2-M4-U12-L6.html", "B2-M4-U12-L7": "lessons/B2-M4-U12-L7.html", "B2-M4-U12-L8": "lessons/B2-M4-U12-L8.html", "B2-M5-U13-L1": "lessons/B2-M5-U13-L1.html", "B2-M5-U13-L2": "lessons/B2-M5-U13-L2.html", "B2-M5-U13-L3": "lessons/B2-M5-U13-L3.html", "B2-M5-U13-L4": "lessons/B2-M5-U13-L4.html", "B2-M5-U13-L5": "lessons/B2-M5-U13-L5.html", "B2-M5-U13-L6": "lessons/B2-M5-U13-L6.html", "B2-M5-U13-L7": "lessons/B2-M5-U13-L7.html", "B2-M5-U13-L8": "lessons/B2-M5-U13-L8.html", "B2-M5-U14-L1": "lessons/B2-M5-U14-L1.html", "B2-M5-U14-L2": "lessons/B2-M5-U14-L2.html", "B2-M5-U14-L3": "lessons/B2-M5-U14-L3.html", "B2-M5-U14-L4": "lessons/B2-M5-U14-L4.html", "B2-M5-U14-L5": "lessons/B2-M5-U14-L5.html", "B2-M5-U14-L6": "lessons/B2-M5-U14-L6.html", "B2-M5-U14-L7": "lessons/B2-M5-U14-L7.html", "B2-M5-U14-L8": "lessons/B2-M5-U14-L8.html", "C1-M1-U1-L1": "lessons/C1-M1-U1-L1.html", "C1-M1-U1-L2": "lessons/C1-M1-U1-L2.html", "C1-M1-U1-L3": "lessons/C1-M1-U1-L3.html", "C1-M1-U1-L4": "lessons/C1-M1-U1-L4.html", "C1-M1-U1-L5": "lessons/C1-M1-U1-L5.html", "C1-M1-U1-L6": "lessons/C1-M1-U1-L6.html", "C1-M1-U1-L7": "lessons/C1-M1-U1-L7.html", "C1-M1-U1-L8": "lessons/C1-M1-U1-L8.html", "C1-M1-U2-L1": "lessons/C1-M1-U2-L1.html", "C1-M1-U2-L2": "lessons/C1-M1-U2-L2.html", "C1-M1-U2-L3": "lessons/C1-M1-U2-L3.html", "C1-M1-U2-L4": "lessons/C1-M1-U2-L4.html", "C1-M1-U2-L5": "lessons/C1-M1-U2-L5.html", "C1-M1-U2-L6": "lessons/C1-M1-U2-L6.html", "C1-M1-U2-L7": "lessons/C1-M1-U2-L7.html", "C1-M1-U2-L8": "lessons/C1-M1-U2-L8.html", "C1-M1-U3-L1": "lessons/C1-M1-U3-L1.html", "C1-M1-U3-L2": "lessons/C1-M1-U3-L2.html", "C1-M1-U3-L3": "lessons/C1-M1-U3-L3.html", "C1-M1-U3-L4": "lessons/C1-M1-U3-L4.html", "C1-M1-U3-L5": "lessons/C1-M1-U3-L5.html", "C1-M1-U3-L6": "lessons/C1-M1-U3-L6.html", "C1-M1-U3-L7": "lessons/C1-M1-U3-L7.html", "C1-M1-U3-L8": "lessons/C1-M1-U3-L8.html", "C1-M2-U4-L1": "lessons/C1-M2-U4-L1.html", "C1-M2-U4-L2": "lessons/C1-M2-U4-L2.html", "C1-M2-U4-L3": "lessons/C1-M2-U4-L3.html", "C1-M2-U4-L4": "lessons/C1-M2-U4-L4.html", "C1-M2-U4-L5": "lessons/C1-M2-U4-L5.html", "C1-M2-U4-L6": "lessons/C1-M2-U4-L6.html", "C1-M2-U4-L7": "lessons/C1-M2-U4-L7.html", "C1-M2-U4-L8": "lessons/C1-M2-U4-L8.html", "C1-M2-U5-L1": "lessons/C1-M2-U5-L1.html", "C1-M2-U5-L2": "lessons/C1-M2-U5-L2.html", "C1-M2-U5-L3": "lessons/C1-M2-U5-L3.html", "C1-M2-U5-L4": "lessons/C1-M2-U5-L4.html", "C1-M2-U5-L5": "lessons/C1-M2-U5-L5.html", "C1-M2-U5-L6": "lessons/C1-M2-U5-L6.html", "C1-M2-U5-L7": "lessons/C1-M2-U5-L7.html", "C1-M2-U5-L8": "lessons/C1-M2-U5-L8.html", "C1-M2-U6-L1": "lessons/C1-M2-U6-L1.html", "C1-M2-U6-L2": "lessons/C1-M2-U6-L2.html", "C1-M2-U6-L3": "lessons/C1-M2-U6-L3.html", "C1-M2-U6-L4": "lessons/C1-M2-U6-L4.html", "C1-M2-U6-L5": "lessons/C1-M2-U6-L5.html", "C1-M2-U6-L6": "lessons/C1-M2-U6-L6.html", "C1-M2-U6-L7": "lessons/C1-M2-U6-L7.html", "C1-M2-U6-L8": "lessons/C1-M2-U6-L8.html", "C1-M3-U7-L1": "lessons/C1-M3-U7-L1.html", "C1-M3-U7-L2": "lessons/C1-M3-U7-L2.html", "C1-M3-U7-L3": "lessons/C1-M3-U7-L3.html", "C1-M3-U7-L4": "lessons/C1-M3-U7-L4.html", "C1-M3-U7-L5": "lessons/C1-M3-U7-L5.html", "C1-M3-U7-L6": "lessons/C1-M3-U7-L6.html", "C1-M3-U7-L7": "lessons/C1-M3-U7-L7.html", "C1-M3-U7-L8": "lessons/C1-M3-U7-L8.html", "C1-M3-U8-L1": "lessons/C1-M3-U8-L1.html", "C1-M3-U8-L2": "lessons/C1-M3-U8-L2.html", "C1-M3-U8-L3": "lessons/C1-M3-U8-L3.html", "C1-M3-U8-L4": "lessons/C1-M3-U8-L4.html", "C1-M3-U8-L5": "lessons/C1-M3-U8-L5.html", "C1-M3-U8-L6": "lessons/C1-M3-U8-L6.html", "C1-M3-U8-L7": "lessons/C1-M3-U8-L7.html", "C1-M3-U8-L8": "lessons/C1-M3-U8-L8.html", "C1-M3-U9-L1": "lessons/C1-M3-U9-L1.html", "C1-M3-U9-L2": "lessons/C1-M3-U9-L2.html", "C1-M3-U9-L3": "lessons/C1-M3-U9-L3.html", "C1-M3-U9-L4": "lessons/C1-M3-U9-L4.html", "C1-M3-U9-L5": "lessons/C1-M3-U9-L5.html", "C1-M3-U9-L6": "lessons/C1-M3-U9-L6.html", "C1-M3-U9-L7": "lessons/C1-M3-U9-L7.html", "C1-M3-U9-L8": "lessons/C1-M3-U9-L8.html", "C1-M4-U10-L1": "lessons/C1-M4-U10-L1.html", "C1-M4-U10-L2": "lessons/C1-M4-U10-L2.html", "C1-M4-U10-L3": "lessons/C1-M4-U10-L3.html", "C1-M4-U10-L4": "lessons/C1-M4-U10-L4.html", "C1-M4-U10-L5": "lessons/C1-M4-U10-L5.html", "C1-M4-U10-L6": "lessons/C1-M4-U10-L6.html", "C1-M4-U10-L7": "lessons/C1-M4-U10-L7.html", "C1-M4-U10-L8": "lessons/C1-M4-U10-L8.html", "C1-M4-U11-L1": "lessons/C1-M4-U11-L1.html", "C1-M4-U11-L2": "lessons/C1-M4-U11-L2.html", "C1-M4-U11-L3": "lessons/C1-M4-U11-L3.html", "C1-M4-U11-L4": "lessons/C1-M4-U11-L4.html", "C1-M4-U11-L5": "lessons/C1-M4-U11-L5.html", "C1-M4-U11-L6": "lessons/C1-M4-U11-L6.html", "C1-M4-U11-L7": "lessons/C1-M4-U11-L7.html", "C1-M4-U11-L8": "lessons/C1-M4-U11-L8.html", "C1-M4-U12-L1": "lessons/C1-M4-U12-L1.html", "C1-M4-U12-L2": "lessons/C1-M4-U12-L2.html", "C1-M4-U12-L3": "lessons/C1-M4-U12-L3.html", "C1-M4-U12-L4": "lessons/C1-M4-U12-L4.html", "C1-M4-U12-L5": "lessons/C1-M4-U12-L5.html", "C1-M4-U12-L6": "lessons/C1-M4-U12-L6.html", "C1-M4-U12-L7": "lessons/C1-M4-U12-L7.html", "C1-M4-U12-L8": "lessons/C1-M4-U12-L8.html", "C2-M1-U1-L1": "lessons/C2-M1-U1-L1.html", "C2-M1-U1-L2": "lessons/C2-M1-U1-L2.html", "C2-M1-U1-L3": "lessons/C2-M1-U1-L3.html", "C2-M1-U1-L4": "lessons/C2-M1-U1-L4.html", "C2-M1-U1-L5": "lessons/C2-M1-U1-L5.html", "C2-M1-U1-L6": "lessons/C2-M1-U1-L6.html", "C2-M1-U2-L1": "lessons/C2-M1-U2-L1.html", "C2-M1-U2-L2": "lessons/C2-M1-U2-L2.html", "C2-M1-U2-L3": "lessons/C2-M1-U2-L3.html", "C2-M1-U2-L4": "lessons/C2-M1-U2-L4.html", "C2-M1-U2-L5": "lessons/C2-M1-U2-L5.html", "C2-M1-U2-L6": "lessons/C2-M1-U2-L6.html", "C2-M1-U3-L1": "lessons/C2-M1-U3-L1.html", "C2-M1-U3-L2": "lessons/C2-M1-U3-L2.html", "C2-M1-U3-L3": "lessons/C2-M1-U3-L3.html", "C2-M1-U3-L4": "lessons/C2-M1-U3-L4.html", "C2-M1-U3-L5": "lessons/C2-M1-U3-L5.html", "C2-M1-U3-L6": "lessons/C2-M1-U3-L6.html", "C2-M2-U4-L1": "lessons/C2-M2-U4-L1.html", "C2-M2-U4-L2": "lessons/C2-M2-U4-L2.html", "C2-M2-U4-L3": "lessons/C2-M2-U4-L3.html", "C2-M2-U4-L4": "lessons/C2-M2-U4-L4.html", "C2-M2-U4-L5": "lessons/C2-M2-U4-L5.html", "C2-M2-U4-L6": "lessons/C2-M2-U4-L6.html", "C2-M2-U5-L1": "lessons/C2-M2-U5-L1.html", "C2-M2-U5-L2": "lessons/C2-M2-U5-L2.html", "C2-M2-U5-L3": "lessons/C2-M2-U5-L3.html", "C2-M2-U5-L4": "lessons/C2-M2-U5-L4.html", "C2-M2-U5-L5": "lessons/C2-M2-U5-L5.html", "C2-M2-U5-L6": "lessons/C2-M2-U5-L6.html", "C2-M2-U6-L1": "lessons/C2-M2-U6-L1.html", "C2-M2-U6-L2": "lessons/C2-M2-U6-L2.html", "C2-M2-U6-L3": "lessons/C2-M2-U6-L3.html", "C2-M2-U6-L4": "lessons/C2-M2-U6-L4.html", "C2-M2-U6-L5": "lessons/C2-M2-U6-L5.html", "C2-M2-U6-L6": "lessons/C2-M2-U6-L6.html", "C2-M3-U7-L1": "lessons/C2-M3-U7-L1.html", "C2-M3-U7-L2": "lessons/C2-M3-U7-L2.html", "C2-M3-U7-L3": "lessons/C2-M3-U7-L3.html", "C2-M3-U7-L4": "lessons/C2-M3-U7-L4.html", "C2-M3-U7-L5": "lessons/C2-M3-U7-L5.html", "C2-M3-U7-L6": "lessons/C2-M3-U7-L6.html", "C2-M3-U8-L1": "lessons/C2-M3-U8-L1.html", "C2-M3-U8-L2": "lessons/C2-M3-U8-L2.html", "C2-M3-U8-L3": "lessons/C2-M3-U8-L3.html", "C2-M3-U8-L4": "lessons/C2-M3-U8-L4.html", "C2-M3-U8-L5": "lessons/C2-M3-U8-L5.html", "C2-M3-U8-L6": "lessons/C2-M3-U8-L6.html", "C2-M3-U9-L1": "lessons/C2-M3-U9-L1.html", "C2-M3-U9-L2": "lessons/C2-M3-U9-L2.html", "C2-M3-U9-L3": "lessons/C2-M3-U9-L3.html", "C2-M3-U9-L4": "lessons/C2-M3-U9-L4.html", "C2-M3-U9-L5": "lessons/C2-M3-U9-L5.html", "C2-M3-U9-L6": "lessons/C2-M3-U9-L6.html", "C2-M4-U10-L1": "lessons/C2-M4-U10-L1.html", "C2-M4-U10-L2": "lessons/C2-M4-U10-L2.html", "C2-M4-U10-L3": "lessons/C2-M4-U10-L3.html", "C2-M4-U10-L4": "lessons/C2-M4-U10-L4.html", "C2-M4-U10-L5": "lessons/C2-M4-U10-L5.html", "C2-M4-U10-L6": "lessons/C2-M4-U10-L6.html", "C2-M4-U11-L1": "lessons/C2-M4-U11-L1.html", "C2-M4-U11-L2": "lessons/C2-M4-U11-L2.html", "C2-M4-U11-L3": "lessons/C2-M4-U11-L3.html", "C2-M4-U11-L4": "lessons/C2-M4-U11-L4.html", "C2-M4-U11-L5": "lessons/C2-M4-U11-L5.html", "C2-M4-U11-L6": "lessons/C2-M4-U11-L6.html"};  // existierende Lektionsdateien
+
+/* ---------- Curriculum-Baum ---------- */
+const TREE = [
+{id:"A1",name:"Beginner · Durchstarten",goal:"Überleben & Kontakte: sich vorstellen, buchstabieren, bestellen, einkaufen, Uhrzeit, Wege, Wochenende erzählen.",abilities:["sich vorstellen","einfache Fragen stellen","Essen bestellen","einkaufen","Anweisungen verstehen","Alltag beschreiben"],modules:[
+ {id:"A1-M1",title:"Modul 1 · Erste Schritte",units:[
+  {id:"A1-M1-U1",title:"Unit 1 · Hallo! Sich vorstellen",ls:["Guten Tag! – Sich vorstellen","Das Alphabet – Wie schreibt man das?","Zahlen 0–12 & Telefonnummern","Wie geht's?","du oder Sie?","Ich, du, wir – sein komplett","Wer bist du? – Konsolidierung","Review + Unit Test"]},
+  {id:"A1-M1-U2",title:"Unit 2 · Woher? Regelmäßige Verben",ls:["Woher kommst du?","Ich wohne in Berlin","Ich spreche Deutsch","Wie alt bist du? – Zahlen 13–100","Fahren, lesen, essen – starke Verben","Wer? Was? Wo? – Fragen","Steckbrief: Wer bin ich?","Review + Unit Test"]}]},
+ {id:"A1-M2",title:"Modul 2 · Alltag & Familie",units:[
+  {id:"A1-M2-U3",title:"Unit 3 · Familie & Freizeit",ls:["Meine Familie","mein, dein, Ihr","haben & Negation kein","Hobbys & gern","Essen & Trinken","Im Café","Einkaufen & Preise","Review + Unit Test"]},
+  {id:"A1-M2-U4",title:"Unit 4 · Bestellen & Akkusativ",ls:["Im Restaurant","Akkusativ: den & einen","mögen & möchten","Zahlen bis 1.000","Beim Bäcker","Supermarkt & Mengen","Grüße aus dem Café (Schreiben)","Review + Unit Test"]}]},
+ {id:"A1-M3",title:"Modul 3 · Zeit & Stadt",units:[
+  {id:"A1-M3-U5",title:"Unit 5 · Uhrzeit & Termine",ls:["Wie spät ist es?","Uhrzeit: halb & Viertel","Tage, Wochen, Monate","Trennbare Verben","Mein Tag – Wortstellung","Termine machen & anrufen","dürfen & sollen","Review + Unit Test"]},
+  {id:"A1-M3-U6",title:"Unit 6 · Stadt & Wege",ls:["In der Stadt – Orte","Wegbeschreibung","Imperativ","Verkehrsmittel","Am Bahnhof – Ticket kaufen","wollen & Pläne","Stadt-Rallye (Konsolidierung)","Review + Unit Test"]}]},
+ {id:"A1-M4",title:"Modul 4 · Was hast du gemacht?",units:[
+  {id:"A1-M4-U7",title:"Unit 7 · Perfekt – Freizeit früher",ls:["Perfekt mit haben","Partizip II (regelmäßig)","Perfekt mit sein","Bewegungsverben","Was hast du gemacht? (unregelmäßig)","Wochenende erzählen","SMS & kurze Nachrichten","Review + Unit Test"]},
+  {id:"A1-M4-U8",title:"Unit 8 · Gesundheit & Abschluss",ls:["Beim Arzt – der Körper","Symptome & Ratschläge","gesund & ungesund","war & hatte","Dialog beim Arzt","Prüfungstraining: Lesen","Prüfungstraining: Hören & Sprechen","Review + Unit Test"]}]},
+ {exam:"A1-EXAM",title:"A1 Abschlussexamen (Goethe-Format: Hören · Lesen · Schreiben · Sprechen)"}]},
+
+{id:"A2",name:"Elementary · Alltag meistern",goal:"Alltagsunabhängigkeit: Routine, Wohnen, Reisen, Gefühle, Arbeit, Ämter.",abilities:["über den Alltag sprechen","Reisen planen & erzählen","E-Mails schreiben","telefonieren","Ämter & Bank verstehen","Vergleiche & Wünsche"],modules:[
+ {id:"A2-M1",title:"Modul 1 · Wohnen & Stadt",units:[
+  {id:"A2-M1-U1",title:"Unit 1 · Wohnung & Möbel (Dativ)",ls:["Wohnungsanzeigen","Möbel & Räume","Dativ: bestimmter Artikel","Dativ: mein / kein","mit, bei, nach, aus, zu, von, seit","Beschwerden & Wünsche","Wohnung beschreiben","Review + Unit Test"]},
+  {id:"A2-M1-U2",title:"Unit 2 · Wechselpräpositionen & Alltag",ls:["Wo? wohin? (in, an, auf)","Dativ vs. Akkusativ","Positionsangaben","Präteritum: sein & haben","Präteritum: Modalverben","Im Haushalt","Weg und Lage erklären","Review + Unit Test"]}]},
+ {id:"A2-M2",title:"Modul 2 · Reisen & Erfahrungen",units:[
+  {id:"A2-M2-U3",title:"Unit 3 · Reisen, Wetter, Perfekt",ls:["Reiseträume","Wetter heute","Wetterbericht","weil-Sätze","dass-Sätze","Urlaubsstory erzählen","Reisetagebuch (Schreiben)","Review + Unit Test"]},
+  {id:"A2-M2-U4",title:"Unit 4 · Wünsche & Vergleiche (Konjunktiv II, Komparativ)",ls:["hätte / wäre / könnte","möchte & Wünsche","wenn-Sätze (real)","Komparativ","Superlativ","Ordinalzahlen & Daten","Geschenke & Pläne","Review + Unit Test"]}]},
+ {id:"A2-M3",title:"Modul 3 · Menschen & Gefühle",units:[
+  {id:"A2-M3-U5",title:"Unit 5 · Aussehen & Kleidung (Adjektivendungen)",ls:["Kleidungsstücke","Farben & Muster","Adjektivendungen: der/die/das","Adjektive nach ein-","Einkaufen (Kleidung)","Personen beschreiben","Modenschau (Sprechen)","Review + Unit Test"]},
+  {id:"A2-M3-U6",title:"Unit 6 · Einladungen & Gefühle (Reflexiv, Dativ-Verben)",ls:["Gefühle & Gemüt","Reflexive Verben","Dativ-Pronomen","gefallen, passen, fehlen","Infinitiv mit zu","Einladen & absagen (doch!)","Dialog: Verabredung","Review + Unit Test"]}]},
+ {id:"A2-M4",title:"Modul 4 · Arbeit & Ämter",units:[
+  {id:"A2-M4-U7",title:"Unit 7 · Arbeitswelt & Bewerbung",ls:["Berufe & Arbeitsorte","Bewerbung (Textsorte)","Telefonieren","Termin ändern","be-, ver-, er- (Präfixe)","Verb + Präposition (Chunks)","Vorstellungsgespräch-Rollenspiel","Review + Unit Test"]},
+  {id:"A2-M4-U8",title:"Unit 8 · Ämter & Alltag + A2-Examen",ls:["Bank & Post","Formulare ausfüllen","Beim Amt","Indirekte Fragen (Chunks)","Zahlen & Daten schnell","Kundenverkehr","A2-Prüfungstraining","Review + Unit Test"]}]},
+ {exam:"A2-EXAM",title:"A2 Abschlussexamen (Goethe-Format)"}]},
+
+{id:"B1",name:"Intermediate · Selbstständig kommunizieren",goal:"Schwellenflüssigkeit: Meinungen, Beruf, Geschichten, Reklamation, Medien.",abilities:["Meinungen begründen","Arbeitsalltag bewältigen","Geschichten erzählen","Reklamieren & verhandeln","Nachrichten verstehen","Präsentationen halten"],modules:[
+ {id:"B1-M1",title:"Modul 1 · Beruf & Kommunikation",units:[
+  {id:"B1-M1-U1",title:"Unit 1 · Büro & Small Talk (Relativsätze)",ls:["Büro & Kollegen","Small Talk","Relativsätze: Nominativ & Akkusativ","Relativsätze: Dativ & Präpositionen","ob-Fragen & indirekte Fragen","E-Mails im Job","Meetings-Sprache","Review + Unit Test"]},
+  {id:"B1-M1-U2",title:"Unit 2 · Probleme & Ratschläge (Konjunktiv II)",ls:["Probleme schildern","Konjunktiv II: würde","Ratschläge: hätte / könnte / wäre","An deiner Stelle …","Beschwerden höflich","Konfliktgespräch","Höflichkeit im Beruf","Review + Unit Test"]},
+  {id:"B1-M1-U3",title:"Unit 3 · Genitiv & Präpositionalverben",ls:["Genitiv: Grundformen","wegen / trotz + Genitiv","Verben mit Präpositionen","Worauf wartest du? (Präp.-Fragen)","Nominalisierung (leicht)","Texte verknüpfen","Konsolidierung: Bürofall","Review + Unit Test"]}]},
+ {id:"B1-M2",title:"Modul 2 · Konsum, Gesundheit & Umwelt",units:[
+  {id:"B1-M2-U4",title:"Unit 4 · Verbraucher & Reklamation (Passiv)",ls:["Reklamation","Passiv: Präsens","Passiv: Präteritum","von & durch","Zustandspassiv (hören/lesen)","Rechte als Verbraucher","Verbraucher-Debatte","Review + Unit Test"]},
+  {id:"B1-M2-U5",title:"Unit 5 · Ernährung & Körper",ls:["Körper & Gesundheit","Ernährung","Beim Arzt (B1)","Ratschläge mit sollen","um … zu","damit","Gesund leben – Diskussion","Review + Unit Test"]},
+  {id:"B1-M2-U6",title:"Unit 6 · Umwelt & Prozesse (um…zu / damit)",ls:["Umwelt im Alltag","Recycling & Prozesse","Prozesse beschreiben (Passiv)","Passiv mit Modalverben (rezeptiv)","Grafik beschreiben","Nachhaltigkeit diskutieren","Projekt: Umwelt-Tipp","Review + Unit Test"]}]},
+ {id:"B1-M3",title:"Modul 3 · Geschichten & Medien",units:[
+  {id:"B1-M3-U7",title:"Unit 7 · Erzählen (Präteritum, Plusquamperfekt)",ls:["Geschichten eröffnen","Präteritum erzählen","Plusquamperfekt","als / wann / wenn","Zeitmarker: danach, schließlich","Anekdote erzählen","Schreiben: Ein Erlebnis","Review + Unit Test"]},
+  {id:"B1-M3-U8",title:"Unit 8 · Nachrichten & Futur",ls:["Nachrichten verstehen","Futur I: Pläne","Futur I: Vermutungen","Schlagzeilen & Medien-Vokabular","Nachrichten vergleichen","Podcast hören","Nachrichten zusammenfassen","Review + Unit Test"]},
+  {id:"B1-M3-U9",title:"Unit 9 · Bildung & obwohl/trotzdem",ls:["Schule & Ausbildung","obwohl","trotzdem / deshalb","Stellung nehmen","Bildung in D-A-CH","Diskussion: Bildung","Präsentation halten","Review + Unit Test"]}]},
+ {id:"B1-M4",title:"Modul 4 · Gesellschaft & B1-Prüfung",units:[
+  {id:"B1-M4-U10",title:"Unit 10 · Engagement & Zusammenleben",ls:["Ehrenamt & Engagement","Generationen","Zusammenleben","Konjunktiv II: Vergangenheit","Redemittel Diskussion","Debatte moderieren","Projekt: Mein Thema","Review + Unit Test"]},
+  {id:"B1-M4-U11",title:"Unit 11 · D-A-CH & Landeskunde",ls:["Landeskunde D-A-CH","Höflichkeitsunterschiede","Alltagskultur vergleichen","Dialekte hören (Überblick)","Interkulturelle Missverständnisse","Rollenspiel Alltag","Kultur-Quiz","Review + Unit Test"]},
+  {id:"B1-M4-U12",title:"Unit 12 · Prüfungstraining B1",ls:["Goethe B1: Lesen","Lesen: Strategien","Hören: Format","Schreiben: Format","Sprechen: Teil 1","Sprechen: Teil 2+3","Vollsimulation","Review + Unit Test"]}]},
+ {exam:"B1-EXAM",title:"B1 Abschlussexamen (Goethe-Zertifikat B1)"}]},
+
+{id:"B2",name:"Upper Intermediate · Fließend argumentieren",goal:"Unabhängige Argumentation in Medien, Beruf, Wissenschaft, Kultur.",abilities:["strukturiert argumentieren","Präsentationen halten","verhandeln","native Medien verstehen","Essays & Berichte schreiben","nuanciert diskutieren"],modules:[
+ {id:"B2-M1",title:"Modul 1 · Meinung & Argumentation",units:[
+  {id:"B2-M1-U1",title:"Unit 1 · Konjunktiv II komplett & Konnektoren",ls:["Meinung äußern","Konjunktiv II: System","Irreale Wünsche","als ob / als wenn","dennoch, hingegen, allerdings","Argumente wiedergeben","Debatte I","Review + Unit Test"]},
+  {id:"B2-M1-U2",title:"Unit 2 · Debatten-Sprache",ls:["Diskussionsrunde","Argumente strukturieren","These – Antithese – Beleg","Genaues Hören: Meinungen","Podcast diskutieren","Zusammenfassen & widersprechen","Debatte II","Review + Unit Test"]},
+  {id:"B2-M1-U3",title:"Unit 3 · Passiversatz & Genitivpräpositionen",ls:["Passiversatz: sein zu","sich lassen","aufgrund / infolge / hinsichtlich","Nominalstil erkennen","Texte „entrumpeln“ (Verbalstil)","Fachtext lesen","Anwendung: Kommentar","Review + Unit Test"]}]},
+ {id:"B2-M2",title:"Modul 2 · Arbeitswelt & Verhandlung",units:[
+  {id:"B2-M2-U4",title:"Unit 4 · Bewerbung & Vorstellungsgespräch",ls:["Arbeitsmarkt-Wortschatz","Anschreiben perfekt","Vorstellungsgespräch","Stärken & Schwächen","Gehalt verhandeln","sowohl … als auch / weder … noch","Bewerbungs-Simulation","Review + Unit Test"]},
+  {id:"B2-M2-U5",title:"Unit 5 · Verhandeln & Korrelativ-Konnektoren",ls:["Verhandlungssprache","Konditionalsätze","Zugeständnisse: zwar … aber","ohne … zu / statt … zu","Meetings leiten","Protokoll schreiben","Verhandlungs-Rollenspiel","Review + Unit Test"]},
+  {id:"B2-M2-U6",title:"Unit 6 · Nominalstil ↔ Verbalstil",ls:["Nominalisierung gezielt","Nominalstil ↔ Verbalstil","Funktionsverbgefüge I","Funktionsverbgefüge II","Business-E-Mails","Berichte schreiben","Projekt: Reportage","Review + Unit Test"]}]},
+ {id:"B2-M3",title:"Modul 3 · Wissenschaft & Technik",units:[
+  {id:"B2-M3-U7",title:"Unit 7 · Grafikbeschreibung & Daten",ls:["Zahlen & Statistiken","Grafik beschreiben","Trends & Prognosen","Wissenschaftssprache","Studien verstehen","Vortrag halten I","Vortrag halten II","Review + Unit Test"]},
+  {id:"B2-M3-U8",title:"Unit 8 · Akademische Texte",ls:["Akademische Textsorten","Zitieren & Paraphrasieren","Erweiterte Partizipien (lesen)","Sachtexte analysieren","Lesestrategien B2","Podcast: Wissenschaft","Zusammenfassung schreiben","Review + Unit Test"]},
+  {id:"B2-M3-U9",title:"Unit 9 · Zukunftsthemen",ls:["Technikutopien","KI & Alltag","Energie & Klima","Pro/Contra-Essay","Essay schreiben II","Feedback & Revision","Diskussion: Zukunft","Review + Unit Test"]}]},
+ {id:"B2-M4",title:"Modul 4 · Kultur, Psychologie & Medien",units:[
+  {id:"B2-M4-U10",title:"Unit 10 · Konjunktiv I & Redewiedergabe",ls:["Konjunktiv I: Grundlagen","Redewiedergabe Presse","Indirekte Fragen & Zweifel","Nachrichten analysieren","Partizip I/II attributiv","Idiome: Alltag","Feuilleton lesen","Review + Unit Test"]},
+  {id:"B2-M4-U11",title:"Unit 11 · Emotionen & Literatur",ls:["Emotionen benennen","Psychologie-Vokabular","Nuancierte Meinungen","Ironie erkennen","Literarisches Lesen","Film diskutieren","Buchkreis","Review + Unit Test"]},
+  {id:"B2-M4-U12",title:"Unit 12 · Interkulturelles",ls:["Interkulturelle Kommunikation","Missverständnisse analysieren","Höflichkeitssysteme","Streit schlichten","Redewendungen: Emotionen","Rollenspiel: Konflikt","Projekt: Kulturvergleich","Review + Unit Test"]}]},
+ {id:"B2-M5",title:"Modul 5 · Prüfungstraining B2",units:[
+  {id:"B2-M5-U13",title:"Unit 13 · Lesen & Hören (Modulformat)",ls:["Goethe B2: Lesen I","Lesen II","Hören I","Hören II","Zeitmanagement","Schreiben I: Stellungnahme","Schreiben II","Review + Unit Test"]},
+  {id:"B2-M5-U14",title:"Unit 14 · Schreiben & Sprechen (Modulformat)",ls:["Sprechen: Vortrag","Sprechen: Diskussion","Moderieren","Vollsimulation I","Fehleranalyse","Vollsimulation II","Finetuning","Review + Unit Test"]}]},
+ {exam:"B2-EXAM",title:"B2 Abschlussexamen (Goethe-Zertifikat B2)"}]},
+
+{id:"C1",name:"Advanced · Studium, Beruf & Stil",goal:"Professionelles & akademisches Deutsch, Stilkontrolle.",abilities:["akademisch schreiben","frei präsentieren","verhandeln & moderieren","Stil register-sicher","Fachtexte lesen","native Medien mühelos"],modules:[
+ {id:"C1-M1",title:"Modul 1 · Stil & Ausdruck",units:[
+  {id:"C1-M1-U1",title:"Unit 1 · Register & Kollokationen",ls:["Register: gehoben – neutral – umgangssprachlich","Kollokationen I","Kollokationen II","Synonymnuancen","Wortbildung: -ung/-heit/-keit","Präfixsemantik","Stiltagebuch","Review + Unit Test"]},
+  {id:"C1-M1-U2",title:"Unit 2 · Erweiterte Attribute & Satzarchitektur",ls:["Erweiterte Attribute lesen","Erweiterte Attribute schreiben","Schachtelsätze entwirren","Partizipialattribute","Nominal ↔ Verbal (meisterlich)","Stilkritik","Projekt: Stilvolles Übersetzen","Review + Unit Test"]},
+  {id:"C1-M1-U3",title:"Unit 3 · Funktionsverbgefüge & Klarheit",ls:["Funktionsverbgefüge meistern","Nomen-Verb-Kombinationen","Angebots- & Berichtssprache","Idiomatik vs. Klarheit","Redundanzen streichen","Lektorat eigener Texte","Projekt: Textwerkstatt","Review + Unit Test"]}]},
+ {id:"C1-M2",title:"Modul 2 · Studium & Beruf",units:[
+  {id:"C1-M2-U4",title:"Unit 4 · Wissenschaftliche Textsorten",ls:["Hausarbeit strukturieren","Quellen & Zitierweisen","Paraphrasieren & Plagiat","Exposé schreiben","Rezension","Bericht","Projekt: Mini-Paper I","Review + Unit Test"]},
+  {id:"C1-M2-U5",title:"Unit 5 · Präsentieren & Verhandeln",ls:["Präsentieren: Aufbau","Folien & Sprache","Frei sprechen mit Notizen","Q&A meistern","Verhandeln: Strategien","Konjunktiv I perfekt","Projekt: Mini-Paper II + Vortrag","Review + Unit Test"]},
+  {id:"C1-M2-U6",title:"Unit 6 · Konjunktiv I & Amtssprache",ls:["Konjunktiv I: System","Indirekte Rede nuanciert","Höflichkeit & Distanz","Presse-Deutsch","Behördendeutsch","Vertrags- & Verwaltungssprache","Projekt: Fallstudie","Review + Unit Test"]}]},
+ {id:"C1-M3",title:"Modul 3 · Politik, Wirtschaft & Medien",units:[
+  {id:"C1-M3-U7",title:"Unit 7 · Rhetorik & Argumentation",ls:["Rhetorische Mittel","Argumentationsanalyse","Speechwriting","Debatten-Formate","Wirtschaftsdeutsch I","Wirtschaftsdeutsch II","Debatte live","Review + Unit Test"]},
+  {id:"C1-M3-U8",title:"Unit 8 · Wirtschaftsdeutsch & Verhandlung",ls:["Wirtschaftsthemen","Berichte & Kennzahlen","Verhandlungspraxis","Vertragsverhandlungen","Professioneller Small Talk","Netzwerken","Simulation: Boardmeeting","Review + Unit Test"]},
+  {id:"C1-M3-U9",title:"Unit 9 · Feuilleton & Essayistik",ls:["Feuilleton & Essayistik","Ironie & Satire","Kommentar schreiben","Longform-Podcasts","Film-Analyse","Humor verstehen","Projekt: Eigener Essay","Review + Unit Test"]}]},
+ {id:"C1-M4",title:"Modul 4 · Literatur & C1-Prüfung",units:[
+  {id:"C1-M4-U10",title:"Unit 10 · Kurzprosa & Stilmittel",ls:["Kurzgeschichte lesen","Erzähltechnik","Stilmittel","Interpretation schreiben","Gedichte: Einstieg","Literaturgespräch","Projekt: Interpretation","Review + Unit Test"]},
+  {id:"C1-M4-U11",title:"Unit 11 · D-A-CH-Variationen",ls:["Standarddeutsch & Variation","Österreichisches Deutsch","Schweizerdeutsch verstehen","Regionales Wörterbuch","Jugendsprache vs. Amtssprache","Dialektproben hören","Quiz D-A-CH","Review + Unit Test"]},
+  {id:"C1-M4-U12",title:"Unit 12 · Prüfungstraining C1",ls:["Goethe C1: Lesen","Hören","Schreiben","Sprechen","Strategien & Zeit","Vollsimulation I","Vollsimulation II + Analyse","Review + Unit Test"]}]},
+ {exam:"C1-EXAM",title:"C1 Abschlussexamen (Goethe-Zertifikat C1)"}]},
+
+{id:"C2",name:"Mastery · Meisterschaft",goal:"Near-native Nuancen, Rhetorik, Stil, regionale Bandbreite.",abilities:["nuanciert argumentieren","debattieren & moderieren","Ironie & Humor","Dialekte verstehen","stilistisch schreiben","literarisch analysieren"],modules:[
+ {id:"C2-M1",title:"Modul 1 · Feinheiten des Ausdrucks",units:[
+  {id:"C2-M1-U1",title:"Unit 1 · Synonymik & Konnotation",ls:["Synonymik & Konnotation","Feinbedeutungen","Wortfeldarbeit","Registerfehler erkennen","Stilübungen","Review + Unit Test"]},
+  {id:"C2-M1-U2",title:"Unit 2 · Modalpartikel & Präfixverben",ls:["Modalpartikel: System","doch, ja, mal, eben, halt","Präfixverben präzise","er-/ver-/ent- Nuancen","Produktive Übungen","Review + Unit Test"]},
+  {id:"C2-M1-U3",title:"Unit 3 · Idiomatische Meisterschaft",ls:["Kernredewendungen","Sprichwörter heute","Kollokationen fortgeschritten","Metaphernfelder","Idiomatik produzieren","Review + Unit Test"]}]},
+ {id:"C2-M2",title:"Modul 2 · Diskurs & Rhetorik",units:[
+  {id:"C2-M2-U4",title:"Unit 4 · Debatte & Moderation",ls:["Debatten-Formate","Argumentieren meisterhaft","Moderation","Podiumsdiskussion","Nachgespräch analysieren","Review + Unit Test"]},
+  {id:"C2-M2-U5",title:"Unit 5 · Humor & schnelle Gespräche",ls:["Humor & Timing","Ironie produzieren","Schnellverstehen","Slang & Umgangssprache","Film ohne Untertitel","Review + Unit Test"]},
+  {id:"C2-M2-U6",title:"Unit 6 · Regionale Varietäten verstehen",ls:["Bairisch verstehen","Schwäbisch & Alemannisch","Österreichische Varietäten","Schweizer Alltagssprache","Dialekt-Lesung","Review + Unit Test"]}]},
+ {id:"C2-M3",title:"Modul 3 · Literatur, Wissenschaft & Feuilleton",units:[
+  {id:"C2-M3-U7",title:"Unit 7 · Romanlektüre & Essays",ls:["Romanlektüre I","Romanlektüre II","Essay-Kanon lesen","Feuilleton-Klassiker","Literarische Debatte","Review + Unit Test"]},
+  {id:"C2-M3-U8",title:"Unit 8 · Stilanalyse & Übersetzungsvergleich",ls:["Übersetzen als Training","Stilvergleich DE/EN","Stilanalyse schreiben","Parodie & Pastiche","Werkstatt-Gespräch","Review + Unit Test"]},
+  {id:"C2-M3-U9",title:"Unit 9 · Wissenschaftliche Artikel",ls:["Fachartikel lesen","Akademische Vorträge","Abstract & Paper","Forschung diskutieren","Kolloquium","Review + Unit Test"]}]},
+ {id:"C2-M4",title:"Modul 4 · Meisterprojekt & C2-Prüfung",units:[
+  {id:"C2-M4-U10",title:"Unit 10 · Meisterprojekt: Portfolio",ls:["Portfolio: Essay planen","Essay schreiben","Vortrag erarbeiten","Diskussion vorbereiten","Generalprobe","Review + Unit Test"]},
+  {id:"C2-M4-U11",title:"Unit 11 · Prüfungssimulation C2",ls:["Goethe C2: Lesen","Hören","Schreiben","Sprechen","Vollsimulation","Review + Unit Test"]}]},
+ {exam:"C2-EXAM",title:"C2 Abschlussexamen (Goethe-Zertifikat C2 · GDS)"}]}
+];
+
+/* ---------- Rendering ---------- */
+function lessonCount(lv){ let n=0; lv.modules.forEach(m=>{ if(m.exam)return; m.units.forEach(u=>n+=u.ls.length); }); return n; }
+let grandTotal=0; TREE.forEach(lv=>grandTotal+=lessonCount(lv));
+document.getElementById("m-total").textContent = grandTotal;
+
+const doneSet = new Set(COMPLETED);
+TREE.forEach(lv=>{
+  const total=lessonCount(lv);
+  const done=lv.modules.flatMap(m=>m.exam?[]:m.units.flatMap(u=>u.ls.map((_,i)=>u.id+"-L"+(i+1)))).filter(id=>doneSet.has(id)).length;
+  const pct= total? Math.round(done/total*100):0;
+  const row=document.createElement("div"); row.className="bar-row";
+  row.innerHTML='<span class="lv">'+lv.id+'</span><div class="progress"><i style="width:'+pct+'%"></i></div><span class="pct">'+done+' / '+total+' · '+pct+'%</span>';
+  document.getElementById("bars").appendChild(row);
+});
+
+const curMeta = (function(){ for(const lv of TREE){ for(const m of lv.modules){ if(m.exam)continue; for(const u of m.units){ for(let i=0;i<u.ls.length;i++){ const id=u.id+"-L"+(i+1); if(id===CURRENT) return {lv,u,title:u.ls[i],id}; } } } } return null; })();
+if(curMeta){
+  const el=document.getElementById("cur-lesson");
+  el.innerHTML='<a href="'+(FILES[CURRENT]||"#")+'" style="color:var(--primary)">'+CURRENT+' — '+curMeta.title+'</a>';
+}
+
+const tree=document.getElementById("tree");
+TREE.forEach(lv=>{
+  const total=lessonCount(lv);
+  const ids=[]; lv.modules.forEach(m=>{ if(m.exam)return; m.units.forEach(u=>u.ls.forEach((_,i)=>ids.push(u.id+"-L"+(i+1)))); });
+  const done=ids.filter(id=>doneSet.has(id)).length;
+  const sec=document.createElement("div"); sec.className="lvl-sec";
+  let h='<div class="lvl-head"><span class="lvl-badge">'+lv.id+'</span><span class="lvl-name">'+lv.name+'</span><span class="lvl-status">'+(done>0?"In Progress":"Geplant")+'</span></div>';
+  h+='<div class="summary">'+
+    '<div class="sum-item"><b>'+lv.modules.filter(m=>!m.exam).length+' Module + Prüfung</b>Struktur</div>'+
+    '<div class="sum-item"><b>~'+total+' Lektionen</b>inkl. Reviews & Tests</b></div>'+
+    '<div class="sum-item"><b>'+done+' / '+total+'</b>abgeschlossen</div>'+
+    '<div class="sum-item"><b>Ziel</b>'+lv.goal+'</div></div>';
+  h+='<ul class="abilities">'+lv.abilities.map(a=>'<li>'+a+'</li>').join("")+'</ul>';
+  h+='<div class="mod-block">';
+  lv.modules.forEach(m=>{
+    if(m.exam){ h+='<div class="exam-row"><span class="st st-num k-lock">EX</span>'+m.title+'<span class="pill pill-exam">Examen</span></div>'; return; }
+    h+='<div class="mod-title"><span>'+m.title+'</span><span class="muted small">'+m.units.length+' Units</span></div>';
+    m.units.forEach(u=>{
+      const uDone=u.ls.filter((_,i)=>doneSet.has(u.id+"-L"+(i+1))).length;
+      h+='<div class="unit-block"><div class="unit-head"><span>'+u.title+'</span><span class="muted">'+uDone+' / '+u.ls.length+'</span></div>';
+      u.ls.forEach((title,i)=>{
+        const id=u.id+"-L"+(i+1);
+        const isReview=i===u.ls.length-1;
+        const isDone=doneSet.has(id), isCur=id===CURRENT, hasFile=!!FILES[id];
+        let st, cls="lesson-row";
+        var lnum = l.id.indexOf("-L")>-1 ? "L"+l.id.split("-L")[1] : "EX";
+        if(isDone){st='<span class="st st-num k-done">'+lnum+'</span>';}
+        else if(isCur){st='<span class="st st-num k-cur">'+lnum+'</span>';cls+=" cur";}
+        else if(hasFile){st='<span class="st st-num k-open">'+lnum+'</span>';}
+        else{st='<span class="st st-num k-lock">'+lnum+'</span>';}
+        const t=hasFile?'<a href="'+FILES[id]+'">'+title+'</a>':title;
+        h+='<div class="'+cls+'">'+st+'<span class="lid">'+id+'</span><span class="lt">'+t+'</span><span class="pill '+(isReview?"pill-review":isDone?"pill-done":"")+'">'+(isReview?"Review+Test":isDone?"Fertig":"Geplant")+'</span></div>';
+      });
+      h+='</div>';
+    });
+    h+='</div>';
+  });
+  h+='</div>';
+  sec.innerHTML=h;
+  tree.appendChild(sec);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kursraum · A2-M3-U6-L5 · Einladungen & Gefühle · Lektion 5</title>
+<link rel="stylesheet" href="../../assets/styles.css">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>if(window.mermaid){mermaid.initialize({startOnLoad:true,theme:"neutral",flowchart:{curve:"basis"}})}</script>
+<style>
+.lbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.ls-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:10px}
+audio{display:none}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="lbar">
+    <span class="lv-pill" id="lvlPill"></span><div class="crumb">🏛️ Kursraum · <b>A2-M3-U6-L5</b> · Einladungen & Gefühle · Lektion 5</div>
+    <div class="row"><span class="stepcount" id="stepcount"></span>
+      <a class="btn btn-ghost btn-sm" href="../index.html">📚 Kursraum-Index</a>
+      <a class="btn btn-ghost btn-sm" href="../../index.html">🏛️ Gesamt-Index</a>
+      <button class="btn btn-ghost btn-sm" onclick="location.reload()">'+T("restart")+'</button></div>
+  </div>
+  <div class="progress"><i id="pbar" style="width:0%"></i></div>
+</div>
+<main class="tx-main" id="stephost"></main>
+<script>
+"use strict";
+const L = {"id":"A2-M3-U6-L5","title":"Einladungen & Gefühle · Lektion 5","level":"A2 · Modul","time":20,"isReview":false,"objectives":["Topic & vocabulary: Einladungen & Gefühle (4 items)","Use the grammar actively: Dativ-Verben · Infinitiv mit zu","Pass the quiz (≥ 4/6) and speak aloud"],"vocab":[["fehlen","fehlt","to be missing"],["gehören","gehört","to belong"],["vielleicht",null,"maybe"],["leider",null,"unfortunately"]],"dialogue":[["Ben","Hast du Lust, ins Kino zu kommen?","Do you feel like coming to the cinema?"],["Aya","Gerne! Wann denn?"],["Ben","Am Freitag um acht. Ich freue mich schon!","Friday at eight. I'm already looking forward to it!"],["Aya","Tut mir leid — ich muss leider absagen, ich habe keine Zeit.","I'm sorry — I have to decline, I have no time."],["Ben","Schade! Ärgerst du dich?"],["Aya","Nein — nächste Woche passt es bestimmt. Montags habe ich immer Zeit.","No — next week will surely work. Mondays I always have time."],["Ben","Abgemacht: Montag. Der Film interessiert mich sowieso!","Deal: Monday. I'm interested in the film anyway!"],["Aya","Perfekt. Bis dann!","Perfect. See you then!"]],"grammar":[{"title":"Dativ-Verben","meaning":"gefallen, passen, fehlen, gehören take dative objects.<br><span class=\"pattern-note\">Pattern: Das gefällt/fügt? — Das gefällt mir · Der Mantel passt dir · Die Zeit fehlt uns</span>","table":null,"examples":[["Der Mantel passt mir.","Dativ: mir."],["Das Buch gehört ihm.","gehören + Dativ."]],"mistakes":[["Der Mantel passt mich.","Der Mantel passt mir.","passen → dative."]],"diagram":"flowchart LR\n    N1[\"gefallen → mir\"]\n    N2[\"passen → dir\"]\n    N3[\"fehlen → uns\"]\n    N4[\"gehören → Ihnen\"]\n    N1 --> N2\n    N2 --> N3\n    N3 --> N4"},{"title":"Infinitiv mit zu","meaning":"After many verbs/nouns: zu + infinitive at the end.<br><span class=\"pattern-note\">Pattern: (Es ist wichtig / Ich habe Zeit) … , … zu + Infinitiv — trennbare: ein|zu|kaufen</span>","table":null,"examples":[["Ich habe keine Zeit, die Zeitung zu lesen.","zu lesen am Ende."],["Es ist wichtig, jeden Tag zu üben.","Es ist … zu + Inf."]],"mistakes":[["Ich habe keine Zeit die Zeitung zu lese.","… die Zeitung zu lesen.","zu + infinitive (lesen) — the -en ending stays."]],"diagram":"flowchart LR\n    N1[\"Einleitung\"]\n    N2[\"… \"]\n    N3[\"zu + Infinitiv (Ende)\"]\n    N1 --> N2\n    N2 --> N3"}],"pron":{"focus":"Pronounce the topic words clearly","tips":["Say every new word 2× aloud after listening (Hybrid/Kursraum)."],"drills":["fehlen","gehören","vielleicht","leider"]},"listen":[],"quiz":[{"q":"Was bedeutet „fehlen“?","opts":["son","daughter","child","to be missing"],"a":3,"expl":"fehlen = to be missing."},{"q":"Was bedeutet „gehören“?","opts":["child","siblings","to belong","daughter"],"a":2,"expl":"gehören = to belong."},{"q":"Translate: „Es ist … zu + Inf.“","opts":["Es ist wichtig, jeden Tag zu üben.","Ich habe keine Zeit, die Zeitung zu lesen."],"a":0,"expl":"Pattern: Es ist wichtig, jeden Tag zu üben."},{"q":"Was bedeutet „vielleicht“?","opts":["maybe","son","daughter","child"],"a":0,"expl":"vielleicht = maybe."},{"q":"Was bedeutet „leider“?","opts":["son","daughter","child","unfortunately"],"a":3,"expl":"leider = unfortunately."}],"exs":{"fills":[],"corrections":[]},"speak":{"prompt":"Roleplay out loud — use the new words. Topic: Einladungen & Gefühle","model":"Hast du Lust, ins Kino zu kommen? · Gerne! Wann denn? · Am Freitag um acht. Ich freue mich schon!","phrases":[["Hast du Lust, ins Kino zu kommen?","Do you feel like coming to the cinema?"],["Gerne! Wann denn?",""],["Am Freitag um acht. Ich freue mich schon!","Friday at eight. I'm already looking forward to it!"]]},"write":{"prompt":"Write 3–5 sentences about „Einladungen & Gefühle“ — use the lesson's grammar.","model":"Hast du Lust, ins Kino zu kommen? Gerne! Wann denn?","check":["Verb conjugated correctly?","Nouns with article + capitalized?","Word order: verb in position 2?"]},"fun":{"riddle":["Ich bin ein Dativ-Verb und sage höflich, dass etwas schön ist: „Der Film ___ mir.“ Wer bin ich?","gefallen (gefallt? → gefällt mir)."],"culture":"Punctuality is respect: cancel early and politely („leider“, „tut mir leid“). „Lust haben“ + zu-infinitive is the classic invitation phrase.","challenge":"Lade laut jemanden ein („Hast du Lust, …?“) und sag einmal höflich ab."},"ext":"DW · Nicos Weg A2 · Thema „Einladen, Gefühle, reflexive Verben“.","next":{"id":"A2-M3-U6-L6","title":"Einladungen & Gefühle · Lektion 6"},"nextId":"A2-M3-U6-L6.html"};
+const EN = /^(A1|A2)/.test(L.level || "");
+const LBL = {
+ goals:["Learning goals","Lernziele"],
+ flow:["Flow: Dialogue → Vocabulary → Grammar → Practice → Pronunciation → Listening → Recall → Speaking → Writing → Quiz. Typing: ae/oe/ue works instead of ä/ö/ü.","Ablauf: Dialog → Vokabeln → Grammatik → Üben → Aussprache → Hören → Abruf → Sprechen → Schreiben → Quiz. Eingaben: ae/oe/ue statt ä/ö/ü erlaubt."],
+ playAll:["▶ Play whole dialogue","▶ Ganzen Dialog spielen"],
+ showTr:["Show translations","Übersetzungen zeigen"],
+ vocab:["Vocabulary","Vokabeln"],
+ vocabDone:["All","durchgearbeitet."],
+ reveal:["Show meaning","Übersetzung zeigen"],
+ hard:["⚠ Hard — remember","⚠ Schwer – merken"],
+ gotIt:["✓ Got it — next","✓ Verstanden – weiter"],
+ grammar:["Grammar","Grammatik"],
+ examples:["Examples","Beispiele"],
+ mistakes:["Common mistakes","Typische Fehler"],
+ gpractice:["Grammar practice","Grammatik üben"],
+ task:["Task ","Aufgabe "],
+ correct1:["correct (first try)","richtig (erster Versuch)"],
+ drills:["Drills — listen & repeat 3× aloud:","Drills — hören & 3× laut nachsprechen:"],
+ selfcheck:["Self-check:","Selbstbewertung:"],
+ good:["Good","Geht gut"],
+ practice:["Needs practice","Brauche Übung"],
+ listening:["Listening training","Hör-Training"],
+ recall:["Active recall — say it aloud, then reveal","Aktiver Abruf — sprich laut, dann aufdecken"],
+ sayDe:["Say in German: <b>","Sag auf Deutsch: <b>"],
+ modelBtn:["Show model answer","Modellantwort zeigen"],
+ writeDone:["Done – show model","Fertig – Modell ansehen"],
+ writeHere:["Write here in German …","Schreibe hier auf Deutsch …"],
+ words:["words","Wörter"],
+ quizIntro:["6 questions · first try counts · pass at 4/6.","6 Fragen · erster Versuch zählt · bestanden ab 4/6."],
+ passed:["passed ✓","bestanden ✓"],
+ repeat:["review recommended","Wiederholung empfohlen"],
+ results:["Results","Ergebnis"],
+ tasksRight:["tasks correct (first try)","Aufgaben richtig (erster Versuch)"],
+ yourMistakes:["Your mistakes","Deine Fehler"],
+ correctLbl:["Correct:","Richtig:"],
+ flip:["Flashcards — click to flip","Flashcards — klicke zum Umdrehen"],
+ printHint:["Print (Ctrl/Cmd+P) turns them into cut-out cards.","Drucken (Strg/Cmd+P) macht daraus einen Schnittbogen."],
+ reviewPlan:["Review plan","Review-Plan"],
+ schedule:["These words return: <b>today ✓ → +1 day → +3 → +7 → +14 → +30</b>.","Diese Vokabeln kehren zurück: <b>heute ✓ → +1 Tag → +3 → +7 → +14 → +30</b>."],
+ extPr:["External practice (optional)","Externe Praxis (optional)"],
+ nextStep:["Next step","Nächster Schritt"],
+ unitNote:["📌 <b>Unit complete!</b> Come to the chat now and take your <b>unit exam</b> — the next unit starts after that.","📌 <b>Unit-Ende!</b> Komm jetzt in den Chat und mach deine <b>Unit-Prüfung</b> — erst danach startet die nächste Unit."],
+ sayNext:["— say \"next\" in the chat.","— sag im Chat „weiter“."],
+ directNext:["Go to the next lesson →","Direkt zur nächsten Lektion →"],
+ questions:["❓ Questions? Ask your teacher in the chat — asking is part of the lesson.","❓ Fragen? Frag deinen Lehrer im Chat — Klärung ist Teil des Unterrichts."],
+ back:["← Back","← Zurück"],
+ next:["Next →","Weiter →"],
+ tryAgain:["Try again","Nochmal versuchen"],
+ check:["Check","Prüfen"],
+ restart:["Restart","Neu starten"],
+ answerPh:["Your answer …","Deine Antwort …"],
+ right:["✓ Correct!","✓ Richtig!"],
+ notQuite:["✗ Not quite.","✗ Nicht ganz."],
+ rightIs:["Correct: <u>","Richtig: <u>"],
+ youWrote:["You: <i>","Du: <i>"],
+ modelLbl:["Model:","Modell:"],
+ step:["Step ","Schritt "]
+};
+const T = k => EN ? LBL[k][0] : LBL[k][1];
+
+let deVoice=null;
+function pickVoice(){ if(!("speechSynthesis" in window))return; deVoice=speechSynthesis.getVoices().find(v=>/^de/i.test(v.lang))||null; }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function say(t,r){ if(!("speechSynthesis" in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="de-DE"; u.rate=r||0.92; if(deVoice)u.voice=deVoice; speechSynthesis.speak(u); }
+function sayAll(ts){ if(!("speechSynthesis" in window))return; speechSynthesis.cancel(); ts.forEach(t=>{const u=new SpeechSynthesisUtterance(t);u.lang="de-DE";u.rate=0.87;if(deVoice)u.voice=deVoice;speechSynthesis.speak(u);}); }
+function sayBtns(t){ return '<button class="speak-btn" data-say="'+esc(t)+'">🔊</button><button class="speak-btn slow" data-say="'+esc(t)+'" data-rate="0.68">0.7×</button>'; }
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]"); if(b) say(b.dataset.say,b.dataset.rate?parseFloat(b.dataset.rate):undefined);});
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function norm(s){return String(s||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[.,!?;:„“"'´`()\[\]]/g," ").replace(/-/g," ").replace(/\s+/g," ").trim();}
+function artColor(s){return String(s).replace(/\b(der|die|das)\b/g,m=>'<span class="art-'+m.toLowerCase()+'">'+m+'</span>');}
+
+const host = document.getElementById("stephost");
+const STEPS = [];
+STEPS.push({ty:"intro"});
+if(L.dialogue&&L.dialogue.length) STEPS.push({ty:"dialogue"});
+if(L.vocab.length) STEPS.push({ty:"vocab"});
+if(L.grammar&&L.grammar.length) STEPS.push({ty:"grammar"});
+if((L.exs&&((L.exs.fills&&L.exs.fills.length)||(L.exs.corrections&&L.exs.corrections.length)))) STEPS.push({ty:"exs"});
+if(L.pron) STEPS.push({ty:"pron"});
+if(L.listen&&L.listen.length) STEPS.push({ty:"listen"});
+STEPS.push({ty:"recall"});
+if(L.speak) STEPS.push({ty:"speak"});
+if(L.write) STEPS.push({ty:"write"});
+if(L.quiz&&L.quiz.length) STEPS.push({ty:"quiz"});
+STEPS.push({ty:"results"});
+
+let cur=0, stepDone=true, runResults=[], quizRes=null;
+
+function render(){
+  const st=STEPS[cur];
+  stepDone = !["exs","quiz","listen","vocab"].includes(st.ty);
+  document.getElementById("stepcount").textContent=T("step")+(cur+1)+" / "+STEPS.length+" · "+Math.round(cur/(STEPS.length-1)*100)+"%";
+  document.getElementById("pbar").style.width=Math.round(cur/(STEPS.length-1)*100)+"%";
+  host.innerHTML="";
+  const nav=document.createElement("div"); nav.className="nav-btns";
+  nav.innerHTML=(cur>0?'<button class="btn btn-ghost" data-nav="back">'+T("back")+'</button>':'<span></span>')+
+    '<button class="btn btn-primary" data-nav="next" '+(stepDone?"":"disabled")+'>'+T("next")+'</button>';
+  const box=document.createElement("div"); box.id="sbox"; host.appendChild(box);
+  nav.querySelector('[data-nav="back"]')?.addEventListener("click",()=>{cur--;render();window.scrollTo(0,0);});
+  nav.querySelector('[data-nav="next"]').addEventListener("click",()=>{ if(!stepDone)return; if(cur<STEPS.length-1){cur++;render();window.scrollTo(0,0);} });
+  host.appendChild(nav);
+  R[st.ty](box);
+  window.scrollTo(0,0);
+}
+
+const R = {
+intro(b){ b.innerHTML='<div class="steptitle">Lektion</div><div class="card"><h1>'+L.title+'</h1>'+
+ '<div class="tx-meta">'+L.id+' · '+L.level+' · ca. '+L.time+' Min'+(L.isReview?' · Review + Unit Test':'')+'</div>'+
+ '<div class="pron-tip"><b>'+T("goals")+'</b><ul style="margin:6px 0 0;padding-left:20px">'+L.objectives.map(o=>'<li>'+o+'</li>').join("")+'</ul></div>'+
+ '<p class="small muted">'+T("flow")+'</p></div>'; },
+
+dialogue(b){ let h='<div class="steptitle">'+EN?"Dialogue":"Dialog"+' · Hören &amp; Lesen</div><div class="card">'+
+ '<div class="row" style="margin-bottom:8px"><button class="btn btn-primary btn-sm" id="dplay">'+T("playAll")+'</button><button class="btn btn-ghost btn-sm" id="drev">'+T("showTr")+'</button></div>';
+ L.dialogue.forEach((l,i)=>{ h+='<div class="dlg-line'+(i%2?" other":"")+'"><div class="who">'+esc(l[0])+'</div><div class="dlg-bubble"><div class="dlg-de">'+esc(l[1])+' '+sayBtns(l[1])+'</div><div class="dlg-en" style="display:none">'+esc(l[2])+'</div></div></div>'; });
+ h+='</div>'; b.innerHTML=h;
+ document.getElementById("dplay").onclick=()=>sayAll(L.dialogue.map(l=>l[1]));
+ document.getElementById("drev").onclick=e=>{b.querySelectorAll(".dlg-en").forEach(x=>x.style.display="block");e.target.disabled=true;}; },
+
+vocab(b){ const V=L.vocab; const seen=new Array(V.length).fill(false); let i=0;
+ const draw=()=>{ if(i>=V.length){ b.innerHTML='<div class="steptitle">'+T("vocab")+'</div><div class="card center" style="padding:34px"><div style="font-size:32px">✓</div><b>'+T("vocabDone")[0]+' '+V.length+' '+T("vocabDone")[1]+'</b><p class="small muted">.</p></div>'; stepDone=true; return; }
+  const v=V[i]; const noun=!!v[1];
+  b.innerHTML='<div class="steptitle">Vokabeln</div><div class="card"><div class="voc-card">'+
+  '<div class="voc-de">'+(noun?artColor(v[0].split(" ")[0]+" ___ "+esc(v[0].split(" ").slice(1).join(" "))):esc(v[0]))+'</div>'+
+  '<div style="margin:10px 0">'+sayBtns(v[0])+'</div>'+
+  '<div id="vback">'+(seen[i]?'<div class="voc-en">'+artColor(esc(v[0]))+(noun?' <span class="muted small">· Plural: '+artColor(esc(v[1]))+'</span>':'')+'</div><div class="voc-en" style="font-weight:400">'+esc(v[2])+'</div>'+
+  (v[3]?'<div class="voc-ex"><div class="de">'+esc(v[3])+' '+sayBtns(v[3])+'</div><div class="en">'+esc(v[4]||"")+'</div></div>':'')+
+  '<div class="row" style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="vhard">'+T("hard")+'</button><button class="btn btn-good btn-sm" id="vok">'+T("gotIt")+'</button></div>'
+  :'<button class="btn btn-ghost" id="vrev">'+T("reveal")+'</button>')+'</div></div>'+
+  '<div class="voc-dots">'+V.map((_,j)=>'<i class="'+(j<i?"done":j===i?"on":"")+'"></i>').join("")+'</div></div>';
+  const rv=document.getElementById("vrev"); if(rv)rv.onclick=()=>{seen[i]=true;draw();};
+  document.getElementById("vok")?.addEventListener("click",()=>{i++;draw();});
+  document.getElementById("vhard")?.addEventListener("click",()=>{i++;draw();}); };
+ draw(); },
+
+grammar(b){ let h='<div class="steptitle">'+T("grammar")+'</div>';
+ L.grammar.forEach(g=>{ h+='<div class="card"><h2>'+g.title+'</h2>';
+  if(g.meaning) h+='<div class="pron-tip">'+g.meaning+'</div>';
+  if(g.table){ h+='<table class="gram-tbl"><tr>'+g.table[0].map(x=>'<th>'+x+'</th>').join("")+'</tr>'+g.table.slice(1).map(r=>'<tr>'+r.map((c,ci)=>'<td'+(ci===0?' style="font-weight:800;background:#fbfbfd"':'')+'>'+c+'</td>').join("")+'</tr>').join("")+'</table>'; }
+  if(g.examples&&g.examples.length){ h+='<h3>'+T("examples")+'</h3>'+g.examples.map(e=>'<div class="ex-line">'+sayBtns(e[0])+'<div><div class="de">'+e[0]+'</div><div class="en">'+esc(e[1])+'</div></div></div>').join(""); }
+  if(g.mistakes&&g.mistakes.length){ h+='<h3>'+T("mistakes")+'</h3>'+g.mistakes.map(m=>'<div class="mistake-box"><span class="wrong">✗ '+m[0]+'</span> → <span class="right">'+m[1]+'</span><div class="small">'+m[2]+'</div></div>').join(""); }
+  if(g.diagram){ h+='<div class="mermaid-box"><div class="cap">Diagramm</div><pre class="mermaid">\n'+g.diagram+'\n</pre></div>'; }
+  h+='</div>'; });
+ b.innerHTML=h; },
+
+exs(b){ const items=[];
+ (L.exs.fills||[]).forEach(f=>items.push({t:"fill",f}));
+ (L.exs.corrections||[]).forEach(c=>items.push({t:"corr",c}));
+ b.innerHTML='<div class="steptitle">'+T("gpractice")+'</div><div class="card"><div id="xrun"></div></div>';
+ runItems(document.getElementById("xrun"),items,res=>{runResults.push(res);stepDone=true;
+  document.getElementById("xrun").innerHTML+='<p class="center"><b>'+res.correct+' / '+res.total+' '+T("correct1")+' ✓</p>';}); },
+
+pron(b){ b.innerHTML='<div class="steptitle">Aussprache</div><div class="card"><h2>'+L.pron.focus+'</h2>'+
+ L.pron.tips.map(t=>'<div class="pron-tip">'+t+'</div>').join("")+
+ '<p class="small"><b>'+T("drills")+'</b></p>'+
+ L.pron.drills.map(d=>'<div class="drill-line">'+sayBtns(d)+'<div class="txt">'+esc(d)+'</div></div>').join("")+
+ '<div class="row" style="margin-top:12px"><span class="small"><b>'+T("selfcheck")+'</b></span><button class="btn btn-good btn-sm" id="pg">'+T("good")+'</button><button class="btn btn-ghost btn-sm" id="pb">'+T("practice")+'</button></div></div>';
+ document.getElementById("pg").onclick=()=>say("Sehr gut! Weiter so!"); document.getElementById("pb").onclick=()=>say("Kein Problem. Übung macht den Meister."); },
+
+listen(b){ b.innerHTML='<div class="steptitle">'+T("listening")+'</div><div class="card"><div id="lrun"></div></div>';
+ runItems(document.getElementById("lrun"),L.listen.map(x=>({t:"listen",x})),res=>{runResults.push(res);stepDone=true;
+  document.getElementById("lrun").innerHTML+='<p class="center"><b>'+res.correct+' / '+res.total+' '+T("correct1")+'</p>';}); },
+
+recall(b){ const items=L.vocab.slice(0,8).map(v=>({p:''+T("sayDe")+''+esc(v[2])+'</b>',a:artColor(esc(v[0]))+(v[1]?' <span class="muted">· '+artColor(esc(v[1]))+'</span>':'')}));
+ if(L.recallExtra) items.push(...L.recallExtra);
+ b.innerHTML='<div class="steptitle">'+T("recall")+'</div><div class="card">'+
+ items.map((it,j)=>'<div class="recall-item" data-r="1"><div class="p">'+it.p+'</div><div class="a">'+it.a+'</div></div>').join("")+'</div>';
+ b.querySelectorAll(".recall-item").forEach(el=>el.addEventListener("click",()=>el.classList.add("revealed"))); },
+
+speak(b){ b.innerHTML='<div class="steptitle">Sprechen</div><div class="card"><div class="pron-tip" style="font-size:15.5px"><b>'+L.speak.prompt+'</b></div>'+
+ L.speak.phrases.map(p=>'<div class="ex-line">'+sayBtns(p[0])+'<div><div class="de">'+p[0]+'</div><div class="en">'+esc(p[1])+'</div></div></div>').join("")+
+ '<button class="btn btn-ghost" id="smod" style="margin-top:10px">'+T("modelBtn")+'</button><div id="smodel" class="model-box" style="display:none">'+L.speak.model+' '+sayBtns(L.speak.model.replace(/·/g,","))+'</div></div>';
+ document.getElementById("smod").onclick=()=>{document.getElementById("smodel").style.display="block";}; },
+
+write(b){ b.innerHTML='<div class="steptitle">Schreiben</div><div class="card"><div class="pron-tip">'+L.write.prompt+'</div>'+
+ '<textarea class="write-area" id="wa" placeholder="'+T("writeHere")+'"></textarea>'+
+ '<div class="row spread" style="margin-top:8px"><span class="small muted" id="wc">0 '+T("words")+'</span><button class="btn btn-ghost btn-sm" id="wm">'+T("writeDone")+'</button></div>'+
+ '<div id="wbox" class="model-box" style="display:none"><b>'+T("modelLbl")+'</b><div style="margin-top:6px">'+L.write.model+'</div><ul class="check-list">'+L.write.check.map(c=>'<li>'+c+'</li>').join("")+'</ul></div></div>';
+ const wa=document.getElementById("wa"); wa.addEventListener("input",()=>{document.getElementById("wc").textContent=(wa.value.trim().match(/\S+/g)||[]).length+' '+T("words");});
+ document.getElementById("wm").onclick=()=>{document.getElementById("wbox").style.display="block";}; },
+
+quiz(b){ b.innerHTML='<div class="steptitle">'+"Quiz"+'</div><div class="card"><p class="small muted">'+T("quizIntro")+'</p><div id="qrun"></div></div>';
+ runItems(document.getElementById("qrun"),L.quiz.map(x=>({t:"mcq",x})),res=>{quizRes=res;runResults.push(res);stepDone=true;
+  document.getElementById("qrun").innerHTML+='<p class="center" style="margin-top:10px"><b>Quiz: '+res.correct+' / '+res.total+'</b>'+(res.correct>=4?' — '+T('passed'):' — '+T('repeat'))+'</p>';}); },
+
+results(b){ const all=runResults; const tot=all.reduce((a,r)=>a+r.total,0), cor=all.reduce((a,r)=>a+r.correct,0);
+ const pct=tot?Math.round(cor/tot*100):0; const stars=pct>=90?"★★★":pct>=75?"★★☆":pct>=60?"★☆☆":"☆☆☆";
+ let h='<div class="steptitle">'+T("results")+'</div><div class="card results-hero"><div class="stars">'+stars+'</div><div class="results-score">'+pct+'%</div><div class="muted">'+cor+' von '+tot+' '+T('tasksRight')+(quizRes?' · Quiz '+quizRes.correct+'/'+quizRes.total:'')+'</div></div>';
+ const wrongs=all.flatMap(r=>r.items||[]).filter(x=>!x.ok);
+ if(wrongs.length) h+='<div class="card"><h3>'+T("yourMistakes")+'</h3>'+wrongs.map(w=>'<div class="res-item bad"><span><b>✗</b></span><div>'+esc(w.q)+'<div class="small">'+T("correctLbl")+'<b>'+esc(w.a)+'</b></div></div></div>').join("")+'</div>';
+ if(L.vocab.length){ h+='<div class="card"><h3>'+T("flip")+'</h3><div class="fc-deck">';
+  L.vocab.forEach((v,j)=>{ const front=v[1]?artColor(v[0].split(" ")[0]+" ___ "+esc(v[0].split(" ").slice(1).join(" "))):esc(v[2]);
+   const back=artColor(esc(v[0]))+(v[1]?' <span class="muted">· '+artColor(esc(v[1]))+'</span>':'')+' <span class="muted">· '+esc(v[2])+'</span>';
+   h+='<div class="fcflip"><input type="checkbox" id="rf'+j+'"><label for="rf'+j+'"><div class="inner"><div class="face front"><div class="s">'+(v[1]?"Artikel + Plural":"Bedeutung")+'</div><div class="t">'+front+'</div></div><div class="face back"><div class="s">Antwort</div><div class="t">'+back+'</div></div></div></label></div>'; });
+  h+='</div><p class="fc-hint">'+T("printHint")+'</p></div>'; }
+ if(L.fun) h+='<div class="card"><div class="riddle-box">🧩 <b>'+L.fun.riddle[0]+'</b><details class="akey" style="margin-top:8px"><summary>Lösung anzeigen</summary>'+L.fun.riddle[1]+'</details></div>'+
+  '<div class="kultur-box">🇩🇪 <b>Kulturtipp:</b> '+L.fun.culture+'</div><div class="challenge-box">🎯 <b>'+L.fun.challenge+'</b></div></div>';
+ h+='<div class="card"><h3>'+T("reviewPlan")+'</h3><div class="schedule">'+T("schedule")+'</div>'+
+  (L.ext?'<h3>'+T("extPr")+'</h3><div class="pron-tip">'+L.ext+'</div>':'')+
+  '<h3>'+T("nextStep")+'</h3><p class="small">'+(L.isReview?T('unitNote'):(L.next?'➡️ <b>'+L.next.id+' · '+esc(L.next.title)+'</b>'+T('sayNext'):'Modul-Review nächste Session.'))+'</p>'+
+  (L.nextId?'<a class="btn btn-primary btn-sm" href="'+L.nextId+'" style="margin-top:6px">'+T("directNext")+'</a>':'')+'</div>'+
+  '<div class="foot-note">'+T("questions")+'</div>';
+ b.innerHTML=h; }
+};
+
+function runItems(box,items,onDone){
+ let i=0; const res=[];
+ const q=()=>{ if(i>=items.length){onDone({total:res.length,correct:res.filter(r=>r.ok).length,items:res});return;}
+  const it=items[i]; let h='<div class="excount">Aufgabe '+(i+1)+' / '+items.length+'</div>';
+  if(it.t==="mcq"||it.t==="listen"){ const x=it.x||it.f; const o=(it.t==="listen")?it.x[2]:it.f[1]; const qtxt=(it.t==="listen")?it.x[1]:it.f[0];
+   if(it.t==="listen") h+='<div class="row" style="margin-bottom:10px">'+sayBtns(it.x[0])+'</div>';
+   h+='<div class="ex-q">'+qtxt+'</div><div class="opt-list">'+o.map((op,j)=>'<button class="opt" data-o="'+j+'"><span class="k">'+"abcd"[j]+'</span>'+esc(op)+'</button>').join("")+'</div>';
+   h+='<div class="row" style="margin-top:12px"><button class="btn btn-primary btn-sm" data-chk>'+T("check")+'</button></div><div id="fb"></div>';
+   box.innerHTML=h;
+   box.querySelectorAll(".opt").forEach(op=>op.addEventListener("click",()=>{box.querySelectorAll(".opt").forEach(x2=>x2.classList.remove("sel"));op.classList.add("sel");}));
+   const correct=(it.t==="listen")?it.x[3]:it.f[2];
+   box.querySelector("[data-chk]").onclick=()=>chk(o,correct,(it.t==="listen")?it.x[4]:it.f[3],v=>o[v]);
+  } else { const x=it.t==="fill"?it.f:it.c;
+   const pre=it.t==="fill"?x[0]:""; const post=it.t==="fill"?(x[1]||""):"";
+   h+='<div class="ex-q">'+(it.t==="fill"?esc(pre)+'<span style="border-bottom:2px solid var(--ink);padding:0 12px"></span>'+esc(post):(x[2]?'<span class="hint">'+x[2]+'</span>':'')+'Korrigiere: <b>'+esc(x[0])+'</b>')+(x[3]?'<span class="hint">Hinweis: '+x[3]+'</span>':'')+'</div>'+
+   '<input class="ex-input" type="text" autocomplete="off" spellcheck="false" placeholder="'+T("answerPh")+'"><div class="row" style="margin-top:12px"><button class="btn btn-primary btn-sm" data-chk>'+T("check")+'</button></div><div id="fb"></div>';
+   box.innerHTML=h;
+   const inp=box.querySelector(".ex-input"); inp.focus(); inp.addEventListener("keydown",e=>{if(e.key==="Enter")box.querySelector("[data-chk]").click();});
+   const accepts=it.t==="fill"?[x[2]]:x[1];
+   const correctDisp=it.t==="fill"?x[2]:x[1][0];
+   box.querySelector("[data-chk]").onclick=()=>{ const ok=accepts.some(a=>norm(a)===norm(inp.value));
+    mark(ok,correctDisp,x[4]||x[3],inp.value);
+    box.querySelectorAll(".opt").forEach((op,j)=>{}); };
+  }
+  function mark(ok,correctDisp,expl,user){ if(!mark._f){mark._f=true;res.push({ok,q:(box.querySelector(".ex-q")||{}).textContent||"",a:correctDisp});}
+   const fb=box.querySelector("#fb");
+   fb.innerHTML='<div class="feedback '+(ok?"ok":"bad")+'"><div class="fb-title">'+(ok?"✓ Richtig!":"✗ Nicht ganz.")+'</div>'+
+    (ok?"":'<div class="fb-correct">'+T("rightIs")+'<u>'+esc(correctDisp)+'</u></div><div class="fb-expl">'+T("youWrote")+'<i>'+esc(String(user))+'</i></div>')+
+    (expl?'<div class="fb-expl">'+expl+'</div>':'')+
+    '<div class="fb-actions">'+(ok?'':'<button class="btn btn-ghost btn-sm" data-rt>'+T("tryAgain")+'</button>')+'<button class="btn btn-primary btn-sm" data-nx>Weiter →</button></div></div>';
+   fb.querySelector("[data-rt]")?.addEventListener("click",()=>{fb.innerHTML="";mark._f=true;const inp=box.querySelector(".ex-input");if(inp){inp.value="";inp.focus();}});
+   fb.querySelector("[data-nx]").addEventListener("click",()=>{i++;q();}); }
+  function chk(o,correct,expl,dsp){ const sel=box.querySelector(".opt.sel"); if(!sel)return; const v=Number(sel.dataset.o); const ok=v===correct;
+   box.querySelectorAll(".opt").forEach((op,j)=>{op.style.pointerEvents="none"; if(j===correct)op.classList.add("correct"); if(j===v&&!ok)op.classList.add("wrong");});
+   mark(ok,dsp(v),expl,dsp(v)); } };
+ q();
+}
+
+const _pill=document.getElementById("lvlPill");
+if(_pill){ _pill.textContent=(L.level||"").split(" ")[0]; }
+document.addEventListener("keydown",e=>{
+  const t=e.target&&e.target.tagName;
+  if(t==="INPUT"||t==="TEXTAREA"||t==="SELECT")return;
+  const opts=[...document.querySelectorAll(".opt")];
+  if(/^[1-4]$/.test(e.key)&&opts.length){const o=opts[Number(e.key)-1];if(o&&o.style.pointerEvents!=="none"){document.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));o.classList.add("sel");}return;}
+  if(e.key==="Enter"){const b=document.querySelector("[data-chk]");if(b&&!b.disabled)b.click();}
+});
+render();
+</script>
+</body>
+</html>

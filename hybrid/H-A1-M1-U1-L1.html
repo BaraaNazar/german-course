@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hybrid · H-A1-M1-U1-L1 · Guten Tag!</title>
+<link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="row">
+    <div class="crumb">⚡ Hybrid · <b>H-A1-M1-U1-L1</b> · Guten Tag! – Sich vorstellen</div>
+    <div class="row"><span class="stepcount" id="stepcount"></span>
+    <a class="btn btn-ghost btn-sm" href="../index.html" style="text-decoration:none">📚 Index</a>
+    <button class="btn btn-ghost btn-sm" onclick="location.reload()">Restart</button></div>
+  </div>
+  <div class="progress"><i id="pbar"></i></div>
+</div>
+
+<main id="main"></main>
+
+<script>
+"use strict";
+
+/* ---------- Audio (Browser-Sprachausgabe) ---------- */
+let deVoice = null;
+function pickVoice(){ const vs = speechSynthesis.getVoices(); deVoice = vs.find(v=>/^de/i.test(v.lang)) || null; }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+function speak(text, rate){
+  if(!("speechSynthesis" in window)){ alert("Dieser Browser unterstützt keine Sprachausgabe. Nutze Chrome, Edge oder Safari."); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "de-DE"; u.rate = rate || 0.92; if(deVoice) u.voice = deVoice;
+  speechSynthesis.speak(u);
+}
+function sayBtns(text){
+  return '<button class="speak-btn" data-say="'+esc(text)+'">🔊</button>'+
+         '<button class="speak-btn slow" data-say="'+esc(text)+'" data-rate="0.68">0.7×</button>';
+}
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-say]");
+  if(b) speak(b.dataset.say, b.dataset.rate ? parseFloat(b.dataset.rate) : undefined);
+});
+
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function norm(s){
+  return String(s||"").toLowerCase()
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss")
+    .replace(/[.,!?;:„“"'´`()\[\]]/g," ").replace(/-/g," ").replace(/\s+/g," ").trim();
+}
+function colorArt(s){ return String(s).replace(/\b(der|die|das|Der|Die|Das)\b/g, m=>'<span class="art-'+m.toLowerCase()+'">'+m+'</span>'); }
+
+/* ---------- Übungsdaten ---------- */
+const ITEMS = {
+  comp1: [
+    {t:"mcq", q:"What is the woman's name?", opts:["Anna","Ben","Lena"], a:0, expl:"Sie sagt: „Ich heiße Anna.“"},
+    {t:"mcq", q:"What is the man's name?", opts:["Ben","Anna","Tom"], a:0, expl:"Er sagt: „Ich heiße Ben.“"},
+    {t:"mcq", q:"Informell (du) oder formell (Sie)?", opts:["informell – sie sagen du","formell – sie sagen Sie"], a:0, expl:"„Hallo!“ + „Und du?“ → informell, wie unter Freunden oder jungen Leuten im Kurs."},
+    {t:"speak", q:"Speaking practice: Say out loud: „Hallo! Ich heiße [your name].“", audio:"Hallo! Ich heiße Anna.", expl:"Self-check: did „heiße“ [ˈhaɪsə] come out clearly?"}
+  ],
+  comp2: [
+    {t:"mcq", q:"What is the woman's name?", opts:["Angela Weber","Anna Weber","Pedro Weber"], a:0, expl:"„Ich heiße Angela Weber.“"},
+    {t:"mcq", q:"Informell oder formell?", opts:["formell – Guten Tag + Frau/Herr + Nachname","informell – Hallo + Vorname"], a:0, expl:"„Guten Tag, Frau Weber“ + Nachnamen → formell: Sie."}
+  ],
+  exs: [
+    {t:"fill", pre:"Du ", post:" Ben. ", hint:"(heißen)", a:["heißt"], expl:"du + heißen = du heißt. Endung -st."},
+    {t:"mcq", q:"Wie heißen ___?", opts:["du","Sie","ich"], a:1, expl:"Formell: Wie heißen Sie? (Verb-Endung -en bei Sie.)"},
+    {t:"order", words:["Wie","heißt","du"], a:"Wie heißt du?", expl:"W-Frage: W-Wort + Verb + Person. Nomen groß!"},
+    {t:"correct", q:"Ich bin heiße Tom.", a:["ich heiße tom","ich bin tom"], expl:"Zwei Verben nacheinander ist falsch – nur EIN Verb: heißen ODER sein."}
+  ],
+  listen: [
+    {t:"listen", audio:"Guten Tag! Ich heiße Pedro Silva.", q:"Höre: What is the man's name?", opts:["Pedro Silva","Angela Weber","Ben"], a:0, expl:"„Ich heiße Pedro Silva.“"},
+    {t:"listen", audio:"Hallo! Ich heiße Ben. Und du?", q:"Höre: du or Sie?", opts:["du","Sie"], a:0, expl:"„Hallo!“ + „Und du?“ → informell."}
+  ],
+  quiz: [
+    {t:"mcq", q:"Wie ___ Sie?", opts:["heiße","heißt","heißen","bin"], a:2, expl:"Sie + heißen → heißen (Endung -en)."},
+    {t:"article", word:"Tag", en:"day", art:"der", expl:"der Tag – maskulin. Merkwort: „Guten Tag!“"},
+    {t:"fill", pre:"Ich ", post:" Anna. ", hint:"(heißen)", a:["heiße"], expl:"ich + heißen = ich heiße."},
+    {t:"trans", q:"Nice to meet you!", a:["freut mich"], expl:"Freut mich! – wörtlich: „es freut mich“."},
+    {t:"mcq", q:"Plural: der Name → die ___", opts:["Namen","Name","Namens"], a:0, expl:"der Name → die Namen."},
+    {t:"correct", q:"Du bin Tom.", a:["du heißt tom","du bist tom"], expl:"du + sein = du bist. Oder: du + heißen = du heißt."}
+  ]
+};
+
+const VOCAB = [
+  {de:"hallo", en:"hello (informell)", ex:"Hallo! Ich heiße Ben.", exEn:"Hello! My name is Ben."},
+  {de:"der Tag", pl:"die Tage", en:"day · „Guten Tag!“ = hello (neutral)", ex:"Guten Tag! Ich heiße Weber.", exEn:"Hello! My name is Weber."},
+  {de:"der Morgen", pl:"die Morgen", en:"morning · „Guten Morgen!“", ex:"Guten Morgen, Frau Weber!", exEn:"Good morning, Ms Weber!"},
+  {de:"der Abend", pl:"die Abende", en:"evening · „Guten Abend!“", ex:"Guten Abend, Herr Silva!", exEn:"Good evening, Mr Silva!"},
+  {de:"heißen", en:"to be called, name is", ex:"Wie heißt du? – Ich heiße Anna.", exEn:"What is your name? – My name is Anna."},
+  {de:"der Name", pl:"die Namen", en:"name", ex:"Mein Name ist Anna.", exEn:"My name is Anna."},
+  {de:"Freut mich!", en:"Nice to meet you!", ex:"Freut mich, Ben!", exEn:"Nice to meet you, Ben!"},
+  {de:"tschüss", en:"bye (informell)", ex:"Tschüss, Ben!", exEn:"Bye, Ben!"}
+];
+
+const RECALL = [
+  {p:"Sag: hello (informell)", a:"Hallo!"},
+  {p:"Sag: good morning", a:"Guten Morgen!"},
+  {p:"Sag: Nice to meet you!", a:"Freut mich!"},
+  {p:"Sag: bye (informell)", a:"Tschüss!"},
+  {p:"der / die / das? … Name", a:"der Name (Plural: die Namen)"},
+  {p:"Wie fragst du formell nach dem Namen?", a:"Wie heißen Sie?"}
+];
+
+const FLASHCARDS = [
+  {f:"der ___  (Englisch: day)", b:"der Tag · Plural: die Tage"},
+  {f:"„Good morning!“", b:"Guten Morgen!"},
+  {f:"„Wie heißt du?“ – was bedeutet das?", b:"What is your name? (informell)"},
+  {f:"Plural: der Name", b:"die Namen"},
+  {f:"„Nice to meet you!“", b:"Freut mich!"},
+  {f:"Ich … Anna. (heißen)", b:"heiße – Ich heiße Anna."},
+  {f:"… du Tom? (sein)", b:"Bist – Bist du Tom?"},
+  {f:"„bye“ (informell)", b:"Tschüss!"}
+];
+
+const DIALOG1 = [
+  {s:"Anna", de:"Hallo!", en:"Hello!"},
+  {s:"Ben", de:"Hallo! Ich heiße Ben. Und du?", en:"Hello! My name is Ben. And you?"},
+  {s:"Anna", de:"Ich heiße Anna.", en:"My name is Anna."},
+  {s:"Ben", de:"Freut mich, Anna!", en:"Nice to meet you, Anna!"},
+  {s:"Anna", de:"Freut mich auch!", en:"Nice to meet you too!"}
+];
+const DIALOG2 = [
+  {s:"Fr. Weber", de:"Guten Tag! Ich heiße Angela Weber.", en:"Good day! My name is Angela Weber."},
+  {s:"Hr. Silva", de:"Guten Tag, Frau Weber. Ich bin Pedro Silva.", en:"Good day, Ms Weber. I am Pedro Silva."},
+  {s:"Fr. Weber", de:"Freut mich, Herr Silva!", en:"Nice to meet you, Mr Silva!"},
+  {s:"Hr. Silva", de:"Freut mich auch.", en:"Nice to meet you too."}
+];
+
+/* ---------- Lektionsschritte ---------- */
+const STEPS = [
+  {title:"Willkommen", type:"intro"},
+  {title:"Dialog 1 · informell (du)", type:"dialogue", lines:DIALOG1},
+  {title:"Verständnis: Dialog 1", type:"exercises", items:ITEMS.comp1},
+  {title:"Dialog 2 · formell (Sie)", type:"dialogue", lines:DIALOG2},
+  {title:"Verständnis: Dialog 2", type:"exercises", items:ITEMS.comp2},
+  {title:"Vocabulary (8)", type:"vocab"},
+  {title:"Grammatik: ich, du, Sie", type:"grammar"},
+  {title:"Grammar practice", type:"exercises", items:ITEMS.exs},
+  {title:"Pronunciation", type:"pron"},
+  {title:"Listening training", type:"exercises", items:ITEMS.listen},
+  {title:"Active recall", type:"recall"},
+  {title:"Speaking", type:"speak"},
+  {title:"Writing", type:"write"},
+  {title:"Quiz", type:"quiz"},
+  {title:"Results & Flashcards", type:"results"}
+];
+
+let cur = 0;
+let stepDone = true;
+let quizResults = null;
+let exsLog = [];
+
+const main = document.getElementById("main");
+
+function correctDisplay(it){
+  if(it.t==="mcq"||it.t==="listen") return it.opts[it.a];
+  if(it.t==="article") return it.art+" "+it.word;
+  if(Array.isArray(it.a)) return it.a[0];
+  return it.a;
+}
+function gradeItem(it, val){
+  if(it.t==="mcq"||it.t==="listen"||it.t==="article"){
+    if(it.t==="article") return ["der","die","das"][val]===it.art;
+    return val===it.a;
+  }
+  const target = Array.isArray(it.a)? it.a : [it.a];
+  return target.some(x=>norm(x)===norm(val));
+}
+
+/* ---------- Runner für Übungsserien ---------- */
+function runItems(container, items, opts, onDone){
+  opts = opts || {};
+  let i = 0;
+  const results = [];
+  function render(){
+    if(i>=items.length){ onDone(results); return; }
+    const it = items[i];
+    let h = '<div class="excount">Frage '+(i+1)+' / '+items.length+'</div>';
+    if(it.t==="mcq"||it.t==="listen"||it.t==="article"){
+      const optsList = it.t==="article" ? ["der","die","das"] : it.opts;
+      if(it.t==="listen") h += '<div class="row" style="margin-bottom:12px">'+sayBtns(it.audio)+' <span class="small muted">Höre zuerst – Transkript gibt es in der Erklärung.</span></div>';
+      if(it.t==="article") h += '<div class="ex-q">___ <b>'+esc(it.word)+'</b> <span class="muted">('+esc(it.en)+')</span></div>';
+      else h += '<div class="ex-q">'+esc(it.q)+'</div>';
+      h += '<div class="opt-list">'+optsList.map((o,j)=>'<button class="opt" data-opt="'+j+'"><span class="k">'+"abcde"[j]+'</span>'+esc(o)+'</button>').join("")+'</div>';
+    } else if(it.t==="fill"){
+      h += '<div class="ex-q">'+esc(it.pre)+'<span style="border-bottom:2px solid var(--ink);padding:0 14px"></span>'+esc(it.post||"")+
+           (it.hint?'<span class="hint">Hinweis: '+esc(it.hint)+'</span>':'')+'</div>'+
+           '<input class="ex-input" type="text" autocomplete="off" spellcheck="false" placeholder="Your answer …">';
+    } else if(it.t==="order"){
+      h += '<div class="ex-q">Baue den Satz: klicke die Wörter in der richtigen Reihenfolge.</div>'+
+           '<div class="chip-ans" id="ord-ans"></div><div class="chip-pool" id="ord-pool">'+
+           it.words.map((w,j)=>'<button class="chip" data-chip="'+j+'">'+esc(w)+'</button>').join("")+'</div>';
+    } else if(it.t==="correct"||it.t==="trans"){
+      h += '<div class="ex-q">'+(it.t==="correct"?"Correct the sentence: <b>"+esc(it.q)+"</b>":"Translate: <b>"+esc(it.q)+"</b>")+'</div>'+
+           '<input class="ex-input" type="text" autocomplete="off" spellcheck="false" placeholder="Write in German…">';
+    } else if(it.t==="speak"){
+      h += '<div class="ex-q">'+esc(it.q)+'</div><div class="row" style="margin:6px 0 12px">'+sayBtns(it.audio)+'</div>'+
+           '<p class="small muted">Speak it 2× aloud, then click Done (self-check).</p>';
+    }
+    if(it.t==="speak"){
+      h += '<div class="row" style="margin-top:14px"><button class="btn btn-good btn-sm" data-done>✓ Done — I said it aloud</button></div><div id="fb"></div>';
+    } else {
+      h += '<div class="row" style="margin-top:14px"><button class="btn btn-primary btn-sm" data-check>Check</button></div><div id="fb"></div>';
+    }
+    container.innerHTML = h;
+
+    container.querySelectorAll(".opt").forEach(o=>o.addEventListener("click",()=>{
+      container.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));
+      o.classList.add("sel");
+    }));
+    container.querySelectorAll(".chip").forEach(ch=>ch.addEventListener("click",()=>{
+      const ans = container.querySelector("#ord-ans");
+      if(ch.parentElement.id==="ord-pool") ans.appendChild(ch);
+      else container.querySelector("#ord-pool").appendChild(ch);
+    }));
+    const inp = container.querySelector(".ex-input");
+    if(inp){ inp.focus(); inp.addEventListener("keydown",e=>{ if(e.key==="Enter") check(); }); }
+    container.querySelector("[data-done]")?.addEventListener("click", ()=>{
+      if(!("_first" in it)){ it._first = true; results.push({it, ok:true, user:"(spoken)"}); }
+      i++; render();
+    });
+    container.querySelector("[data-check]")?.addEventListener("click", check);
+
+    function readVal(){
+      const sel = container.querySelector(".opt.sel");
+      if(it.t==="mcq"||it.t==="listen"||it.t==="article") return sel? Number(sel.dataset.opt) : null;
+      if(it.t==="order"){
+        return Array.from(container.querySelectorAll("#ord-ans .chip")).map(c=>c.textContent).join(" ");
+      }
+      return inp ? inp.value : null;
+    }
+    function displayUser(val){
+      if(it.t==="mcq"||it.t==="listen") return val===null?"—":it.opts[val];
+      if(it.t==="article") return val===null?"—":["der","die","das"][val]+" "+it.word;
+      return val;
+    }
+    function check(){
+      const val = readVal();
+      if(val===null || (typeof val==="string" && !val.trim())){ return; }
+      const ok = it.t==="speak" ? true : gradeItem(it, val);
+      if(!("_first" in it)){
+        it._first = true;
+        results.push({it, ok, user: it.t==="speak" ? "(spoken)" : displayUser(val)});
+      }
+      let fb = '<div class="feedback '+(ok?"ok":"bad")+'">';
+      fb += ok ? '<div class="fb-title">✓ Correct! Well done.</div>'
+               : '<div class="fb-title">✗ Not quite.</div><div class="fb-correct">Correct: <u>'+esc(correctDisplay(it))+'</u></div>'+
+                 '<div class="fb-expl">You: <i>'+esc(String(displayUser(val)))+'</i></div>';
+      if(it.expl) fb += '<div class="fb-expl">'+esc(it.expl)+'</div>';
+      if(it.t==="listen" && !ok) fb += '<div class="fb-expl">Transkript: „'+esc(it.audio)+'“</div>';
+      fb += '<div class="fb-actions">';
+      if(!ok) fb += '<button class="btn btn-ghost btn-sm" data-retry>Try again</button>';
+      fb += '<button class="btn btn-primary btn-sm" data-next>Next →</button></div></div>';
+      const fbEl = container.querySelector("#fb");
+      fbEl.innerHTML = fb;
+      container.querySelectorAll(".opt").forEach((o,j)=>{
+        o.style.pointerEvents="none";
+        const isRight = it.t==="article" ? ["der","die","das"][j]===it.art : j===it.a;
+        if((it.t==="mcq"||it.t==="listen"||it.t==="article") && isRight) o.classList.add("correct");
+        if(o.classList.contains("sel") && !isRight && (it.t==="mcq"||it.t==="listen"||it.t==="article")) o.classList.add("wrong");
+      });
+      const retry = fbEl.querySelector("[data-retry]");
+      if(retry) retry.addEventListener("click", ()=>{
+        const input = container.querySelector(".ex-input");
+        if(input){ input.value=""; input.focus(); }
+        container.querySelectorAll(".opt").forEach(o=>{o.classList.remove("sel","wrong","correct");o.style.pointerEvents="";});
+        fbEl.innerHTML="";
+      });
+      fbEl.querySelector("[data-next]").addEventListener("click", ()=>{ i++; render(); });
+    }
+  }
+  render();
+}
+
+/* ---------- Schritt-Renderer ---------- */
+function renderStep(){
+  const st = STEPS[cur];
+  stepDone = !(st.type==="exercises" || st.type==="quiz" || st.type==="vocab");
+  document.getElementById("stepcount").textContent = "Schritt "+(cur+1)+" / "+STEPS.length;
+  document.getElementById("pbar").style.width = Math.round(cur/(STEPS.length-1)*100)+"%";
+
+  let h = '<div class="steptitle">'+esc(st.title)+'</div>';
+  main.innerHTML = '<div id="stephost"></div><div class="nav-btns">'+
+    (cur>0 ? '<button class="btn btn-ghost" id="btn-back">← Back</button>' : "<span></span>")+
+    '<button class="btn btn-primary" id="btn-next" '+(stepDone?"":"disabled")+'>Next →</button></div>';
+  const host = document.getElementById("stephost");
+  if(cur>0) document.getElementById("btn-back").onclick = ()=>{ cur--; renderStep(); window.scrollTo(0,0); };
+  document.getElementById("btn-next").onclick = nextStep;
+
+  if(st.type==="intro"){
+    host.innerHTML = h +
+      '<div class="card"><h1>Guten Tag! – Sich vorstellen</h1>'+
+      '<p class="muted">A1 · Modul 1 · Unit 1 · Lektion 1 · ca. 25 Minuten</p>'+
+      '<div class="pron-tip"><b>Learning goals:</b><ul style="margin:6px 0 0;padding-left:20px">'+
+      '<li>Leute begrüßen und dich vorstellen</li><li>Nach dem Namen fragen – mit <b>du</b> und <b>Sie</b></li>'+
+      '<li><b>ich / du / Sie</b> mit <i>heißen</i> und <i>sein</i> verwenden</li></ul></div>'+
+      '<p class="small muted">🔊 Audioknöpfe nutzen die Sprachausgabe deines Browsers (am besten Chrome/Edge/Safari). Bei Eingaben darfst du ae/oe/ue statt ä/ö/ü schreiben.</p></div>';
+  }
+  else if(st.type==="dialogue"){
+    let d = h + '<div class="card"><div class="row" style="margin-bottom:8px">'+
+      '<button class="btn btn-primary btn-sm" id="playall">▶ Ganzen Dialog spielen</button>'+
+      '<button class="btn btn-ghost btn-sm" id="reveal">Show translations</button></div>';
+    st.lines.forEach((l,i2)=>{
+      d += '<div class="dlg-line'+(i2%2?" other":"")+'"><div class="who">'+esc(l.s)+'</div>'+
+        '<div class="dlg-bubble"><div class="dlg-de">'+esc(l.de)+' '+sayBtns(l.de)+'</div><div class="dlg-en" style="display:none">'+esc(l.en)+'</div></div></div>';
+    });
+    d += '</div>';
+    host.innerHTML = d;
+    document.getElementById("playall").onclick = ()=>{
+      if(!("speechSynthesis" in window)) return;
+      speechSynthesis.cancel();
+      st.lines.forEach(l=>{
+        const u = new SpeechSynthesisUtterance(l.de);
+        u.lang="de-DE"; u.rate=0.85; if(deVoice) u.voice=deVoice;
+        speechSynthesis.speak(u);
+      });
+    };
+    document.getElementById("reveal").onclick = e=>{
+      host.querySelectorAll(".dlg-en").forEach(x=>x.style.display="block");
+      e.target.disabled = true;
+    };
+  }
+  else if(st.type==="exercises"){
+    host.innerHTML = h + '<div class="card"><div id="runner"></div></div>';
+    const done = (results)=>{
+      exsLog.push(...results);
+      stepDone = true; enableNext();
+      const ok = results.filter(r=>r.ok).length;
+      document.getElementById("runner").innerHTML += '<p class="center" style="margin-top:10px"><b>'+ok+' / '+results.length+' richtig</b> beim ersten Versuch. ✓ Weiter.</p>';
+    };
+    runItems(document.getElementById("runner"), st.items, {}, done);
+  }
+  else if(st.type==="vocab"){
+    let vi = 0;
+    const states = VOCAB.map(()=>({revealed:false}));
+    function renderVoc(){
+      if(vi>=VOCAB.length){
+        host.innerHTML = h + '<div class="card center" style="padding:36px"><div style="font-size:32px">✓</div><b>All 8 Vocabulary done.</b><p class="muted small">Am Ende der Lektion kommen sie als Flashcards wieder.</p></div>';
+        stepDone = true; enableNext(); return;
+      }
+      const v = VOCAB[vi], s2 = states[vi];
+      let inner = '<div class="voc-de">'+colorArt(esc(v.de))+(v.pl?'<span class="pl">Plural: '+colorArt(esc(v.pl))+'</span>':'')+'</div>'+
+        '<div style="margin:10px 0">'+sayBtns(v.de)+'</div>';
+      if(s2.revealed){
+        inner += '<div class="voc-en">'+esc(v.en)+'</div>'+
+          '<div class="voc-ex"><div class="de">'+esc(v.ex)+' '+sayBtns(v.ex)+'</div><div class="en">'+esc(v.exEn)+'</div></div>'+
+          '<div class="row" style="margin-top:16px"><button class="btn btn-ghost btn-sm" data-hard>⚠ Hard — remember</button><button class="btn btn-good btn-sm" data-ok>✓ Got it — next</button></div>';
+      } else {
+        inner += '<button class="btn btn-ghost" data-reveal>Show meaning</button>';
+      }
+      host.innerHTML = h + '<div class="card"><div class="voc-card">'+inner+'</div>'+
+        '<div class="voc-dots">'+VOCAB.map((_,j)=>'<i class="'+(j<vi?"done":j===vi?"on":"")+'"></i>').join("")+'</div>'+
+        '<div class="center small muted">'+(vi+1)+' / '+VOCAB.length+'</div></div>';
+      const rv = host.querySelector("[data-reveal]");
+      if(rv) rv.onclick = ()=>{ states[vi].revealed=true; renderVoc(); };
+      const ok = host.querySelector("[data-ok]"); if(ok) ok.onclick = ()=>{ vi++; renderVoc(); };
+      const hd = host.querySelector("[data-hard]"); if(hd) hd.onclick = ()=>{ vi++; renderVoc(); };
+    }
+    renderVoc();
+  }
+  else if(st.type==="grammar"){
+    host.innerHTML = h + '<div class="card"><h2>ich, du, Sie – heißen & sein</h2>'+
+      '<div class="pron-tip"><b>Was bedeutet das?</b> Verben ändern ihre Endung je nach Person. Für „you“ gibt es zwei wichtige Formen: <b>du</b> (informell: Freunde, Familie, Jugendliche) und <b>Sie</b> (formell: Erwachsene, die man nicht kennt, Arbeit, Geschäfte). <b>Sie</b> schreibt man immer groß.<br><span class="small muted"><b>English:</b> Verb endings change by person. For “you”: <b>du</b> = informal (friends, family, young people) · <b>Sie</b> = formal (strangers, work, officials) — always capitalized.</span></div>'+
+      '<table class="gram-tbl"><tr><th></th><th>heißen</th><th>sein</th></tr>'+
+      '<tr><td>ich</td><td>heiße</td><td>bin</td></tr>'+
+      '<tr><td>du</td><td>heißt</td><td>bist</td></tr>'+
+      '<tr><td>Sie</td><td>heißen</td><td>sind</td></tr></table>'+
+      '<h3>Examples</h3>'+
+      '<div class="ex-line">'+sayBtns("Ich heiße Anna. Ich bin Anna.")+'<div><div class="de">Ich heiße Anna. / Ich bin Anna.</div><div class="en">Beides natürlich für den Namen – heißen etwas präziser, Ich bin… alltäglicher.</div></div></div>'+
+      '<div class="ex-line">'+sayBtns("Du heißt Ben, oder?")+'<div><div class="de">Du heißt Ben, oder?</div><div class="en">You are called Ben, right?</div></div></div>'+
+      '<div class="ex-line">'+sayBtns("Wie heißen Sie?")+'<div><div class="de">Wie heißen Sie?</div><div class="en">What is your name? (formell)</div></div></div>'+
+      '<h3>Common mistakes</h3>'+
+      '<div class="mistake-box"><span class="wrong">Ich bin heiße Anna.</span> → <span class="right">Ich heiße Anna. / Ich bin Anna.</span><div class="small">Nur ein Verb! heißen ODER sein – nicht beide.</div></div>'+
+      '<div class="mistake-box"><span class="wrong">Wie bist du?</span> → <span class="right">Wie heißt du?</span><div class="small">„Wie bist du?“ fragt nach der Art, nicht nach dem Namen.</div></div>'+
+      '<div class="mistake-box"><span class="wrong">Wie heißt Sie?</span> → <span class="right">Wie heißen Sie?</span><div class="small">Mit Sie bekommt das Verb die Endung -en.</div></div>'+
+      '<div class="mermaid-box"><div class="cap">Entscheidungsbaum: du or Sie?</div><pre class="mermaid">\nflowchart TD\n    A[Du triffst eine Person] --> B{Freund, Familie, Kind\noder Klassenkamerad?}\n    B -- Ja --> C[du: „Hallo! Wie heißt du?“]\n    B -- Nein --> D{Arbeit, Amt,\nunbekannt, offiziell?}\n    D -- Ja --> E[Sie: „Guten Tag! Wie heißen Sie?“]\n    D -- Unsicher --> F[Sie wählen — immer sicher]\n    C --> G[„Freut mich!“]\n    E --> G\n    F --> E\n      </pre></div>'+
+      '<div class="mermaid-box"><div class="cap">Deine Reise — du bist hier</div><pre class="mermaid">\nflowchart LR\n    N1["A1 · Start"] --> N2["A2"] --> N3["B1"] --> N4["B2"] --> N5["C1"] --> N6["C2 · Ziel"]\n    style N1 fill:#f5b301,stroke:#b98700,color:#1a1a1a,stroke-width:3px\n      </pre></div>'+
+      '<p class="small">📚 All A1-Grammatikthemen mit Examplesn &amp; Diagrammen: <a href="../reference/grammar-a1.html">A1-Grammatik-Referenz</a></p></div>';
+  }
+  else if(st.type==="pron"){
+    host.innerHTML = h + '<div class="card"><h2>Pronunciation</h2>'+
+      '<div class="pron-tip"><b>1 · Der ich-Laut [ɪç]</b> – in <b>ich, nicht, mich</b>: <b>kurzes</b> [ɪ] (wie der Vokal in englisch <i>hit</i>), dann ein weiches hauchiges [ç] (Zunge vor, wie Dampf auf Glas). <b>Nicht</b> wie englisch „itch“.</div>'+
+      '<div class="pron-tip"><b>2 · Auslautverhärtung</b> – am Silbenende klingen b/d/g wie p/t/k: <b>Tag</b> = [tʰaːk] („Taak“), <b>und</b> = [ʊnt] („unt“).</div>'+
+      '<p><b>Drills – hören & 3× aloud:</b></p>'+
+      ["ich","ich heiße Anna","nicht","Guten Tag!","Wie heißt du?","Wie heißen Sie?"].map(d=>'<div class="drill-line">'+sayBtns(d)+'<div class="txt">'+esc(d)+'</div></div>').join("")+
+      '<div class="row" style="margin-top:12px"><span class="small"><b>Selbstbewertung [ɪç]:</b></span><button class="btn btn-good btn-sm" onclick="this.textContent=\'✓ notiert\'">Good</button><button class="btn btn-ghost btn-sm" onclick="this.textContent=\'→ mehr Drills im Review\'">Needs practice</button></div></div>';
+  }
+  else if(st.type==="recall"){
+    host.innerHTML = h + '<div class="card"><p class="muted small">Say the answer <b>aloud</b> before revealing!</p>'+
+      RECALL.map(r=>'<div class="recall-item"><div class="p">'+esc(r.p)+'</div><div class="a">'+esc(r.a)+'</div></div>').join("")+
+      '<p class="small muted">Karte antippen zum Aufdecken.</p></div>';
+    host.querySelectorAll(".recall-item").forEach(el=>el.addEventListener("click",()=>el.classList.add("revealed")));
+  }
+  else if(st.type==="speak"){
+    host.innerHTML = h + '<div class="card"><h2>Speaking</h2>'+
+      '<div class="pron-tip" style="font-size:15.5px"><b>Rollenspiel:</b> Begrüße eine Person informell (du), sag deinen Namen und frag nach dem Namen. Dann formell (Sie).</div>'+
+      '<div class="ex-line">'+sayBtns("Hallo! Ich heiße Anna. Und du?")+'<div><div class="de">Hallo! Ich heiße Anna. Und du?</div><div class="en">Modell (informell)</div></div></div>'+
+      '<div class="ex-line">'+sayBtns("Guten Tag! Ich heiße Ben Kassem. Wie heißen Sie?")+'<div><div class="de">Guten Tag! Ich heiße Ben Kassem. Wie heißen Sie?</div><div class="en">Modell (formell)</div></div></div>'+
+      '<div class="ex-line">'+sayBtns("Freut mich!")+'<div><div class="de">Freut mich!</div><div class="en">Reaktion auf die Antwort</div></div></div>'+
+      '<p class="small muted">Speak both versions 2× each. Tip: record yourself on your phone and compare.</p></div>';
+  }
+  else if(st.type==="write"){
+    host.innerHTML = h + '<div class="card"><h2>Writing</h2>'+
+      '<div class="pron-tip">Dein Steckbrief: schreibe <b>2 Sätze</b> – einmal informell, einmal formell.</div>'+
+      '<div class="ex-line"><div><div class="de">Hallo! Ich heiße …</div><div class="en">informell</div></div></div>'+
+      '<div class="ex-line"><div><div class="de">Guten Tag! Ich bin …</div><div class="en">formell</div></div></div>'+
+      '<textarea class="write-area" id="wa" placeholder="Schreibe hier …"></textarea>'+
+      '<div class="row spread" style="margin-top:8px"><span class="small muted" id="wc">0 Wörter</span><button class="btn btn-ghost btn-sm" id="wmodel">Done – show model</button></div>'+
+      '<div id="wbox" class="model-box" style="display:none"><b>Model:</b><div style="margin-top:6px">Hallo! Ich heiße Baraa. · Guten Tag! Ich bin Baraa Kassem.</div>'+
+      '<ul class="check-list"><li>Verb richtig? (heiße / bin)</li><li>Satz beginnt mit Großbuchstabe</li><li>Nomen groß geschrieben?</li></ul></div></div>';
+    const wa = document.getElementById("wa");
+    wa.addEventListener("input",()=>{ document.getElementById("wc").textContent=(wa.value.trim().match(/\S+/g)||[]).length+" Wörter"; });
+    document.getElementById("wmodel").onclick=()=>{ document.getElementById("wbox").style.display="block"; };
+  }
+  else if(st.type==="quiz"){
+    host.innerHTML = h + '<div class="card"><h2>Lektions-Quiz</h2><p class="small muted">6 Fragen – nur der erste Versuch zählt. Besteh ab 4/6.</p><div id="quiz"></div></div>';
+    runItems(document.getElementById("quiz"), ITEMS.quiz, {}, (results)=>{
+      quizResults = results;
+      const ok = results.filter(r=>r.ok).length;
+      document.getElementById("quiz").innerHTML += '<p class="center" style="margin-top:12px"><b>Quiz: '+ok+' / '+results.length+'</b>'+(ok>=4?" – passed ✓":" – review recommended")+'</p>';
+      stepDone = true; enableNext();
+    });
+  }
+  else if(st.type==="results"){
+    const all = exsLog.concat(quizResults||[]);
+    const tot = all.length, cor = all.filter(r=>r.ok).length;
+    const pct = tot? Math.round(cor/tot*100):0;
+    const stars = pct>=90?"★★★":pct>=75?"★★☆":pct>=60?"★☆☆":"☆☆☆";
+    const wrongs = all.filter(r=>!r.ok);
+    let r = h + '<div class="card results-hero"><div class="stars">'+stars+'</div><div class="results-score">'+pct+'%</div>'+
+      '<div class="muted">'+cor+' von '+tot+' Aufgaben correct (first try)</div></div>';
+    if(wrongs.length){
+      r += '<div class="card"><h3>Zur Kontrolle – deine Fehler</h3>'+wrongs.map(w=>'<div class="res-item bad"><span><b>✗</b></span><div>'+esc(w.it.q||w.it.pre||"")+
+        '<div class="small">Richtig: <b>'+esc(correctDisplay(w.it))+'</b>'+(w.it.expl?' – '+esc(w.it.expl):"")+'</div></div></div>').join("")+'</div>';
+    }
+    r += '<div class="card"><h3>Flashcards – Card-Flip-Training</h3><div class="flashcard" id="fc"><div class="fc-inner">'+
+      '<div class="fc-face"><div class="fc-label">Frage</div><div class="fc-text" id="fcf"></div></div>'+
+      '<div class="fc-face back"><div class="fc-label">Antwort</div><div class="fc-text" id="fcb"></div></div></div></div>'+
+      '<div class="fc-hintbar">Karte anklicken zum Umdrehen · Leertaste geht auch</div>'+
+      '<div class="row" style="justify-content:center;margin-top:14px"><button class="btn btn-ghost btn-sm" id="fcno">Nochmal (kommt bald wieder)</button><button class="btn btn-good btn-sm" id="fcyes">Gewusst (nächste Karte)</button></div>'+
+      '<p class="center small muted" id="fcnum"></p></div>';
+    r += '<div class="card"><h3>Review plan (Raumwiederholung)</h3>'+
+      '<div class="schedule">Die 8 Vocabulary dieser Lektion kehren zurück: <b>heute ✓ → +1 Tag → +3 Tage → +7 → +14 → +30</b>. Schwere Karten häufiger.</div>'+
+      '<h3>Externe Praxis (optional, 15 Min)</h3>'+
+      '<div class="pron-tip"><b>DW · Nicos Weg (A1)</b> – Thema: <b>„Begrüßen & Sich vorstellen“</b>: schau die ersten Folgen und mache die interaktiven Übungen dazu. <span class="muted">(dw.com → Nicos Weg A1 → Lektionsthema suchen)</span></div>'+
+      '<h3>Next step</h3><p class="small muted">A1-M1-U1-<b>L2 · „Das Alphabet – Wie schreibt man das?“</b> – dann L3 (Zahlen 0–12 & Telefonnummern).</p></div>';
+    r += '<div class="foot-note">📚 <b>Primärquelle (empfohlen, ~15 Min):</b> <a href="https://learngerman.dw.com/en/" target="_blank">DW · Nicos Weg A1</a> – Thema „Begrüßen &amp; Sich vorstellen“, interaktive Übungen.<br>📋 Sag im Chat <b>„weiter“</b>, wenn du ≥ 4/6 erreicht hast – dann kommt H-A1-M1-U1-L2. <b>Unit complete! (L8)?</b> Come to the chat für deine unit exam.<br>❓ Etwas unklar? Ask your teacher jederzeit im Chat – Fragen sind Teil des Unterrichts.</div>';
+    host.innerHTML = r;
+
+    let fi = 0;
+    const show = ()=>{
+      document.getElementById("fcf").textContent = FLASHCARDS[fi].f;
+      document.getElementById("fcb").textContent = FLASHCARDS[fi].b;
+      document.getElementById("fcnum").textContent = "Karte "+(fi+1)+" / "+FLASHCARDS.length;
+      document.getElementById("fc").classList.remove("flipped");
+    };
+    show();
+    document.getElementById("fc").addEventListener("click",()=>document.getElementById("fc").classList.toggle("flipped"));
+    document.addEventListener("keydown", spaceFlip);
+    function spaceFlip(e){ if(e.key===" "){ const fc=document.getElementById("fc"); if(fc) fc.classList.toggle("flipped"); e.preventDefault(); } }
+    document.getElementById("fcyes").onclick = ()=>{ fi=(fi+1)%FLASHCARDS.length; show(); };
+    document.getElementById("fcno").onclick = ()=>{
+      const card = FLASHCARDS[fi];
+      FLASHCARDS.push(FLASHCARDS.splice(fi,1)[0]);
+      fi = Math.min(fi, FLASHCARDS.length-1);
+      show();
+      toast("„"+card.f.slice(0,28)+"…“ kommt gleich nochmal.");
+    };
+  }
+}
+
+function toast(msg){
+  let t = document.getElementById("toast");
+  if(!t){ t = document.createElement("div"); t.id="toast"; document.body.appendChild(t);
+    t.style.cssText="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#191c27;color:#fff;padding:10px 18px;border-radius:12px;font-size:14px;opacity:0;transition:opacity .25s;z-index:99;max-width:90vw"; }
+  t.textContent = msg; t.style.opacity = 1;
+  clearTimeout(t._to); t._to = setTimeout(()=>{ t.style.opacity = 0; }, 2200);
+}
+
+function enableNext(){ const b = document.getElementById("btn-next"); if(b) b.disabled = false; }
+
+function nextStep(){
+  if(!stepDone){ toast("Bitte schließe zuerst die Task ab."); return; }
+  if(cur < STEPS.length-1){ cur++; renderStep(); window.scrollTo(0,0); }
+}
+
+renderStep();
+</script>
+</body>
+</html>

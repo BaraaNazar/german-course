@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vocab Trainer · 3000+ German Words</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+.v-main{max-width:680px;margin:0 auto;padding:20px 16px 80px}
+.v-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:20px}
+.v-tab{flex:1;padding:12px 8px;text-align:center;font-weight:800;font-size:13px;cursor:pointer;
+  border:none;background:none;color:var(--muted);border-bottom:3px solid transparent;transition:all .18s}
+.v-tab:hover{color:var(--ink)}
+.v-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.v-tab .n{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+.v-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.v-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
+.v-stat .num{font-size:22px;font-weight:900;color:var(--primary)}
+.v-stat .lbl{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.v-deck{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface);
+  border:1px solid var(--border);border-radius:12px;margin:8px 0;cursor:pointer;transition:all .15s}
+.v-deck:hover{border-color:var(--primary);background:var(--primary-soft)}
+.v-deck .dn{width:32px;height:32px;border-radius:9px;background:var(--flag-black);color:var(--gold);
+  display:flex;align-items:center;justify-content:center;font:800 13px ui-monospace,Menlo,monospace;flex:0 0 32px}
+.v-deck .dt{flex:1}
+.v-deck .dt b{font-size:14px}
+.v-deck .dt span{display:block;font-size:11.5px;color:var(--muted)}
+.v-deck .dp{font-size:11px;font-weight:800;color:var(--good)}
+.v-bar{height:6px;background:var(--surface-3);border-radius:99px;overflow:hidden;margin-top:4px}
+.v-bar i{display:block;height:100%;background:var(--good);border-radius:99px}
+.v-milestone{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin:6px 0;font-size:14px}
+.v-milestone.locked{background:var(--surface-2);color:var(--muted)}
+.v-milestone.unlocked{background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border)}
+.v-milestone.current{background:var(--primary-soft);border:1px solid #f2c6ce}
+.v-milestone .mi{font-size:20px}
+/* flashcard */
+.v-fc{perspective:1000px;height:280px;cursor:pointer;margin:16px 0}
+.v-fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s}
+.v-fc.flipped .v-fc-inner{transform:rotateY(180deg)}
+.v-fc-face{position:absolute;inset:0;backface-visibility:hidden;background:var(--surface);
+  border:2px solid var(--border);border-radius:20px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;text-align:center;box-shadow:var(--shadow-2)}
+.v-fc-back{transform:rotateY(180deg);background:var(--good-bg);border-color:#b3e3c9}
+.v-fc-de{font-size:clamp(26px,6vw,36px);font-weight:900}
+.v-fc-en{font-size:clamp(18px,4vw,22px);color:var(--muted);margin-top:10px}
+.v-fc-ex{font-size:14px;color:var(--muted);margin-top:16px;padding:10px 16px;background:var(--surface-2);border-radius:10px;max-width:480px}
+.v-fc-pl{font-size:13px;color:var(--gold-ink);margin-top:6px;font-weight:700}
+.v-grades{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+/* quiz */
+.v-q{font-size:18px;font-weight:800;text-align:center;margin:20px 0}
+.v-opts{display:flex;flex-direction:column;gap:10px}
+/* ===== Story Reader ===== */
+.v-story-head{display:flex;align-items:center;gap:14px;margin:16px 0 12px;flex-wrap:wrap}
+.v-story-head .lvl{background:var(--flag-black);color:var(--gold);border-radius:9px;padding:4px 12px;font:800 11px ui-monospace,Menlo,monospace}
+.v-story-head h2{margin:0;font-size:22px;flex:1}
+.v-story-head .meta{font-size:12px;color:var(--muted);font-weight:600}
+.v-story{font-family:Georgia,'Noto Serif',serif;font-size:17.5px;line-height:1.85;padding:24px 28px;
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;margin:12px 0;
+  box-shadow:var(--shadow-1);position:relative;overflow:hidden}
+.v-story::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,var(--flag-black) 0 33%,var(--flag-red) 33% 66%,var(--flag-gold) 66% 100%)}
+.v-story p{margin:0 0 18px;text-indent:0;line-height:1.85;color:var(--ink)}
+.v-story p:first-child::first-letter{font-size:52px;font-weight:700;float:left;line-height:.85;
+  margin:6px 10px 0 0;color:var(--primary)}
+.v-story p:last-child{margin-bottom:0}
+.v-story .dialogue{color:var(--primary);font-weight:600}
+.v-story .hl{color:var(--primary);font-weight:700;cursor:pointer;text-decoration:none;
+  border-bottom:2px solid rgba(221,0,0,.25);transition:all .15s;padding:0 1px;border-radius:2px}
+.v-story .hl:hover{background:var(--primary-soft);border-bottom-color:var(--primary)}
+.v-story .hl.known{color:var(--good);border-bottom-color:rgba(21,136,75,.3)}
+.v-story .hl.known:hover{background:var(--good-bg);border-bottom-color:var(--good)}
+.v-story-actions{display:flex;justify-content:center;gap:12px;margin:20px 0;flex-wrap:wrap}
+.v-read-time{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);
+  background:var(--surface-2);border:1px solid var(--border);border-radius:99px;padding:4px 12px}
+@media(max-width:600px){.v-story{padding:18px 16px;font-size:16px}.v-story p:first-child::first-letter{font-size:42px}}
+@media(max-width:600px){.v-stats{grid-template-columns:repeat(2,1fr)}.v-grades{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="row">
+    <span class="lv-pill" style="background:var(--flag-black);color:var(--gold)">V</span>
+    <div class="crumb"><b>Vocab Trainer</b> · 3000+ essential words</div>
+    <div class="row"><a class="btn btn-ghost btn-sm" href="../index.html">🏛️ Hub</a></div>
+  </div>
+</div>
+<main class="v-main" id="app"></main>
+
+<script src="data.js"></script>
+<script src="stories.js"></script>
+<script>
+"use strict";
+// ===== State =====
+const S = JSON.parse(localStorage.getItem("vocab_v1") || '{"known":[],"scores":[],"deckProgress":{},"milestones":[]}');
+function save(){ localStorage.setItem("vocab_v1", JSON.stringify(S)); }
+
+// ===== Deck logic =====
+const CAT_NAMES = {1:"People",2:"Food",3:"Home",4:"Health",5:"City",6:"Time",7:"Verbs",8:"Clothing",9:"Weather",10:"Work",11:"Travel",12:"Feelings",13:"School",14:"Sports",15:"Animals",16:"Tech",17:"Money",18:"Comm",19:"Adj/Prep",20:"B1 Verbs",21:"Abstract",22:"Countries",23:"Movement",24:"Veg/Fruit",25:"B1 Comm",26:"Adverbs",27:"Business",28:"Health B1",29:"Environment",30:"Politics",31:"Art",32:"Adv Verbs",33:"Admin",34:"Emotions B1",35:"Science",36:"Law",37:"Cooking",38:"Fitness",39:"Travel Ext",40:"Daily Life",41:"Economics",42:"Medicine B1",43:"Psychology",44:"Media",45:"Education",46:"Housing",47:"Geography",48:"Grammar",49:"C1 Verbs",50:"C1 Adj",51:"Idioms",52:"FVG",53:"Connectors",54:"Style",55:"Change V",56:"Eval Adj",57:"Objects",58:"C1 Abstract",59:"ver- Verbs",60:"ent/er/be-",61:"Register",62:"Collocations",63:"B2 Verbs",64:"B2 Adj",65:"Institutions",66:"Productivity",67:"Conflict",68:"Digital Life",69:"Math/Formulas",70:"Culture/Travel",71:"Misc B2"};
+const DECK_SIZE = 50;
+function deckOf(i){ return Math.floor(i/DECK_SIZE)+1; }
+function deckWords(d){ return WORDS.filter((_,i)=>deckOf(i)===d); }
+function deckKnown(d){ return deckWords(d).filter(w=>S.known.includes(w[0])).length; }
+function totalKnown(){ return S.known.length; }
+function totalWords(){ return WORDS.length; }
+
+// ===== Milestones =====
+const MILESTONES = [
+  {n:50,  name:"First Words",     icon:"🌱", desc:"Learn your first 50 words"},
+  {n:100, name:"Getting Started", icon:"📗", desc:"100 words — basic survival"},
+  {n:250, name:"Foundation",      icon:"📘", desc:"250 words — everyday topics"},
+  {n:500, name:"Conversational",  icon:"📙", desc:"500 words — hold a simple conversation"},
+  {n:1000,name:"Intermediate",    icon:"📕", desc:"1000 words — express opinions"},
+  {n:2000,name:"Advanced",        icon:"🎓", desc:"2000 words — read news, discuss topics"},
+  {n:3000,name:"Master",          icon:"👑", desc:"3000 words — near-fluent vocabulary"}
+];
+function milestoneStatus(){
+  const known = totalKnown();
+  return MILESTONES.map(m=>({...m, status: known >= m.n ? "unlocked" : "current", progress: Math.min(100, Math.round(known/m.n*100))}));
+}
+
+// ===== Views =====
+const app = document.getElementById("app");
+let view = "home";
+let currentDeck = 1;
+let fcIndex = 0;
+let fcFlipped = false;
+let quizData = [];
+let quizIndex = 0;
+let quizScore = 0;
+let currentStory = null;
+
+function nav(v){ view = v; render(); window.scrollTo(0,0); }
+
+function render(){
+  try{
+    const views = {home:vHome, flash:vFlash, quiz:vQuiz, story:vStory};
+    app.innerHTML = `
+      <div class="v-tabs">
+        <button class="v-tab ${view==='home'?'active':''}" onclick="nav('home')">Home<span class="n">${totalKnown()}/${totalWords()}</span></button>
+        <button class="v-tab ${view==='flash'?'active':''}" onclick="nav('flash')">Flashcards<span class="n">SRS</span></button>
+        <button class="v-tab ${view==='quiz'?'active':''}" onclick="nav('quiz')">Quiz<span class="n">MCQ</span></button>
+        <button class="v-tab ${view==='story'?'active':''}" onclick="nav('story')">Stories<span class="n">${STORIES.length}</span></button>
+      </div>
+      <div id="content"></div>`;
+    views[view]();
+  }catch(err){
+    app.innerHTML = `<div class="card center" style="padding:40px">
+      <h3>⚠️ Something went wrong</h3>
+      <p class="muted small">${err.message}</p>
+      <button class="btn btn-ghost" onclick="location.reload()">Reload</button></div>`;
+    console.error(err);
+  }
+}
+
+// ===== HOME =====
+function vHome(){
+  const c = document.getElementById("content");
+  const known = totalKnown(), total = totalWords();
+  const pct = total ? Math.round(known/total*100) : 0;
+  const numDecks = Math.ceil(total/DECK_SIZE);
+
+  let h = `<div class="v-stats">
+    <div class="v-stat"><div class="num">${known}</div><div class="lbl">Known</div></div>
+    <div class="v-stat"><div class="num">${total-known}</div><div class="lbl">To Learn</div></div>
+    <div class="v-stat"><div class="num">${pct}%</div><div class="lbl">Progress</div></div>
+    <div class="v-stat"><div class="num">${S.scores.length}</div><div class="lbl">Quizzes</div></div>
+  </div>`;
+
+  // Milestones
+  h += `<div class="card"><h3>🏅 Milestones</h3>`;
+  milestoneStatus().forEach(m=>{
+    h += `<div class="v-milestone ${m.status}">
+      <span class="mi">${m.icon}</span>
+      <div style="flex:1"><b>${m.name}</b> — ${m.desc}
+        ${m.status==='current' ? `<div class="v-bar"><i style="width:${m.progress}%"></i></div>` : ''}
+      </div>
+      ${m.status==='unlocked' ? '<span style="color:var(--good);font-weight:900">✓</span>' : `<span class="small muted">${m.n} words</span>`}
+    </div>`;
+  });
+  h += `</div>`;
+
+  // Decks
+  h += `<div class="card"><h3>📚 Decks</h3>`;
+  for(let d=1; d<=numDecks; d++){
+    const words = deckWords(d);
+    if(!words.length) continue;
+    const k = deckKnown(d);
+    const p = words.length ? Math.round(k/words.length*100) : 0;
+    const cats = [...new Set(words.map(w=>w[5]))].join(", ");
+    h += `<div class="v-deck" onclick="startFlash(${d})">
+      <div class="dn">${d}</div>
+      <div class="dt"><b>${CAT_NAMES[d] || cats}</b><span>${words.length} words · ${cats}</span>
+        <div class="v-bar"><i style="width:${p}%"></i></div>
+      </div>
+      <span class="dp">${k}/${words.length}</span>
+    </div>`;
+  }
+  h += `</div>`;
+
+  c.innerHTML = h;
+}
+
+// ===== FLASHCARDS =====
+function startFlash(deck){
+  currentDeck = deck;
+  fcIndex = 0;
+  fcFlipped = false;
+  nav("flash");
+}
+
+function vFlash(){
+  const c = document.getElementById("content");
+  const words = deckWords(currentDeck);
+  if(!words.length){ c.innerHTML = "<p>No words in this deck.</p>"; return; }
+  if(fcIndex >= words.length){
+    // Deck complete
+    c.innerHTML = `<div class="card center" style="padding:40px">
+      <div style="font-size:48px">🎉</div>
+      <h2>Deck ${currentDeck} Complete!</h2>
+      <p class="muted">You reviewed all ${words.length} words.</p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-primary" onclick="startFlash(${currentDeck})">↻ Restart Deck</button>
+        ${currentDeck < 7 ? `<button class="btn btn-good" onclick="startFlash(${currentDeck+1})">Next Deck →</button>` : ""}
+        <button class="btn btn-ghost" onclick="nav('quiz')">Take Quiz</button>
+      </div></div>`;
+    return;
+  }
+
+  const w = words[fcIndex];
+  const isKnown = S.known.includes(w[0]);
+
+  c.innerHTML = `
+    <div class="v-q" style="font-size:13px;color:var(--muted)">Deck ${currentDeck} · Card ${fcIndex+1}/${words.length} ${isKnown?'· ✓ known':''}</div>
+    <div class="v-fc" id="fc" onclick="flipCard()">
+      <div class="v-fc-inner">
+        <div class="v-fc-face">
+          <div class="v-fc-de">${w[0]}</div>
+          <button class="speak-btn" data-say="${w[0]}" onclick="event.stopPropagation()" style="margin-top:12px">🔊</button>
+        </div>
+        <div class="v-fc-face v-fc-back">
+          <div class="v-fc-de">${w[0]}</div>
+          <div class="v-fc-en">${w[1]}</div>
+          ${w[2] ? `<div class="v-fc-pl">Plural: ${w[2]}</div>` : ""}
+          ${w[3] ? `<div class="v-fc-ex">"${w[3]}"<br><span style="font-size:12px">${w[4]}</span></div>` : ""}
+        </div>
+      </div>
+    </div>
+    <p class="small muted center" style="margin:4px 0">Click card to flip</p>
+    <div class="v-grades">
+      <button class="grade-btn g-again" onclick="gradeCard('again')">Again<small>don't know</small></button>
+      <button class="grade-btn g-hard" onclick="gradeCard('hard')">Hard</button>
+      <button class="grade-btn g-good" onclick="gradeCard('good')">Good</button>
+      <button class="grade-btn g-easy" onclick="gradeCard('easy')">Easy</button>
+    </div>`;
+}
+
+function flipCard(){ document.getElementById("fc")?.classList.toggle("flipped"); }
+
+function gradeCard(g){
+  const words = deckWords(currentDeck);
+  const w = words[fcIndex];
+  if(g === "again"){
+    // Move to end of deck (will see again)
+    S.known = S.known.filter(k=>k !== w[0]);
+  } else if(g === "easy" || g === "good"){
+    if(!S.known.includes(w[0])) S.known.push(w[0]);
+  }
+  save();
+  fcIndex++;
+  fcFlipped = false;
+  render();
+}
+
+// ===== QUIZ =====
+function vQuiz(){
+  const c = document.getElementById("content");
+  if(!quizData.length){
+    c.innerHTML = `<div class="card center" style="padding:40px">
+      <h2>🧠 Vocabulary Quiz</h2>
+      <p class="muted">Test your knowledge with multiple-choice questions</p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-primary" onclick="startQuiz(10)">Quick · 10 Questions</button>
+        <button class="btn btn-good" onclick="startQuiz(25)">Standard · 25 Questions</button>
+        <button class="btn btn-dark" onclick="startQuiz(50)">Marathon · 50 Questions</button>
+      </div>
+      ${S.scores.length ? `<div style="margin-top:20px"><b>Recent scores:</b> ${S.scores.slice(-5).map(s=>s+"%").join(", ")}</div>` : ""}
+    </div>`;
+    return;
+  }
+
+  if(quizIndex >= quizData.length){
+    const pct = Math.round(quizScore/quizData.length*100);
+    S.scores.push(pct);
+    save();
+    quizData = []; quizIndex = 0; quizScore = 0;
+    c.innerHTML = `<div class="card results-hero">
+      <div class="stars">${pct>=90?"★★★":pct>=70?"★★☆":pct>=50?"★☆☆":"☆☆☆"}</div>
+      <div class="results-score">${pct}%</div>
+      <p class="muted">Quiz complete!</p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-primary" onclick="nav('quiz')">New Quiz</button>
+        <button class="btn btn-ghost" onclick="nav('flash')">Flashcards</button>
+      </div></div>`;
+    return;
+  }
+
+  const q = quizData[quizIndex];
+  c.innerHTML = `
+    <div class="v-q" style="font-size:13px;color:var(--muted)">Question ${quizIndex+1}/${quizData.length} · Score: ${quizScore}</div>
+    <div class="card">
+      <div class="v-q">${q.prompt}</div>
+      <div class="v-opts" id="qopts">
+        ${q.opts.map((o,i)=>`<button class="opt" onclick="answerQuiz(${i})"><span class="k">${"abcd"[i]}</span>${o}</button>`).join("")}
+      </div>
+      <div id="qfb"></div>
+    </div>`;
+}
+
+function startQuiz(n){
+  const pool = WORDS.slice();
+  quizData = [];
+  for(let i=0; i<n && pool.length; i++){
+    const idx = Math.floor(Math.random()*pool.length);
+    const w = pool.splice(idx,1)[0];
+    // Random quiz type
+    const type = Math.random() < 0.5 ? "de2en" : "en2de";
+    if(type === "de2en"){
+      // German → English
+      const distract = pool.filter(x=>x[1]!==w[1]).sort(()=>Math.random()-.5).slice(0,3).map(x=>x[1]);
+      const opts = [w[1], ...distract].sort(()=>Math.random()-.5);
+      quizData.push({prompt:`What does <b>${w[0]}</b> mean?`, opts, answer: opts.indexOf(w[1]), word: w});
+    } else {
+      // English → German
+      const distract = pool.filter(x=>x[0]!==w[0]).sort(()=>Math.random()-.5).slice(0,3).map(x=>x[0]);
+      const opts = [w[0], ...distract].sort(()=>Math.random()-.5);
+      quizData.push({prompt:`How do you say <b>${w[1]}</b>?`, opts, answer: opts.indexOf(w[0]), word: w});
+    }
+  }
+  quizIndex = 0; quizScore = 0;
+  render();
+}
+
+function answerQuiz(i){
+  const q = quizData[quizIndex];
+  const opts = document.querySelectorAll("#qopts .opt");
+  const fb = document.getElementById("qfb");
+
+  opts.forEach((o,j)=>{
+    o.style.pointerEvents = "none";
+    if(j === q.answer) o.classList.add("correct");
+    if(j === i && i !== q.answer) o.classList.add("wrong");
+  });
+
+  const ok = i === q.answer;
+  if(ok){ quizScore++; if(!S.known.includes(q.word[0])) S.known.push(q.word[0]); save(); }
+
+  fb.innerHTML = `<div class="feedback ${ok?"ok":"bad"}" style="margin-top:14px">
+    <div class="fb-title">${ok ? "✓ Correct!" : "✗ Not quite."}</div>
+    ${!ok ? `<div class="fb-correct">${q.word[0]} = ${q.word[1]}</div>` : ""}
+    ${q.word[3] ? `<div class="fb-ex">${q.word[3]}<br><span style="font-size:12px">${q.word[4]}</span></div>` : ""}
+  </div>
+  <div class="row" style="justify-content:center;margin-top:14px">
+    <button class="btn btn-primary btn-sm" onclick="quizIndex++;render()">Next →</button>
+  </div>`;
+}
+
+// ===== STORIES =====
+function vStory(){
+  const c = document.getElementById("content");
+
+  if(currentStory){
+    const s = currentStory;
+    const wordCount = s.text.join(" ").split(/\s+/).length;
+    const readMin = Math.max(1, Math.round(wordCount / 180));
+    const vocab = s.text.join(" ").split(/\s+/).length;
+
+    let h = `<div class="v-story-head">
+      <span class="lvl">${s.level}</span>
+      <h2>${s.title}</h2>
+      <span class="v-read-time">⏱ ${readMin} min · ${wordCount} words</span>
+    </div>`;
+    h += `<div class="v-story">`;
+
+    s.text.forEach((p,i)=>{
+      // Style dialogue lines differently
+      const isDialogue = /^[«"]|^[A-Z][a-z]+:|^"/.test(p.trim());
+      if(isDialogue){
+        h += `<p class="dialogue">${p}</p>`;
+      } else {
+        h += `<p>${p}</p>`;
+      }
+    });
+
+    h += `</div>`;
+    h += `<div class="v-story-actions">
+      <button class="btn btn-primary btn-lg" onclick="showStoryQuiz()">📝 Take Comprehension Test</button>
+      <button class="btn btn-ghost" onclick="currentStory=null;render()">← Back to Stories</button>
+    </div>`;
+    c.innerHTML = h;
+
+    // Highlight vocabulary words from the database
+    highlightVocab();
+    return;
+  }
+
+  // Story list
+  let h = `<div class="card"><h3>📖 Reading Comprehension</h3>
+    <p class="small muted">Read a short story, then test your understanding with multiple-choice questions.
+    Words from your vocabulary decks are highlighted.</p></div>`;
+
+  STORIES.forEach((s,i)=>{
+    const wc = s.text.join(" ").split(/\s+/).length;
+    const rm = Math.max(1, Math.round(wc / 180));
+    h += `<div class="v-deck" onclick="currentStory=STORIES[${i}];render()">
+      <div class="dn">${i+1}</div>
+      <div class="dt"><b>${s.title}</b><span>${s.level} · ${rm} min read · ${s.questions.length} questions</span>
+        <div class="v-bar" style="width:60px"><i style="width:0%"></i></div>
+      </div>
+      <span class="dp">Read →</span>
+    </div>`;
+  });
+
+  c.innerHTML = h;
+}
+
+function highlightVocab(){
+  const storyEl = document.querySelector(".v-story");
+  if(!storyEl) return;
+  // Get all vocabulary words from the database
+  const vocabWords = WORDS.map(w=>({de:w[0], en:w[1], known:S.known.includes(w[0])}));
+  // Sort by length (longest first) to avoid partial matches
+  vocabWords.sort((a,b)=>b.de.length-a.de.length);
+
+  let html = storyEl.innerHTML;
+  vocabWords.forEach(v=>{
+    // Escape special regex chars in the word
+    const escaped = v.de.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // Match the word (with article) but not inside HTML tags
+    const re = new RegExp("(?<![\w])(?!<[^>]*?)("+escaped+")(?![^<]*?>)(?![\w])","g");
+    if(re.test(html)){
+      const cls = v.known ? "hl known" : "hl";
+      const title = v.en;
+      html = html.replace(re, `<span class="${cls}" title="${title}" onclick="showHint('$${title}')">$1</span>`);
+    }
+  });
+  storyEl.innerHTML = html;
+}
+
+function showHint(en){
+  // Simple tooltip - could be enhanced
+  event.target.title = en;
+  if(event.target.style.background){
+    event.target.style.background = "";
+  } else {
+    event.target.style.background = "var(--gold-soft)";
+    setTimeout(()=>{event.target.style.background = "";},1500);
+  }
+}
+
+function showStoryQuiz(){
+  const c = document.getElementById("content");
+  const s = currentStory;
+
+  let h = `<div class="v-q">📝 ${s.title} — Comprehension</div>`;
+  s.questions.forEach((q,qi)=>{
+    h += `<div class="card"><div class="v-q" style="font-size:15px;text-align:left;margin:10px 0">
+      <b>${qi+1}.</b> ${q.q}</div>
+      <div class="v-opts">
+        ${q.opts.map((o,oi)=>`<button class="opt sq" data-q="${qi}" data-o="${oi}" onclick="answerStory(${qi},${oi})">
+          <span class="k">${"abcd"[oi]}</span>${o}</button>`).join("")}
+      </div>
+      <div class="sf" id="sf${qi}"></div>
+    </div>`;
+  });
+  h += `<div class="row" style="justify-content:center;margin:16px 0">
+    <button class="btn btn-primary" onclick="currentStory=null;nav('story')">Done</button>
+  </div>`;
+
+  c.innerHTML = h;
+  // Store correct answers count
+  window._storyScore = 0;
+  window._storyTotal = s.questions.length;
+}
+
+function answerStory(qi, oi){
+  const s = currentStory;
+  const q = s.questions[qi];
+  const opts = document.querySelectorAll(`[data-q="${qi}"]`);
+  const fb = document.getElementById(`sf${qi}`);
+  const ok = oi === q.a;
+
+  opts.forEach((o,j)=>{
+    o.style.pointerEvents = "none";
+    if(j === q.a) o.classList.add("correct");
+    if(j === oi && !ok) o.classList.add("wrong");
+  });
+
+  if(ok) window._storyScore++;
+
+  fb.innerHTML = `<div class="feedback ${ok?"ok":"bad"}" style="margin-top:10px">
+    <div class="fb-title">${ok?"✓ Correct!":"✗ Not quite."}</div>
+    <div class="fb-expl">${q.expl}</div>
+  </div>`;
+
+  // Check if all answered
+  const answered = document.querySelectorAll(".sq[style*='pointer-events: none']").length;
+  if(answered >= window._storyTotal){
+    const pct = Math.round(window._storyScore/window._storyTotal*100);
+    fb.innerHTML += `<div class="schedule" style="margin-top:12px;text-align:center">
+      <b>Story Score: ${window._storyScore}/${window._storyTotal} (${pct}%)</b></div>`;
+  }
+}
+
+// ===== TTS =====
+// ===== TTS Engine — Google Translate (native German) with fallback =====
+let deVoice = null;
+let currentAudio = null;
+
+function loadVoices(){
+  if(!("speechSynthesis" in window)) return;
+  const voices = speechSynthesis.getVoices();
+  if(voices.length > 0){
+    deVoice = voices.find(v => v.lang.startsWith("de") && v.localService) ||
+              voices.find(v => v.lang.startsWith("de")) || null;
+  }
+}
+if("speechSynthesis" in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+  setTimeout(loadVoices, 500);
+  setTimeout(loadVoices, 2000);
+}
+
+function speakGerman(text){
+  // Stop any current playback
+  if(currentAudio){ currentAudio.pause(); currentAudio = null; }
+  if("speechSynthesis" in window) speechSynthesis.cancel();
+
+  // Method 1: Google Translate TTS (native German speaker)
+  const url = "https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=de&q=" + encodeURIComponent(text);
+  const audio = new Audio(url);
+  audio.volume = 1.0;
+  audio.rate = 0.9;
+
+  audio.play().then(() => {
+    currentAudio = audio;
+  }).catch(() => {
+    // Method 2: System speechSynthesis fallback
+    if(!("speechSynthesis" in window)){ return; }
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "de-DE";
+    u.rate = 0.85;
+    if(deVoice) u.voice = deVoice;
+    speechSynthesis.speak(u);
+  });
+}
+
+// Global click handler
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-say]");
+  if(b){
+    e.preventDefault();
+    e.stopPropagation();
+    speakGerman(b.dataset.say);
+  }
+}, true);
+
+// ===== Start =====
+render();
+</script>
+</body>
+</html>

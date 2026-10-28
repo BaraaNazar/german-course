@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pimsleur-Style · __ID__ · __TITLE__</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+.ps-main{max-width:720px;margin:0 auto;padding:26px 20px 80px}
+.ps-prompt{font-size:clamp(20px,4vw,26px);font-weight:800;text-align:center;padding:40px 20px;
+  background:var(--surface);border:2px solid var(--border);border-radius:20px;box-shadow:var(--shadow-2);
+  min-height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.ps-prompt .en{color:var(--ink)}
+.ps-prompt .hint{font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.ps-pause{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;color:var(--muted);margin-top:12px}
+.ps-pause .dots{display:flex;gap:6px}
+.ps-pause .dots i{width:10px;height:10px;border-radius:50%;background:var(--border-2);animation:psPulse 1s infinite}
+.ps-pause .dots i:nth-child(2){animation-delay:.33s}
+.ps-pause .dots i:nth-child(3){animation-delay:.66s}
+@keyframes psPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.2)}}
+.ps-answer{font-size:clamp(22px,4.5vw,30px);font-weight:800;color:var(--good);text-align:center;
+  padding:24px;background:var(--good-bg);border:2px solid #b3e3c9;border-radius:18px;margin:16px 0}
+.ps-controls{display:flex;justify-content:center;gap:14px;margin:20px 0;flex-wrap:wrap}
+.ps-progress{display:flex;gap:4px;justify-content:center;margin:12px 0}
+.ps-progress i{flex:1;height:6px;border-radius:99px;background:var(--surface-3);max-width:12px}
+.ps-progress i.done{background:var(--good)}
+.ps-progress i.cur{background:var(--flag-red)}
+.ps-progress i.new{background:var(--gold)}
+.ps-tag{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  border-radius:7px;padding:3px 10px;margin-right:8px;vertical-align:middle}
+.ps-tag.new{background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border)}
+.ps-tag.review{background:var(--surface-3);color:var(--muted);border:1px solid var(--border-2)}
+.ps-dialog{border-left:3px solid var(--flag-red);padding:4px 0 4px 16px;margin:8px 0}
+.ps-dialog .de{font-size:17px;font-weight:700}
+.ps-dialog .en{font-size:13.5px;color:var(--muted);margin-top:2px}
+.ps-reveal-btn{display:block;margin:12px auto}
+.ps-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:14px 0}
+.ps-word{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;text-align:center}
+.ps-word .de{font-weight:800;font-size:16px}
+.ps-word .en{color:var(--muted);font-size:13px;margin-top:4px}
+.ps-count{font-size:13px;font-weight:800;color:var(--muted);font-family:ui-monospace,Menlo,monospace;text-align:center;margin:10px 0}
+.ps-phase{font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);
+  margin:22px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.ps-result{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;margin:6px 0;font-size:14px}
+.ps-result.ok{background:var(--good-bg)}
+.ps-result.bad{background:var(--bad-bg)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="row">
+    <span class="lv-pill" style="background:var(--flag-black);color:var(--gold);border:1px solid #000">PS</span>
+    <div class="crumb"><b>__ID__</b> · __TITLE__</div>
+    <div class="row"><span class="stepcount" id="phaseLabel"></span>
+      <a class="btn btn-ghost btn-sm" href="index.html">📚 Index</a>
+      <a class="btn btn-ghost btn-sm" href="../index.html">🏛️ Hub</a></div>
+  </div>
+  <div class="progress"><i id="pbar" style="width:0%"></i></div>
+</div>
+<main class="ps-main" id="host"></main>
+
+<script>
+"use strict";
+const LESSON = __LESSON_JSON__;
+
+let deVoice=null;
+function pickVoice(){ if(!("speechSynthesis" in window))return; deVoice=speechSynthesis.getVoices().find(v=>/^de/i.test(v.lang))||null; }
+if("speechSynthesis" in window){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function say(t,r){ if(!("speechSynthesis" in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="de-DE"; u.rate=r||0.85; if(deVoice)u.voice=deVoice; speechSynthesis.speak(u); }
+document.addEventListener("click",e=>{const b=e.target.closest("[data-say]"); if(b) say(b.dataset.say,b.dataset.rate?parseFloat(b.dataset.rate):undefined);});
+
+const host = document.getElementById("host");
+const total = LESSON.drills.length;
+let cur = 0, score = {ok:0, bad:0, total:0};
+let phase = 1; // 1=intro, 2=drills, 3=summary
+
+// ============= PHASE 1: Conversation Introduction =============
+function phase1(){
+  phase = 1;
+  document.getElementById("phaseLabel").textContent = "Phase 1 · Conversation";
+  document.getElementById("pbar").style.width = "10%";
+
+  let h = '<div class="ps-phase">Phase 1 · Listen to the conversation</div>';
+  h += '<div class="card"><p class="small muted">Listen to this short conversation. Don\'t worry about understanding everything yet — just listen for the rhythm and sounds.</p>';
+  h += '<div class="row" style="justify-content:center;margin:16px 0">';
+  h += '<button class="btn btn-primary btn-lg" id="playAll">▶ Play Conversation</button>';
+  h += '</div><div id="dialogLines" style="display:none;margin-top:16px">';
+
+  LESSON.dialogue.forEach((l,i)=>{
+    h += `<div class="ps-dialog" data-line="${i}" style="cursor:pointer">
+      <div class="de">${l.de} <button class="speak-btn" data-say="${l.de.replace(/"/g,'&quot;')}">🔊</button></div>
+      <div class="en" style="display:none">${l.en}</div>
+    </div>`;
+  });
+
+  h += '</div>';
+  h += '<button class="btn btn-ghost ps-reveal-btn" id="revealTr" style="display:none">Show English translations</button>';
+  h += '<p class="small muted" id="p1hint" style="text-align:center">Click any line to hear it again · Click again to show/hide its English</p>';
+  h += '</div>';
+
+  h += '<div class="card"><b>New words today (' + LESSON.newWords.length + '):</b>';
+  h += '<div class="ps-summary-grid">';
+  LESSON.newWords.forEach(w=>{
+    h += `<div class="ps-word"><div class="de">${w.de} <button class="speak-btn" data-say="${w.de.replace(/"/g,'&quot;')}">🔊</button></div><div class="en">${w.en}</div></div>`;
+  });
+  h += '</div><p class="small muted">That\'s all — just ' + LESSON.newWords.length + ' new words. Everything else is review from previous lessons.</p></div>';
+
+  h += '<div class="nav-btns"><span></span><button class="btn btn-primary" id="toDrills">Start Drills →</button></div>';
+  host.innerHTML = h;
+
+  document.getElementById("playAll").onclick = ()=>{
+    const lines = LESSON.dialogue.map(l=>l.de);
+    lines.forEach(t=>{
+      const u=new SpeechSynthesisUtterance(t); u.lang="de-DE"; u.rate=0.8; if(deVoice)u.voice=deVoice;
+      speechSynthesis.speak(u);
+    });
+    setTimeout(()=>{ document.getElementById("dialogLines").style.display="block";
+      document.getElementById("revealTr").style.display="block"; }, 500);
+  };
+
+  document.getElementById("revealTr").onclick = e=>{
+    host.querySelectorAll(".ps-dialog .en").forEach(x=>x.style.display="block");
+    e.target.disabled = true;
+  };
+
+  host.querySelectorAll(".ps-dialog").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const en = el.querySelector(".en");
+      en.style.display = en.style.display === "none" ? "block" : "none";
+    });
+  });
+
+  document.getElementById("toDrills").onclick = ()=>{ phase2(); };
+}
+
+// ============= PHASE 2: Anticipation Drills =============
+function phase2(){
+  phase = 2;
+  document.getElementById("phaseLabel").textContent = `Phase 2 · Drills (${cur+1}/${total})`;
+
+  let h = '<div class="ps-phase">Phase 2 · Anticipation Drills</div>';
+  h += '<div class="card"><p class="small muted" style="text-align:center;margin-bottom:16px">The prompt appears → <b>speak the German aloud</b> → then hear the answer → self-check</p>';
+
+  // Progress dots
+  h += '<div class="ps-progress">';
+  for(let i=0;i<total;i++){
+    h += `<i class="${i<cur?'done':i===cur?'cur':''}"></i>`;
+  }
+  h += '</div>';
+
+  h += '<div class="ps-count">Prompt ' + (cur+1) + ' of ' + total + '</div>';
+  h += '<div id="drillArea"></div>';
+  h += '</div>';
+  h += '<div class="nav-btns"><button class="btn btn-ghost" id="backIntro">← Back to Intro</button><span id="phaseNext"></span></div>';
+
+  host.innerHTML = h;
+  document.getElementById("backIntro").onclick = ()=>{ phase1(); };
+  renderDrill();
+}
+
+function renderDrill(){
+  const d = LESSON.drills[cur];
+  const area = document.getElementById("drillArea");
+  document.getElementById("phaseLabel").textContent = `Phase 2 · Drills (${cur+1}/${total})`;
+  document.querySelectorAll(".ps-progress i").forEach((el,i)=>{
+    el.className = i<cur?'done':i===cur?'cur':'';
+  });
+
+  let h = '';
+
+  // Tag: NEW or REVIEW
+  h += `<div style="text-align:center;margin-bottom:12px">`;
+  h += `<span class="ps-tag ${d.type}">${d.type === 'new' ? '✦ New' : '↻ Review'}</span>`;
+  if(d.from) h += `<span class="small muted">from lesson ${d.from}</span>`;
+  h += `</div>`;
+
+  // The prompt
+  h += `<div class="ps-prompt">`;
+  h += `<div class="hint">How do you say…</div>`;
+  h += `<div class="en">"${d.prompt}"</div>`;
+  h += `</div>`;
+
+  // Pause indicator
+  h += `<div class="ps-pause" id="pauseArea">
+    <span>Speak now</span>
+    <div class="dots"><i></i><i></i><i></i></div>
+  </div>`;
+
+  // Controls (initially hidden)
+  h += `<div class="ps-controls" id="controls" style="visibility:hidden">
+    <button class="btn btn-ghost" id="replay">🔊 Replay Prompt</button>
+    <button class="btn btn-primary" id="playAns">🔊 Play Answer</button>
+  </div>`;
+
+  // Answer area (hidden until played)
+  h += `<div id="answerArea" style="display:none">
+    <div class="ps-answer">${d.answer}</div>
+    <div class="ps-controls">
+      <button class="btn btn-good" id="saidIt">✓ I said it correctly</button>
+      <button class="btn btn-ghost" id="notYet">✗ Not yet</button>
+    </div>
+  </div>`;
+
+  area.innerHTML = h;
+
+  // Auto-play the prompt after a short delay
+  setTimeout(()=>{ say(d.prompt, 1.0); }, 800); // English at natural speed
+
+  // Show controls after a beat
+  setTimeout(()=>{
+    const c = document.getElementById("controls");
+    if(c) c.style.visibility = "visible";
+    document.getElementById("replay").onclick = ()=> say(d.prompt, 1.0);
+    document.getElementById("playAns").onclick = ()=>{
+      // Hide prompt, show pause countdown, then reveal answer
+      document.getElementById("pauseArea").innerHTML = '<div class="dots"><i></i><i></i><i></i></div><span>Listen…</span>';
+      say(d.answer, 0.82);
+      setTimeout(()=>{
+        document.getElementById("pauseArea").style.display = "none";
+        document.getElementById("answerArea").style.display = "block";
+      }, Math.max(1500, d.answer.length * 60));
+    };
+  }, 1200);
+
+  // Self-assessment buttons
+  area.addEventListener("click", function handler(e){
+    if(e.target.id === "saidIt"){
+      score.ok++; score.total++;
+      nextDrill();
+    } else if(e.target.id === "notYet"){
+      score.bad++; score.total++;
+      // Show the answer once more, then move on
+      say(d.answer, 0.7); // slow replay
+      setTimeout(nextDrill, 2000);
+    }
+  });
+}
+
+function nextDrill(){
+  cur++;
+  if(cur >= total){
+    phase3();
+  } else {
+    // Re-render the drill area
+    const area = document.getElementById("drillArea");
+    if(area) renderDrill();
+  }
+}
+
+// ============= PHASE 3: Summary =============
+function phase3(){
+  phase = 3;
+  document.getElementById("phaseLabel").textContent = "Phase 3 · Summary";
+  document.getElementById("pbar").style.width = "100%";
+
+  const pct = score.total ? Math.round(score.ok / score.total * 100) : 0;
+  const stars = pct >= 90 ? "★★★" : pct >= 75 ? "★★☆" : pct >= 60 ? "★☆☆" : "☆☆☆";
+
+  let h = '<div class="ps-phase">Lesson Complete</div>';
+  h += '<div class="card results-hero">';
+  h += `<div class="stars">${stars}</div>`;
+  h += `<div class="results-score">${pct}%</div>`;
+  h += `<div class="muted">${score.ok} of ${score.total} prompts correct</div>`;
+  if(pct < 60) h += '<p class="small" style="color:var(--bad);margin-top:8px"><b>Tip:</b> Repeat this lesson tomorrow before moving on — Pimsleur works through repetition, not speed.</p>';
+  h += '</div>';
+
+  // New words
+  h += '<div class="card"><h3>New Words (5 max)</h3><div class="ps-summary-grid">';
+  LESSON.newWords.forEach(w=>{
+    h += `<div class="ps-word"><div class="de">${w.de} <button class="speak-btn" data-say="${w.de.replace(/"/g,'&quot;')}">🔊</button></div><div class="en">${w.en}</div></div>`;
+  });
+  h += '</div></div>';
+
+  // Review schedule
+  h += '<div class="card"><h3>Review Schedule</h3>';
+  h += '<div class="schedule">These words return in: <b>+1 lesson · +3 · +7 · +14 · +30</b></div>';
+  if(LESSON.reviewWords) {
+    h += '<p class="small">Reviewed today from earlier lessons:</p><ul class="check-list">';
+    LESSON.reviewWords.forEach(w=>{ h += `<li>${w}</li>`; });
+    h += '</ul>';
+  }
+  h += '</div>';
+
+  // Next lesson
+  h += '<div class="card">';
+  h += '<h3>Next Lesson</h3>';
+  if(LESSON.next) {
+    h += `<p class="small">➡️ <b>${LESSON.next.id} · ${LESSON.next.title}</b> — come back tomorrow (same time, same place).</p>`;
+    h += `<a class="btn btn-primary" href="${LESSON.next.id}.html">Open Next Lesson →</a>`;
+  } else {
+    h += '<p class="small">🎉 Level complete! Come to the chat for your level assessment.</p>';
+  }
+  h += '</div>';
+
+  h += '<div class="foot-note">Pimsleur-Style · Audio-first · Anticipation-driven · 30 min/day<br>';
+  h += '❓ Questions? Ask your teacher in the chat.</div>';
+
+  host.innerHTML = h;
+}
+
+// ============= START =============
+phase1();
+</script>
+</body>
+</html>
