@@ -1,28 +1,25 @@
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
 
 # Editors
 .vscode/
 .idea/
 *.swp
-*.swo
 *~
 
-# Node (if you add tooling later)
+# Node
 node_modules/
-package-lock.json
 
-# User data (never commit personal learning progress)
-*.localstorage
-learning-data.json
-
-# Temporary
-*.tmp
-*.bak
-*~
-
-# Exports (optional, add if you generate PDFs etc.)
-*.pdf
-export/
+# Private working files (not published to web)
+learning-records/
+reference/
+tools/
+RESOURCES.md
+NOTES.md
+MISSION.md
+CURRICULUM.md
+CURRICULUM-INTERAKTIV.md
+CURRICULUM-TEXTKURS.md
+CURRICULUM-HYBRID.md
+GLOSSARY.md
