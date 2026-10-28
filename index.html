@@ -1,78 +1,133 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deutsch A1–C2 · Workspace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Deutschkurs A1–C2 · Home</title>
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#141414">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="apple-touch-icon" href="assets/icon.svg">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <style>
-.hub{max-width:980px;margin:0 auto;padding:30px 20px 60px}
-.tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;margin:22px 0}
-.track{display:block;background:var(--surface);border:1.5px solid var(--border);border-radius:18px;box-shadow:var(--shadow);padding:24px;text-decoration:none;color:inherit;transition:border-color .15s, transform .1s}
-.track:hover{border-color:var(--primary);transform:translateY(-2px)}
-.track .ic{font-size:30px;margin-bottom:10px}
-.track h2{margin:0 0 6px;font-size:19px}
-.track p{margin:0;font-size:13.5px;color:var(--muted)}
-.track .badge-row{margin-top:12px;display:flex;gap:6px;flex-wrap:wrap}
-.shared{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.hub{max-width:960px;margin:0 auto;padding:24px 16px 60px}
+.hub-hero{text-align:center;margin:20px 0 28px}
+.hub-hero h1{font-size:clamp(26px,5vw,36px);margin:0 0 6px}
+.hub-hero p{color:var(--muted);font-size:15px;margin:0}
+.tracks{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:20px 0}
+.track{display:flex;flex-direction:column;background:var(--surface);border:1.5px solid var(--border);border-radius:16px;box-shadow:var(--shadow-1);padding:22px;text-decoration:none;color:inherit;transition:border-color .15s;overflow:hidden;position:relative}
+.track:hover{border-color:var(--primary)}
+.track::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--flag-black) 0 33%,var(--flag-red) 33% 66%,var(--flag-gold) 66% 100%)}
+.track-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.track-head .ic{font-size:28px;flex:0 0 36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);border-radius:10px}
+.track-head h2{margin:0;font-size:17px;flex:1;line-height:1.3}
+.track p{margin:0 0 14px;font-size:13.5px;color:var(--muted);flex:1;line-height:1.55}
+.track-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;align-items:center}
+.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 10px;border-radius:6px;white-space:nowrap}
+.tag-primary{background:var(--primary-soft);color:var(--primary-dark)}
+.tag-gold{background:var(--gold-soft);color:var(--gold-ink);border:1px solid var(--gold-border)}
+.tag-dark{background:var(--flag-black);color:var(--gold)}
+.tag-muted{background:var(--surface-3);color:var(--muted)}
+.shared-section{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;box-shadow:var(--shadow-1)}
+.shared-section h3{margin:0 0 12px;font-size:15px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.shared-links{display:flex;gap:8px;flex-wrap:wrap}
+.shared-links a{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:10px;font-size:13.5px;font-weight:700;text-decoration:none;color:var(--ink);background:var(--surface-2);border:1px solid var(--border);transition:all .15s}
+.shared-links a:hover{border-color:var(--primary);color:var(--primary)}
+.hub-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}
+.hub-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.hub-stat .num{font-size:22px;font-weight:900;color:var(--primary)}
+.hub-stat .lbl{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+@media(max-width:600px){
+  .hub-stats{grid-template-columns:repeat(2,1fr)}
+  .tracks{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
-<div class="hub">
-  <div class="tx-crumb">Deutsch-Workspace · A1 → C2 · <span>Mission</span></div>
-  <h1 class="tx-headline">🇩🇪 Dein Deutsch-Workspace</h1>
-  <div class="tx-meta">Drei Wege, ein Ziel: echte Kommunikation bis C2 · geteilte Lernunterlagen &amp; Fortschrittsdaten</div>
+
+<div class="topbar">
+  <div class="row">
+    <span class="lv-pill">DE</span>
+    <div class="crumb"><b>Deutschkurs</b> · A1 → C2</div>
+    <div class="row">
+      <a class="btn btn-ghost btn-sm" href="about.html">About</a>
+      <a class="btn btn-ghost btn-sm" href="resources.html">Resources</a>
+    </div>
+  </div>
+  <div class="progress"><i style="width:100%"></i></div>
+</div>
+
+<main class="hub">
+
+  <div class="hub-hero">
+    <h1>🇩🇪 Dein Deutsch-Workspace</h1>
+    <p>Five tracks, one goal: genuine communication from A1 to C2</p>
+  </div>
+
+  <div class="hub-stats">
+    <div class="hub-stat"><div class="num">5,000</div><div class="lbl">Words</div></div>
+    <div class="hub-stat"><div class="num">32</div><div class="lbl">Stories</div></div>
+    <div class="hub-stat"><div class="num">193</div><div class="lbl">Questions</div></div>
+    <div class="hub-stat"><div class="num">5</div><div class="lbl">Tracks</div></div>
+  </div>
 
   <div class="tracks">
-    <a class="track" href="kursraum/index.html">
-      <div class="ic">🏛️</div>
-      <h2>Kursraum — Track 1</h2>
-      <p>Interaktive HTML-Lektionen: Browser-Quiz mit sofortiger Korrektur, 🔊 Audio, Flashcards. German-first ab B1.</p>
-      <div class="badge-row"><span class="pill pill-lesson">Interaktiv</span><span class="badge">Interactive lessons</span></div>
-    </a>
-    <a class="track" href="textkurs/index.html">
-      <div class="ic">📖</div>
-      <h2>Textkurs — Track 2</h2>
-      <p>Reine HTML/CSS-Leselektionen: bilingual, druckbar, Mermaid-Diagramme, MCQ-Selbsttests mit Lösungsschlüssel. Offline nutzbar.</p>
-      <div class="badge-row"><span class="pill pill-review">Text-first</span><span class="badge">Text lessons</span></div>
-    </a>
     <a class="track" href="hybrid/index.html">
-      <div class="ic">⚡</div>
-      <h2>Hybrid — Track 3</h2>
-      <p>Beides vereint: Audio + Instant-Feedback-Übungen + Quiz mit Auswertung <b>plus</b> bilingualen Erklärungen &amp; Mermaid-Diagrammen.</p>
-      <div class="badge-row"><span class="pill pill-exam">Merged</span><span class="badge">Hybrid lessons</span></div>
+      <div class="track-head"><span class="ic">⚡</span><h2>Hybrid <span class="muted" style="font-weight:400;font-size:13px">Recommended</span></h2></div>
+      <p>Audio + instant-feedback exercises + bilingual grammar with Mermaid diagrams. The complete package.</p>
+      <div class="track-tags">
+        <span class="tag tag-primary">Interactive</span>
+        <span class="tag tag-muted">498 lessons</span>
+      </div>
     </a>
+
     <a class="track" href="vocab/index.html">
-      <div class="ic">🧠</div>
-      <h2>Vocab Trainer</h2>
-      <p>5000+ essential words with flashcards, quizzes, short stories and comprehension tests. Track milestones.</p>
-      <div class="badge-row"><span class="pill pill-review">Flashcards + Quiz</span><span class="badge">7 decks ready</span></div>
+      <div class="track-head"><span class="ic">🧠</span><h2>Vocab Trainer</h2></div>
+      <p>5,000 words with flashcards, MCQ quizzes, and 32 reading comprehension stories. Track 7 milestones.</p>
+      <div class="track-tags">
+        <span class="tag tag-primary">Flashcards</span>
+        <span class="tag tag-muted">5,000 words</span>
+      </div>
     </a>
+
+    <a class="track" href="textkurs/index.html">
+      <div class="track-head"><span class="ic">📖</span><h2>Textkurs</h2></div>
+      <p>Print-friendly text lessons. Bilingual A1–A2, increasingly German B1+. Works fully offline.</p>
+      <div class="track-tags">
+        <span class="tag tag-gold">Text-based</span>
+        <span class="tag tag-muted">498 lessons</span>
+      </div>
+    </a>
+
+    <a class="track" href="kursraum/index.html">
+      <div class="track-head"><span class="ic">🏛️</span><h2>Kursraum</h2></div>
+      <p>Interactive browser lessons with audio, quizzes, and flashcards. German-first from B1.</p>
+      <div class="track-tags">
+        <span class="tag tag-primary">Interactive</span>
+        <span class="tag tag-muted">498 lessons</span>
+      </div>
+    </a>
+
     <a class="track" href="pimsleur/index.html">
-      <div class="ic">🎧</div>
-      <h2>Pimsleur-Style — Track 4</h2>
-      <p>Audio-first, anticipation-driven. Max 5 new words per lesson. Grammar absorbed through patterns, never explained. Speak from day one.</p>
-      <div class="badge-row"><span class="pill pill-lesson">Audio-first</span><span class="badge">Audio lessons</span></div>
+      <div class="track-head"><span class="ic">🎧</span><h2>Pimsleur-Style</h2></div>
+      <p>Audio-first, anticipation-driven. Max 5 new words per lesson. Grammar absorbed through patterns.</p>
+      <div class="track-tags">
+        <span class="tag tag-dark">Audio-first</span>
+        <span class="tag tag-muted">5 lessons</span>
+      </div>
     </a>
   </div>
 
-  <div class="card">
-    <div class="steptitle" style="margin-top:0">Gemeinsam (für alle Tracks)</div>
-    <div class="shared">
-      <a class="btn btn-ghost btn-sm" href="#">🎯 Mission</a>
-      <a class="btn btn-ghost btn-sm" href="#">📚 Quellen</a>
-      <a class="btn btn-ghost btn-sm" href="#">⚙️ Konventionen</a>
-      <a class="btn btn-ghost btn-sm" href="#">🔁 Review-Plan</a>
-      <a class="btn btn-ghost btn-sm" href="reference/grammar-a1.html">📐 Grammatik-Referenz A1</a>
+  <div class="shared-section">
+    <h3>Quick Links</h3>
+    <div class="shared-links">
+      <a href="about.html">🎯 About</a>
+      <a href="resources.html">📚 Resources</a>
+      <a href="vocab/index.html">🧠 Vocab Trainer</a>
+      <a href="hybrid/H-A1-M1-U1-L1.html">⚡ Start Lesson 1</a>
     </div>
-    <p class="small muted" style="margin-bottom:0">Unit-/Modul-/Level-Prüfungen laufen immer im Chat · Fortschritt &amp; SRS werden geteilt · Track-Wechsel an jeder Unit-Grenze erlaubt.</p>
   </div>
-</div>
+
+</main>
 </body>
 </html>
