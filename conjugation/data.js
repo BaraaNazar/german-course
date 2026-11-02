@@ -281,7 +281,7 @@ ALL.push(regVerb("zufriedenstellen","to satisfy","B1","zufrieden"));
 ["legalisieren","to legalize"],["mobilmachen","to mobilize"],["subventionieren","to subsidize"],
 ["verstaatlichen","to nationalize"],["verschluesseln","to encrypt"],["bevorzugen","to prefer"],
 ["beruecksichtigen","to consider"],["dokumentieren (B2)","to document"],["ermitteln","to investigate"],
-["erstatten","to reimburse"],["verhaengen","to impose (sanctions)",
+["erstatten","to reimburse"],["verhaengen","to impose (sanctions)"],
 ].forEach(([inf,en]) => ALL.push(regVerb(inf,en,"B2")));
 
 // B2 Strong/Irregular (15)
