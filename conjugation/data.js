@@ -21,7 +21,7 @@ function regVerb(inf, en, level, sep) {
       ich: join(stem + e + "te"), du: join(stem + e + "test"), er: join(stem + e + "te"),
       wir: join(stem + e + "ten"), ihr: join(stem + e + "tet"), sie: join(stem + e + "ten")
     },
-    partizip: sep ? prefix.replace(/(zu |ab |an |auf |aus |ein |fern |mit |vor |zurück |weg |los |nach |her |herunter |hinaus |hinein |empor |empor |bei |da |daran |dafür |davon |dazu |los)$/,"") + ge + stem + e + "t" : "ge" + stem + e + "t",
+    partizip: sep ? (prefix ? prefix + "ge" + stem + e + "t" : "ge" + stem + e + "t") : "ge" + stem + e + "t",
     aux: "haben"
   };
 }
