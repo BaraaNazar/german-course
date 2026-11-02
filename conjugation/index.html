@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Konjugation · German Verb Trainer</title>
+<link rel="stylesheet" href="../assets/styles.css">
+<style>
+.cj-main{max-width:720px;margin:0 auto;padding:20px 16px 80px}
+.cj-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:18px}
+.cj-tab{flex:1;padding:12px 8px;text-align:center;font-weight:800;font-size:13px;cursor:pointer;border:none;background:none;color:var(--muted);border-bottom:3px solid transparent;transition:all .18s}
+.cj-tab:hover{color:var(--ink)}
+.cj-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.cj-tab .n{display:block;font-size:10px;font-weight:600;color:var(--muted)}
+.cj-count{font-size:13px;font-weight:800;color:var(--muted);font-family:ui-monospace,Menlo,monospace;text-align:center;margin:10px 0}
+/* conjugation table */
+.cj-table{width:100%;border-collapse:collapse;margin:14px 0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow-1)}
+.cj-table th{background:var(--flag-black);color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left}
+.cj-table td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:16px;font-weight:700}
+.cj-table td:first-child{font-weight:800;color:var(--muted);font-size:13px;width:100px;background:var(--gold-soft)}
+.cj-table td .verb{font-size:18px}
+.cj-table .row-irregular td{color:var(--primary)}
+/* color-coded endings */
+.ending{display:inline-block;padding:1px 6px;border-radius:4px;font-size:13px;font-weight:800}
+.end-e{background:#e8f7ef;color:#16a34a}
+.end-st{background:#fff4d6;color:#8a6100}
+.end-t{background:#e9edff;color:#3730a3}
+.end-en{background:#f3e8ff;color:#7c3aed}
+.end-irr{background:var(--primary-soft);color:var(--primary-dark)}
+/* quiz */
+.cj-quiz-q{font-size:17px;font-weight:800;text-align:center;margin:16px 0;padding:20px;background:var(--surface);border:2px solid var(--border);border-radius:16px;box-shadow:var(--shadow-1)}
+.cj-quiz-q .verb{font-size:26px;color:var(--primary)}
+.cj-quiz-q .person{font-size:14px;color:var(--muted);margin-bottom:6px}
+.cj-quiz-q .tense{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-ink);background:var(--gold-soft);border-radius:6px;padding:2px 12px;display:inline-block;margin-bottom:10px}
+.cj-quiz-opts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+@media(min-width:500px){.cj-quiz-opts{grid-template-columns:repeat(4,1fr)}}
+.cj-input{width:100%;max-width:360px;margin:0 auto;display:block;border:2px solid var(--border);border-radius:12px;padding:12px 16px;font-size:18px;text-align:center;font-family:inherit}
+.cj-input:focus{outline:none;border-color:var(--primary)}
+/* deck selector */
+.cj-deck{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;margin:8px 0;cursor:pointer;transition:border-color .15s}
+.cj-deck:hover{border-color:var(--primary)}
+.cj-deck .dn{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font:800 14px ui-monospace,Menlo,monospace;color:#fff;flex:0 0 36px}
+.cj-deck .dt{flex:1}
+.cj-deck .dt b{font-size:15px}
+.cj-deck .dt span{display:block;font-size:12px;color:var(--muted)}
+.cj-deck .dp{font-size:11px;font-weight:800;color:var(--good)}
+/* verb type badges */
+.type-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:5px;margin-left:6px;vertical-align:middle}
+.type-regular{background:#e8f7ef;color:#16a34a}
+.type-strong{background:#ffedd5;color:#ea580c}
+.type-irregular{background:var(--primary-soft);color:var(--primary-dark)}
+.type-modal{background:#f3e8ff;color:#7c3aed}
+.type-separable{background:#cffafe;color:#0891b2}
+.type-reflexive{background:#fce7f3;color:#be185d}
+/* stats */
+.cj-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.cj-stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px;text-align:center}
+.cj-stat .num{font-size:20px;font-weight:900;color:var(--primary)}
+.cj-stat .lbl{font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+@media(max-width:500px){.cj-stats{grid-template-columns:repeat(2,1fr)}}
+.cj-verb-list{max-height:none}
+.cj-verb-item{display:flex;gap:10px;padding:8px 14px;border-top:1px solid var(--surface-3);cursor:pointer;font-size:14px}
+.cj-verb-item:hover{background:var(--surface-2)}
+.cj-verb-item .vi{font-weight:700;flex:1}
+.cj-verb-item .vn{color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="row">
+    <span class="lv-pill">KO</span>
+    <div class="crumb"><b>Konjugation</b> · German Verb Trainer</div>
+    <div class="row"><a class="btn btn-ghost btn-sm" href="../index.html">🏛️ Hub</a></div>
+  </div>
+</div>
+<main class="cj-main" id="app"></main>
+
+<script src="data.js"></script>
+<script>
+"use strict";
+const S = JSON.parse(localStorage.getItem("conj_v1") || '{"known":[],"scores":[],"deckProgress":{}}');
+function save(){ localStorage.setItem("conj_v1", JSON.stringify(S)); }
+
+const PRONOUNS = ["ich","du","er/sie/es","wir","ihr","sie/Sie"];
+const TENSES = [
+  { key:"praesens", label:"Präsens", get:v=>v[3] },
+  { key:"praeteritum", label:"Präteritum", get:v=>v[4] },
+];
+
+const app = document.getElementById("app");
+let view = "home";
+let currentDeck = 1;
+let quizData = null;
+let quizIdx = 0;
+let quizScore = 0;
+
+// Group verbs by deck
+function getDeckVerbs(deckId) {
+  const d = VERB_DECKS[deckId];
+  if(!d) return [];
+  return VERBS.filter(d.filter);
+}
+
+function nav(v){ view = v; render(); window.scrollTo(0,0); }
+
+function render(){
+  const views = {home:vHome, table:vTable, quiz:vQuiz};
+  app.innerHTML = `
+    <div class="cj-tabs">
+      <button class="cj-tab ${view==='home'?'active':''}" onclick="nav('home')">Home<span class="n">${S.known.length}/${VERBS.length}</span></button>
+      <button class="cj-tab ${view==='table'?'active':''}" onclick="nav('table')">Table<span class="n">Browse</span></button>
+      <button class="cj-tab ${view==='quiz'?'active':''}" onclick="nav('quiz')">Quiz<span class="n">MCQ</span></button>
+    </div>
+    <div id="content"></div>`;
+  views[view]();
+}
+
+// ===== HOME =====
+function vHome(){
+  const c = document.getElementById("content");
+  const known = S.known.length;
+  const total = VERBS.length;
+
+  let h = `<div class="cj-stats">
+    <div class="cj-stat"><div class="num">${known}</div><div class="lbl">Mastered</div></div>
+    <div class="cj-stat"><div class="num">${total}</div><div class="lbl">Total Verbs</div></div>
+    <div class="cj-stat"><div class="num">${Object.keys(VERB_DECKS).length}</div><div class="lbl">Decks</div></div>
+    <div class="cj-stat"><div class="num">${S.scores.length}</div><div class="lbl">Quizzes</div></div>
+  </div>`;
+
+  h += `<div class="card"><h3>📚 Verb Decks</h3>`;
+  for(const [id, deck] of Object.entries(VERB_DECKS)){
+    const verbs = getDeckVerbs(id);
+    if(!verbs.length) continue;
+    const k = verbs.filter(v=>S.known.includes(v[0])).length;
+    h += `<div class="cj-deck" onclick="currentDeck=${id};nav('table')">
+      <div class="dn" style="background:${deck.color}">${id}</div>
+      <div class="dt"><b>${deck.name}</b><span>${verbs.length} verbs · ${k} mastered</span></div>
+      <span class="dp">${k}/${verbs.length}</span>
+    </div>`;
+  }
+  h += `</div>`;
+
+  h += `<div class="card center"><h3>Quick Quiz</h3>
+    <div class="row" style="justify-content:center">
+      <button class="btn btn-primary" onclick="startQuiz(10)">10 Questions</button>
+      <button class="btn btn-good" onclick="startQuiz(20)">20 Questions</button>
+    </div>
+    ${S.scores.length ? `<p class="small muted" style="margin-top:12px">Recent: ${S.scores.slice(-3).map(s=>s+"%").join(", ")}</p>` : ""}
+  </div>`;
+
+  c.innerHTML = h;
+}
+
+// ===== TABLE VIEW =====
+function vTable(){
+  const c = document.getElementById("content");
+  const verbs = getDeckVerbs(currentDeck);
+  const deck = VERB_DECKS[currentDeck];
+
+  // Select verb
+  if(!window._selectedVerb){
+    let h = `<div class="card"><h3>${deck.name}</h3>
+      <p class="small muted">Click a verb to see its full conjugation</p>
+      <div class="cj-verb-list">`;
+    verbs.forEach((v,i)=>{
+      h += `<div class="cj-verb-item" onclick="_selectedVerb=${i};render()">
+        <span class="vi">${v[0]}</span>
+        <span class="type-badge type-${v[2]}">${v[2]}</span>
+        <span class="vn">${v[1]}</span>
+      </div>`;
+    });
+    h += `</div></div>`;
+    c.innerHTML = h;
+    return;
+  }
+
+  // Show conjugation table
+  const v = verbs[_selectedVerb];
+  let h = `<button class="btn btn-ghost btn-sm" style="margin-bottom:12px" onclick="_selectedVerb=null;render()">← Back to list</button>`;
+
+  h += `<div class="card">
+    <h2 style="margin:0 0 4px">${v[0]} <span class="type-badge type-${v[2]}">${v[2]}</span></h2>
+    <p class="muted small" style="margin:0 0 16px">${v[1]} · Partizip: ${v[5]} (${v[6]})</p>
+  </div>`;
+
+  TENSES.forEach((tense,ti)=>{
+    const forms = tense.get(v);
+    h += `<div class="card"><h3>${tense.label}</h3>
+      <table class="cj-table">`;
+    PRONOUNS.forEach((pron,pi)=>{
+      const key = ["ich","du","er","wir","ihr","sie"][pi];
+      const form = forms[key];
+      h += `<tr><td>${pron}</td><td class="verb">${colorEnding(form)}</td></tr>`;
+    });
+    h += `</table></div>`;
+  });
+
+  // Perfekt
+  h += `<div class="card"><h3>Perfekt</h3>
+    <table class="cj-table">
+      <tr><td>ich</td><td class="verb">${v[6]} ${v[5]}</td></tr>
+      <tr><td>du</td><td class="verb">${v[6]}st ${v[5]}</td></tr>
+      <tr><td>er/sie/es</td><td class="verb">${v[6]}t ${v[5]}</td></tr>
+      <tr><td>wir/sie/Sie</td><td class="verb">${v[6]} ${v[5]}</td></tr>
+      <tr><td>ihr</td><td class="verb">${v[6]}t ${v[5]}</td></tr>
+    </table>
+  </div>`;
+
+  // Mark as known button
+  const isKnown = S.known.includes(v[0]);
+  h += `<div class="center" style="margin:14px 0">
+    <button class="btn ${isKnown?'btn-good':'btn-ghost'}" onclick="toggleKnown('${v[0]}')">${isKnown?'✓ Mastered':'Mark as mastered'}</button>
+  </div>`;
+
+  c.innerHTML = h;
+}
+
+function colorEnding(form){
+  // Color the verb ending based on person
+  const endings = {"e":["end-e"], "st":["end-st"], "t":["end-t"], "en":["end-en"]};
+  for(const [suffix, cls] of Object.entries(endings)){
+    if(form.endsWith(suffix) && form.length > suffix.length){
+      const stem = form.slice(0, form.length - suffix.length);
+      return `${stem}<span class="ending ${cls[0]}">${suffix}</span>`;
+    }
+  }
+  return form;
+}
+
+function toggleKnown(verb){
+  const idx = S.known.indexOf(verb);
+  if(idx >= 0) S.known.splice(idx,1);
+  else S.known.push(verb);
+  save();
+  render();
+}
+
+// ===== QUIZ =====
+function vQuiz(){
+  const c = document.getElementById("content");
+  if(!quizData){
+    c.innerHTML = `<div class="card center" style="padding:40px">
+      <h2>🧠 Konjugation Quiz</h2>
+      <p class="muted">Test your verb conjugation knowledge</p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-primary" onclick="startQuiz(10)">Quick · 10</button>
+        <button class="btn btn-good" onclick="startQuiz(20)">Standard · 20</button>
+        <button class="btn btn-dark" onclick="startQuiz(30)">Full · 30</button>
+      </div>
+    </div>`;
+    return;
+  }
+
+  if(quizIdx >= quizData.length){
+    const pct = Math.round(quizScore/quizData.length*100);
+    S.scores.push(pct); save();
+    quizData = null; quizIdx = 0; quizScore = 0;
+    c.innerHTML = `<div class="card results-hero">
+      <div class="stars">${pct>=90?"★★★":pct>=70?"★★☆":pct>=50?"★☆☆":"☆☆☆"}</div>
+      <div class="results-score">${pct}%</div>
+      <p class="muted">Quiz complete!</p>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn btn-primary" onclick="nav('quiz')">New Quiz</button>
+      </div></div>`;
+    return;
+  }
+
+  const q = quizData[quizIdx];
+  c.innerHTML = `
+    <div class="cj-count">Question ${quizIdx+1}/${quizData.length} · Score: ${quizScore}</div>
+    <div class="cj-quiz-q">
+      <span class="tense">${q.tenseLabel}</span>
+      <div class="person">${q.person}</div>
+      <div class="verb">${q.verb}</div>
+    </div>
+    <div id="qarea"></div>`;
+  renderQ(q);
+}
+
+function renderQ(q){
+  const area = document.getElementById("qarea");
+
+  if(q.type === "mcq"){
+    area.innerHTML = `
+      <div class="cj-quiz-opts">
+        ${q.opts.map((o,i)=>`<button class="opt" onclick="answerQ(${i})"><span class="k">${"abcd"[i]}</span>${o}</button>`).join("")}
+      </div>
+      <div id="qfb"></div>`;
+  } else {
+    area.innerHTML = `
+      <input class="cj-input" type="text" placeholder="Deine Antwort …" id="qin" autocomplete="off">
+      <div class="row" style="justify-content:center;margin-top:14px">
+        <button class="btn btn-primary" onclick="checkInput()">Check</button>
+      </div>
+      <div id="qfb"></div>`;
+    const inp = document.getElementById("qin");
+    inp.focus();
+    inp.addEventListener("keydown",e=>{if(e.key==="Enter")checkInput();});
+  }
+
+  window._q = q;
+}
+
+function checkInput(){
+  const inp = document.getElementById("qin");
+  const val = inp.value.trim().toLowerCase();
+  const q = window._q;
+  const ok = val === q.answer.toLowerCase();
+  handleAnswer(ok, q);
+}
+
+function answerQ(idx){
+  const q = window._q;
+  const ok = idx === q.answer;
+  // Highlight
+  document.querySelectorAll(".opt").forEach((o,j)=>{
+    o.style.pointerEvents="none";
+    if(j === q.answer) o.classList.add("correct");
+    if(j === idx && !ok) o.classList.add("wrong");
+  });
+  handleAnswer(ok, q);
+}
+
+function handleAnswer(ok, q){
+  if(ok){
+    quizScore++;
+    if(!S.known.includes(q.verb)) S.known.push(q.verb);
+    save();
+  }
+  const fb = document.getElementById("qfb");
+  fb.innerHTML = `<div class="feedback ${ok?"ok":"bad"}" style="margin-top:14px">
+    <div class="fb-title">${ok?"✓ Richtig!":"✗ Nicht ganz."}</div>
+    ${!ok?`<div class="fb-correct">Richtig: <u>${q.display}</u></div>`:""}
+    ${q.expl?`<div class="fb-expl">${q.expl}</div>`:""}
+  </div>
+  <div class="row" style="justify-content:center;margin-top:14px">
+    <button class="btn btn-primary btn-sm" onclick="quizIdx++;render()">Next →</button>
+  </div>`;
+}
+
+function startQuiz(n){
+  const pool = VERBS.slice();
+  quizData = [];
+  for(let i=0; i<n && pool.length; i++){
+    const v = pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+    const tense = TENSES[Math.floor(Math.random()*2)];
+    const personIdx = Math.floor(Math.random()*6);
+    const key = ["ich","du","er","wir","ihr","sie"][personIdx];
+    const answer = tense.get(v)[key];
+    const isMCQ = Math.random() < 0.6;
+
+    if(isMCQ){
+      // Generate distractors
+      const distract = pool.filter(x=>x[0]!==v[0]).sort(()=>Math.random()-.5).slice(0,3).map(x=>{
+        return tense.get(x)[key];
+      }).filter(x=>x && x !== answer);
+      while(distract.length < 3) distract.push(answer+"e");
+      const opts = [answer, ...distract].sort(()=>Math.random()-.5);
+      quizData.push({
+        type:"mcq", verb:v[0], person:PRONOUNS[personIdx], tenseLabel:tense.label,
+        opts, answer:opts.indexOf(answer), display:answer,
+        expl:`${v[0]} = ${v[1]} · ${tense.label}`
+      });
+    } else {
+      quizData.push({
+        type:"input", verb:v[0], person:PRONOUNS[personIdx], tenseLabel:tense.label,
+        answer, display:answer,
+        expl:`${v[0]} = ${v[1]} · ${tense.label}`
+      });
+    }
+  }
+  quizIdx = 0; quizScore = 0;
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
