@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Deutschkurs — Redirecting…</title>
+  <script>
+    /* GitHub Pages SPA fallback.
+       Static hosts return 404 for client-side routes like /vocab —
+       there is no real file at that path. This page copies GitHub's
+       documented SPA trick: re-enter through the app root and let the
+       router restore the path from the query string. */
+    var base = '/german-course/'
+    var path = location.pathname.slice(base.length)
+    location.replace(base + '?route=' + encodeURIComponent(path))
+  </script>
+</head>
+<body></body>
+</html>
