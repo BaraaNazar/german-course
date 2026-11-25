@@ -20,6 +20,19 @@
    ═══════════════════════════════════════════════════════════════ */
 @import "tailwindcss";
 
+/*
+ * Explicit source roots for class-name detection.
+ *
+ * Tailwind v4 normally auto-detects sources by scanning the project, but
+ * with this project's layout (Vite entry at src/index.html, static lesson
+ * pages at the repo root) automatic detection misses the components —
+ * which silently produced a stylesheet with NO utilities. Declaring the
+ * globs explicitly makes the scan deterministic: every React file in
+ * src/ is scanned, nothing else (1,500+ static lesson pages are skipped
+ * for build speed).
+ */
+@source "./**/*.{js,jsx,html}";
+
 @theme {
   /* surfaces & text */
   --color-bg: #f8f7f2;

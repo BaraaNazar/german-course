@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -17,7 +18,7 @@ const root = dirname(fileURLToPath(import.meta.url))
 // · `npm run deploy` builds and copies dist/ over the repo root.
 export default defineConfig({
   base: '/german-course/',
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   publicDir: false,
   build: {
     rollupOptions: {
