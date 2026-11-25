@@ -161,9 +161,11 @@
   .results-hero .stars { @apply text-4xl tracking-widest; }
   .results-hero .results-score { @apply text-5xl font-black text-primary my-2; }
 
-  /* ----- topbar with German flag stripe ----- */
+  /* ----- topbar with German flag stripe -----
+     The 4px tricolor at the bottom (::after) is the brand signature
+     shared with every static lesson page. */
   .topbar {
-    @apply sticky top-0 z-40 border-b border-line px-5 pt-3 pb-4;
+    @apply sticky top-0 z-40 border-b border-line px-4 pt-3 pb-3 sm:px-5;
     background: color-mix(in srgb, var(--color-surface) 88%, transparent);
     backdrop-filter: blur(10px) saturate(1.3);
     -webkit-backdrop-filter: blur(10px) saturate(1.3);
@@ -176,12 +178,17 @@
       var(--color-flag-red) 33.4% 66.7%,
       var(--color-flag-gold) 66.7% 100%);
   }
-  .topbar .row { @apply flex justify-between items-center gap-3 flex-wrap; }
   .lv-pill {
     @apply bg-gold text-ink text-xs font-black px-2.5 py-1 rounded-md shrink-0;
   }
   .crumb { @apply text-[13.5px] text-muted font-bold no-underline; }
   .crumb b { @apply text-ink; }
+
+  /* ----- swipeable single-line nav on small screens -----
+     Standard mobile pattern: the nav never wraps into a multi-line
+     navbar; it scrolls horizontally with the scrollbar hidden. */
+  .nav-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+  .nav-scroll::-webkit-scrollbar { display: none; }
 
   /* ----- speak button ----- */
   .speak-btn {
