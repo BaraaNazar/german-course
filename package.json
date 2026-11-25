@@ -1,0 +1,25 @@
+{
+  "name": "german-course",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Deutschkurs A1–C2 — React learning platform with vocab, conjugation and lesson tracks",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@vitejs/plugin-react": "^4.3.1",
+    "gh-pages": "^6.1.0",
+    "tailwindcss": "^4.3.5",
+    "vite": "^5.4.0"
+  }
+}

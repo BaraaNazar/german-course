@@ -1,5 +1,5 @@
 // Stories database - auto-generated with proper escaping
-const STORIES = [
+export const STORIES = [
   {
     "id": "story01",
     "title": "Anna und Ben",

@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════════════════
+   Deutschkurs A1–C2 · Tailwind v4 design system
+
+   Strategy: the entire visual language of the platform (German flag
+   palette — Schwarz #141414 / Rot #DD0000 / Gold #FFCE00 — plus its
+   semantic colors) is declared ONCE here as Tailwind theme tokens.
+   That gives us utilities like `bg-primary`, `text-muted`,
+   `border-line`, `shadow-1`, `rounded-card` … everywhere.
+
+   The 1,500+ static lesson pages keep using /assets/styles.css —
+   both files define the same tokens, so React pages and lesson pages
+   render identically.
+
+   Layering rules:
+   · @layer base      → document-level defaults (body, focus rings)
+   · @layer components→ repeated patterns (btn, card, quiz options…)
+                        composed with @apply so JSX stays readable
+                        instead of 30-class utility strings
+   · utilities inline → one-off layout in the JSX itself
+   ═══════════════════════════════════════════════════════════════ */
+@import "tailwindcss";
+
+@theme {
+  /* surfaces & text */
+  --color-bg: #f8f7f2;
+  --color-surface: #ffffff;
+  --color-surface-2: #f7f6ee;
+  --color-surface-3: #edeadd;
+  --color-ink: #141414;
+  --color-muted: #5a5a63;
+
+  /* lines */
+  --color-line: #e5e1d3;
+  --color-line-2: #d5d1c0;
+
+  /* German flag */
+  --color-flag-black: #141414;
+  --color-flag-red: #dd0000;
+  --color-flag-gold: #ffce00;
+
+  /* action / primary (red) */
+  --color-primary: #dd0000;
+  --color-primary-dark: #b00000;
+  --color-primary-soft: #fdeaea;
+
+  /* reward (gold) */
+  --color-gold: #ffce00;
+  --color-gold-soft: #fff7cc;
+  --color-gold-ink: #7a5d00;
+  --color-gold-line: #ecd28a;
+
+  /* semantic */
+  --color-good: #15884b;
+  --color-good-bg: #e7f6ef;
+  --color-bad: #c2182c;
+  --color-bad-bg: #fdeaea;
+
+  /* article colors: der = blue, die = red, das = green */
+  --color-der: #2563eb;
+  --color-die: #c2182c;
+  --color-das: #0f9d58;
+
+  /* elevation & radius */
+  --shadow-1: 0 1px 2px rgba(16, 24, 40, .06), 0 2px 8px rgba(16, 24, 40, .05);
+  --shadow-2: 0 2px 6px rgba(16, 24, 40, .07), 0 12px 32px rgba(16, 24, 40, .08);
+  --shadow-3: 0 8px 40px rgba(16, 24, 40, .16);
+  --radius-card: 14px;
+  --radius-pill: 99px;
+}
+
+/* ---------- document defaults ---------- */
+@layer base {
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    color: var(--color-ink);
+    background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(221, 0, 0, .05), transparent 60%),
+      radial-gradient(900px 400px at -10% 20%, rgba(255, 206, 0, .10), transparent 55%),
+      var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  ::selection { background: rgba(255, 206, 0, .35); }
+
+  /* accessible focus ring (gold) on every interactive element */
+  :focus-visible {
+    outline: 3px solid #e3a600;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+/* ---------- repeated patterns ---------- */
+@layer components {
+  /* ----- buttons ----- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-[10px] px-4 py-2.5
+           text-sm font-bold cursor-pointer transition-all duration-150 border-2
+           select-none disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary { @apply bg-primary text-white border-primary hover:bg-primary-dark hover:border-primary-dark; }
+  .btn-good { @apply bg-good text-white border-good hover:brightness-110; }
+  .btn-dark { @apply bg-flag-black text-gold border-flag-black hover:brightness-125; }
+  .btn-ghost {
+    @apply bg-transparent text-ink border-line hover:border-primary hover:text-primary;
+  }
+  .btn-lg { @apply px-6 py-3 text-base; }
+  .btn-sm { @apply px-3 py-1.5 text-xs rounded-lg; }
+
+  /* ----- cards & form fields ----- */
+  .card {
+    @apply bg-surface border border-line rounded-card p-5 mb-4;
+    box-shadow: var(--shadow-1);
+  }
+  .field { @apply block mb-4; }
+  .field span { @apply block text-xs font-bold uppercase tracking-wider text-muted mb-1.5; }
+  .field input {
+    @apply w-full rounded-[10px] border-2 border-line bg-surface-2 px-3.5 py-2.5
+           text-base text-ink placeholder:text-muted/70 focus:outline-none
+           focus:border-primary transition-colors;
+  }
+
+  /* ----- quiz answer options ----- */
+  .opt {
+    @apply flex items-center gap-3 w-full text-left rounded-xl border-2 border-line
+           bg-surface-2 px-4 py-3 text-sm font-bold cursor-pointer
+           transition-all duration-150 hover:border-primary;
+  }
+  .opt .k {
+    @apply w-7 h-7 flex items-center justify-center rounded-md bg-surface-3
+           text-xs font-black text-muted shrink-0;
+  }
+  .opt.correct { @apply border-good bg-good-bg; }
+  .opt.correct .k { @apply bg-good text-white; }
+  .opt.wrong { @apply border-bad bg-bad-bg; }
+  .opt.wrong .k { @apply bg-bad text-white; }
+
+  /* ----- answer feedback block ----- */
+  .feedback { @apply rounded-xl p-4 text-sm; }
+  .feedback.ok { @apply bg-good-bg border border-good text-good; }
+  .feedback.bad { @apply bg-bad-bg border border-bad text-bad; }
+  .feedback .fb-title { @apply font-black text-base; }
+
+  /* ----- quiz result hero ----- */
+  .results-hero { @apply text-center p-10; }
+  .results-hero .stars { @apply text-4xl tracking-widest; }
+  .results-hero .results-score { @apply text-5xl font-black text-primary my-2; }
+
+  /* ----- topbar with German flag stripe ----- */
+  .topbar {
+    @apply sticky top-0 z-40 border-b border-line px-5 pt-3 pb-4;
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    backdrop-filter: blur(10px) saturate(1.3);
+    -webkit-backdrop-filter: blur(10px) saturate(1.3);
+  }
+  .topbar::after {
+    content: "";
+    @apply absolute left-0 right-0 bottom-0 h-1 block;
+    background: linear-gradient(180deg,
+      var(--color-flag-black) 0 33.4%,
+      var(--color-flag-red) 33.4% 66.7%,
+      var(--color-flag-gold) 66.7% 100%);
+  }
+  .topbar .row { @apply flex justify-between items-center gap-3 flex-wrap; }
+  .lv-pill {
+    @apply bg-gold text-ink text-xs font-black px-2.5 py-1 rounded-md shrink-0;
+  }
+  .crumb { @apply text-[13.5px] text-muted font-bold no-underline; }
+  .crumb b { @apply text-ink; }
+
+  /* ----- speak button ----- */
+  .speak-btn {
+    @apply w-9 h-9 inline-flex items-center justify-center rounded-full
+           bg-gold-soft border border-gold-line text-base cursor-pointer
+           transition-transform duration-150 hover:scale-110 active:scale-95;
+  }
+
+  /* ----- flashcard 3D flip -----
+     Not expressible as utilities: needs preserve-3d + backface-visibility.
+     .flipped on the outer element rotates the inner card. */
+  .fc-scene { perspective: 1000px; }
+  .fc-card { @apply relative w-full h-full cursor-pointer; transform-style: preserve-3d; transition: transform .45s; }
+  .fc-flipped .fc-card { transform: rotateY(180deg); }
+  .fc-face {
+    @apply absolute inset-0 flex flex-col items-center justify-center p-6 text-center
+           bg-surface border-2 border-line rounded-3xl;
+    backface-visibility: hidden;
+    box-shadow: var(--shadow-2);
+  }
+  .fc-back { @apply bg-good-bg border-[#b3e3c9]; transform: rotateY(180deg); }
+
+  /* ----- story reader typography -----
+     Serif body, drop cap on the first paragraph, dialogue in red. */
+  .story {
+    @apply relative overflow-hidden bg-surface border border-line rounded-2xl
+           my-3 px-7 py-6;
+    font-family: Georgia, "Noto Serif", serif;
+    font-size: 17.5px;
+    line-height: 1.85;
+    box-shadow: var(--shadow-1);
+  }
+  .story::before {
+    content: "";
+    @apply absolute top-0 left-0 right-0 h-1 block;
+    background: linear-gradient(90deg,
+      var(--color-flag-black) 0 33%,
+      var(--color-flag-red) 33% 66%,
+      var(--color-flag-gold) 66% 100%);
+  }
+  .story p { @apply mb-[18px] text-ink; }
+  .story p:last-child { @apply mb-0; }
+  .story p:first-child::first-letter {
+    @apply float-left font-bold text-primary;
+    font-size: 52px;
+    line-height: .85;
+    margin: 6px 10px 0 0;
+  }
+  .story .dialogue { @apply text-primary font-semibold; }
+  .story .hl {
+    @apply text-primary font-bold cursor-pointer rounded-sm px-[1px]
+           border-b-2 border-primary/25 transition-all duration-150;
+  }
+  .story .hl:hover { @apply bg-primary-soft border-primary; }
+  .story .hl.known { @apply text-good border-good/30; }
+  .story .hl.known:hover { @apply bg-good-bg border-good; }
+  @media (max-width: 600px) {
+    .story { @apply px-4 py-[18px]; font-size: 16px; }
+    .story p:first-child::first-letter { font-size: 42px; }
+  }
+
+  /* ----- conjugation ending highlights (the core learning device) ----- */
+  .ending { @apply inline-block px-1.5 py-[1px] rounded text-[13px] font-extrabold; }
+  .end-e { @apply bg-[#e8f7ef] text-[#16a34a]; }
+  .end-st { @apply bg-[#fff4d6] text-[#8a6100]; }
+  .end-t { @apply bg-[#e9edff] text-[#3730a3]; }
+  .end-en { @apply bg-[#f3e8ff] text-[#7c3aed]; }
+  .sep-prefix { @apply text-primary; }
+
+  /* ----- flashcard grading buttons ----- */
+  .grade-btn {
+    @apply flex flex-col items-center gap-1 py-3 rounded-xl border-2 font-bold
+           text-sm cursor-pointer transition-all duration-150;
+  }
+  .grade-btn small { @apply text-[10px] font-semibold text-muted; }
+  .g-again { @apply bg-bad-bg border-bad text-bad hover:brightness-95; }
+  .g-hard { @apply bg-gold-soft border-gold-line text-gold-ink hover:brightness-95; }
+  .g-good { @apply bg-primary-soft border-primary/40 text-primary-dark hover:brightness-95; }
+  .g-easy { @apply bg-good-bg border-good/40 text-good hover:brightness-95; }
+}

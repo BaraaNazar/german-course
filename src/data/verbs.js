@@ -1882,3 +1882,5 @@ const TYPE_INFO = {
   inseparable: { name: "Untrennbar", color: "#0d9488" },
   reflexive: { name: "Reflexiv", color: "#be185d" },
 };
+
+export { VERBS, LEVELS, TYPE_INFO };

@@ -2,7 +2,7 @@
 // Format: [de, en, plural|null, example, exampleEn, category, level]
 // Levels: A1, A2, B1, B2, C1
 
-const WORDS = [
+export const WORDS = [
 // ===== DECK 1: Menschen & Familie (People & Family) — 50 words =====
 ["die Person","person","die Personen","Diese Person ist sehr nett.","This person is very nice.","people","A1"],
 ["der Mann","man","die Männer","Der Mann liest eine Zeitung.","The man is reading a newspaper.","people","A1"],
