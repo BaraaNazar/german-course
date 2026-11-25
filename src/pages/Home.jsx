@@ -4,6 +4,7 @@ import { VERBS } from '../data/verbs'
 import { STORIES } from '../data/stories'
 import { useAuth } from '../context/AuthContext'
 import { useConjugationProgress, useVocabProgress } from '../context/ProgressContext'
+import { staticUrl } from '../utils/paths'
 
 /**
  * Home — the hub. Shows live stats (from the actual data modules, not
@@ -57,7 +58,7 @@ export default function Home() {
 
       <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]">
         <TrackCard
-          to="hybrid/index.html" icon="⚡" title="Hybrid" badge="Recommended"
+          to={staticUrl('hybrid/index.html')} icon="⚡" title="Hybrid" badge="Recommended"
           desc="Audio + instant-feedback exercises + bilingual grammar with Mermaid diagrams. The complete package."
           tags={[['Interactive', 'primary'], ['498 lessons', 'muted']]}
         />
@@ -72,17 +73,17 @@ export default function Home() {
           tags={[['Interactive', 'primary'], [`${VERBS.length} verbs`, 'muted']]}
         />
         <TrackCard
-          to="textkurs/index.html" icon="📖" title="Textkurs"
+          to={staticUrl('textkurs/index.html')} icon="📖" title="Textkurs"
           desc="Print-friendly text lessons. Bilingual A1–A2, increasingly German B1+. Works fully offline."
           tags={[['Text-based', 'gold'], ['498 lessons', 'muted']]}
         />
         <TrackCard
-          to="kursraum/index.html" icon="🏛️" title="Kursraum"
+          to={staticUrl('kursraum/index.html')} icon="🏛️" title="Kursraum"
           desc="Interactive browser lessons with audio, quizzes, and flashcards. German-first from B1."
           tags={[['Interactive', 'primary'], ['498 lessons', 'muted']]}
         />
         <TrackCard
-          to="pimsleur/index.html" icon="🎧" title="Pimsleur-Style"
+          to={staticUrl('pimsleur/index.html')} icon="🎧" title="Pimsleur-Style"
           desc="Audio-first, anticipation-driven. Max 5 new words per lesson. Grammar absorbed through patterns."
           tags={[['Audio-first', 'dark'], ['5 lessons', 'muted']]}
         />
@@ -91,11 +92,11 @@ export default function Home() {
       <div className="card">
         <h3 className="mb-3 text-[15px] font-extrabold uppercase tracking-wider text-muted">Quick Links</h3>
         <div className="flex flex-wrap gap-2">
-          <QuickLink href="about.html">🎯 About</QuickLink>
-          <QuickLink href="resources.html">📚 Resources</QuickLink>
+          <QuickLink href={staticUrl('about.html')}>🎯 About</QuickLink>
+          <QuickLink href={staticUrl('resources.html')}>📚 Resources</QuickLink>
           <QuickLink to="/konjugation">🔀 Konjugation</QuickLink>
           <QuickLink to="/vocab">🧠 Vocab Trainer</QuickLink>
-          <QuickLink href="hybrid/H-A1-M1-U1-L1.html">⚡ Start Lesson 1</QuickLink>
+          <QuickLink href={staticUrl('hybrid/H-A1-M1-U1-L1.html')}>⚡ Start Lesson 1</QuickLink>
           {!user && <QuickLink to="/signup">👤 Create Account</QuickLink>}
         </div>
       </div>
