@@ -35,12 +35,20 @@ jobs:
       - name: Build
         run: npm run build
 
+      # Switch Pages from "legacy" (serve the main branch) to artifact
+      # deployments produced by this workflow. Done via the REST API
+      # because actions/configure-pages enablement does not always
+      # flip an existing legacy configuration. The GITHUB_TOKEN has
+      # pages:write via the `permissions` block above.
+      - name: Enable Pages workflow deployment
+        run: |
+          curl -sSf -X PATCH \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages" \
+            -d '{"build_type":"workflow"}'
+
       - uses: actions/configure-pages@v5
-        with:
-          # Switches the repo's Pages build_type from legacy (serve from
-          # branch) to "GitHub Actions" so this workflow's artifact is
-          # what actually gets served.
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
