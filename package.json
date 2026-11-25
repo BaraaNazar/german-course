@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "react": "^18.3.1",
