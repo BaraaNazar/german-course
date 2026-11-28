@@ -136,10 +136,13 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
         <div className="text-[26px] font-black text-primary">{q.verb}</div>
       </div>
 
+      {/* key={index} forces a fresh component per question — without it,
+          two consecutive type-in questions share one instance and the
+          input would still hold the previous answer. */}
       {q.type === 'mcq' ? (
-        <McqQuestion q={q} answered={answered} onAnswer={handleAnswer} />
+        <McqQuestion key={index} q={q} answered={answered} onAnswer={handleAnswer} />
       ) : (
-        <InputQuestion q={q} answered={answered} onAnswer={handleAnswer} />
+        <InputQuestion key={index} q={q} answered={answered} onAnswer={handleAnswer} />
       )}
 
       {answered && (

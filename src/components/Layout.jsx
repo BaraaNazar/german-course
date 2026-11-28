@@ -1,18 +1,23 @@
 import { NavLink, Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { staticUrl } from '../utils/paths'
+import ErrorBoundary from './ErrorBoundary'
 
 /**
  * Layout — the shared shell (topbar + routed page).
  * The navbar reacts to auth state: signed-out visitors get Login/Signup,
  * signed-in users get their name, the profile page and a logout action.
+ * The ErrorBoundary wraps only the routed page: if a page crashes, the
+ * navbar (and navigation) keeps working (task C1).
  */
 export default function Layout() {
   return (
     <>
       <Navbar />
       <main className="mx-auto w-full max-w-[960px] px-4 pb-20 pt-6">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </>
   )

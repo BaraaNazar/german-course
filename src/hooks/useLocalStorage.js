@@ -10,28 +10,36 @@ import { useCallback, useEffect, useState } from 'react'
  *   never read stale state when several updates happen in one tick.
  * - Invalid/corrupt JSON in storage falls back to the initial value instead
  *   of crashing the app (defensive parsing).
+ * - Optional `sanitize`: applied to EVERY read (initial load and sync
+ *   re-reads). Coerces whatever is stored into the expected shape so one
+ *   corrupt write can never crash the consumers of this key. Must be a
+ *   stable module-level function (captured in the listener closure).
  * - Synchronisation: every write broadcasts a namespaced CustomEvent on
  *   `window`. All other hook instances that share the same key re-read from
  *   storage. This keeps components mounted in different parts of the tree in
  *   sync without forcing a global state manager, and the native `storage`
  *   event keeps separate browser tabs in sync as well.
  *
- * @param {string} key   localStorage key
- * @param {*} initial    initial value or `() => value` lazy initializer
+ * @param {string} key        localStorage key
+ * @param {*} initial         initial value or `() => value` lazy initializer
+ * @param {Function} [sanitize] shape guard applied to parsed reads
  */
-export function useLocalStorage(key, initial) {
+export function useLocalStorage(key, initial, sanitize = null) {
+  const applySanitize = parsed => (sanitize ? sanitize(parsed) : parsed)
+  const defaultFor = () => (typeof initial === 'function' ? initial() : initial)
+
   const lazyInit = useCallback(
     () => {
       try {
         const raw = window.localStorage.getItem(key)
-        if (raw !== null) return JSON.parse(raw)
+        if (raw !== null) return applySanitize(JSON.parse(raw))
       } catch (err) {
         // Corrupt JSON — treat as absent and fall through to the default.
         console.warn(`useLocalStorage: invalid JSON for "${key}", resetting`, err)
       }
-      return typeof initial === 'function' ? initial() : initial
+      return defaultFor()
     },
-    [key], // `initial` intentionally excluded: only used on first mount/reset
+    [key], // `initial`/`sanitize` intentionally excluded: only first-mount values
   )
 
   const [value, setValue] = useState(lazyInit)
@@ -42,8 +50,8 @@ export function useLocalStorage(key, initial) {
     const sync = () => {
       try {
         const raw = window.localStorage.getItem(key)
-        setValue(raw !== null ? JSON.parse(raw) : (typeof initial === 'function' ? initial() : initial))
-      } catch { /* ignore corrupt reads */ }
+        setValue(raw !== null ? applySanitize(JSON.parse(raw)) : defaultFor())
+      } catch { /* ignore corrupt reads — the initializer already warned */ }
     }
     window.addEventListener(localEvent, sync)
     window.addEventListener('storage', sync)

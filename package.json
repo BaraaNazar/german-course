@@ -3,12 +3,13 @@
   "private": true,
   "version": "2.0.0",
   "type": "module",
-  "description": "Deutschkurs A1–C2 — React learning platform with vocab, conjugation and lesson tracks",
+  "description": "Deutschkurs A1\u2013C2 \u2014 React learning platform with vocab, conjugation and lesson tracks",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "bash scripts/deploy.sh"
+    "deploy": "bash scripts/deploy.sh",
+    "test": "node --test"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
+import { sanitizeConj, sanitizeVocab, EMPTY_CONJ, EMPTY_VOCAB } from '../utils/sanitizeProgress'
 
 /**
  * Progress hooks — all learning progress lives in localStorage.
@@ -11,11 +12,9 @@ import { useLocalStorage } from '../hooks/useLocalStorage'
 
 /** Conjugation trainer progress: mastered verbs, quiz history per level. */
 export function useConjugationProgress() {
-  const [progress, setProgress] = useLocalStorage('conj_v2', {
-    known: [],      // infinitives the user has mastered, e.g. ['sein','haben']
-    scores: [],     // recent overall quiz results (percent)
-    levelScores: {},// per-level quiz history: { A1: [80,90], ... }
-  })
+  // sanitizeConj guards against corrupt/legacy localStorage data:
+  // a wrong-typed field can never white-screen the app (task B1).
+  const [progress, setProgress] = useLocalStorage('conj_v2', EMPTY_CONJ, sanitizeConj)
 
   const toggleKnown = useCallback(
     inf => {
@@ -57,12 +56,8 @@ export function useConjugationProgress() {
 
 /** Vocab trainer progress: known words, quiz scores, per-deck completion. */
 export function useVocabProgress() {
-  const [progress, setProgress] = useLocalStorage('vocab_v1', {
-    known: [],   // German headwords the user has learned
-    scores: [],  // quiz results (percent)
-    deckProgress: {},
-    milestones: [],
-  })
+  // sanitizeVocab — same white-screen guard for the vocabulary document.
+  const [progress, setProgress] = useLocalStorage('vocab_v1', EMPTY_VOCAB, sanitizeVocab)
 
   const markWordKnown = useCallback(
     (de, known = true) => {
