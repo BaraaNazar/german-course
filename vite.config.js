@@ -19,6 +19,11 @@ const root = dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   base: '/german-course/',
   plugins: [react(), tailwindcss()],
+  test: {
+    environment: 'jsdom',
+    // globals:true lets @testing-library/react auto-cleanup between tests
+    globals: true,
+  },
   publicDir: false,
   build: {
     rollupOptions: {

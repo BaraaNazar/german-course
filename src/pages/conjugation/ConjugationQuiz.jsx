@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
-import { VERBS, LEVELS } from '../../data/verbs'
+import { LEVELS } from '../../data/verbs'
 import { useConjugationProgress } from '../../context/ProgressContext'
-import { PRONOUNS, KEYS, TENSES } from './conjugation-table'
+import { buildConjQuiz } from '../../utils/quiz'
 
 /**
  * ConjugationQuiz — generated quiz with two question formats:
@@ -23,7 +23,7 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
   const { progress, recordQuiz, markKnown } = useConjugationProgress()
 
   function start(n) {
-    setQuestions(buildQuiz(level, n))
+    setQuestions(buildConjQuiz(level, n))
     setStarted(true)
     setIndex(0)
     setScore(0)
@@ -247,63 +247,4 @@ function Feedback({ correct, q }) {
       {q.expl && <div className="mt-1 text-muted">{q.expl}</div>}
     </div>
   )
-}
-
-/* ---------- quiz generation ---------- */
-
-/**
- * Builds a quiz:
- * 1. sample `count` distinct verbs from the level (splice = no repeats)
- * 2. pick a random tense × random person for each
- * 3. 60% MCQ / 40% type-in
- *
- * MCQ distractors are REAL conjugated forms of other verbs from the same
- * level & person — much harder (and more useful) than made-up strings.
- * Padding falls back to a slightly mutated answer only in the pathological
- * case of a tiny pool with identical forms.
- */
-function buildQuiz(level, count) {
-  const pool = VERBS.filter((v) => v.level === level).slice()
-  const questions = []
-
-  for (let i = 0; i < count && pool.length; i++) {
-    const verb = pool.splice(Math.floor(Math.random() * pool.length), 1)[0]
-    const tense = TENSES[Math.floor(Math.random() * TENSES.length)]
-    const personIdx = Math.floor(Math.random() * 6)
-    const answer = tense.get(verb)[KEYS[personIdx]]
-    if (!answer) continue
-
-    if (Math.random() < 0.6) {
-      // Distractors: same person, other verbs — deduplicated, never the answer.
-      const wrong = pool
-        .map((x) => tense.get(x)[KEYS[personIdx]])
-        .filter((f) => f && f !== answer)
-        .filter((f, idx, arr) => arr.indexOf(f) === idx)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3)
-      while (wrong.length < 3) wrong.push(answer + 'e') // tiny-pool fallback
-      const opts = [answer, ...wrong].sort(() => Math.random() - 0.5)
-      questions.push({
-        type: 'mcq',
-        verb: verb.inf,
-        person: PRONOUNS[personIdx],
-        tenseLabel: tense.label,
-        opts,
-        answer: opts.indexOf(answer),
-        display: answer,
-        expl: `${verb.inf} = ${verb.en} · ${tense.label}`,
-      })
-    } else {
-      questions.push({
-        type: 'input',
-        verb: verb.inf,
-        person: PRONOUNS[personIdx],
-        tenseLabel: tense.label,
-        answer,
-        display: answer,
-        expl: `${verb.inf} = ${verb.en} · ${tense.label}`,
-      })
-    }
-  }
-  return questions
 }

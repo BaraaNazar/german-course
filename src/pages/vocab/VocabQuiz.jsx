@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { WORDS } from '../../data/vocab'
+import { buildVocabQuiz } from '../../utils/quiz'
 import { useVocabProgress } from '../../context/ProgressContext'
 
 /**
@@ -17,7 +18,7 @@ export default function VocabQuiz({ progress }) {
   const { markWordKnown, recordQuiz } = useVocabProgress()
 
   function start(n) {
-    setQuestions(buildQuiz(n))
+    setQuestions(buildVocabQuiz(WORDS, n))
     setIndex(0)
     setScore(0)
     setAnswered(null)
@@ -152,36 +153,4 @@ export default function VocabQuiz({ progress }) {
       )}
     </div>
   )
-}
-
-/* ---------- generation ---------- */
-
-function buildQuiz(n) {
-  const pool = WORDS.slice()
-  const questions = []
-  for (let i = 0; i < n && pool.length; i++) {
-    const word = pool.splice(Math.floor(Math.random() * pool.length), 1)[0]
-    const germanToEnglish = Math.random() < 0.5
-
-    // Distractors from the same side the answer is on, so the options
-    // are all plausible members of one language.
-    const answer = germanToEnglish ? word[1] : word[0]
-    const distract = pool
-      .map((x) => (germanToEnglish ? x[1] : x[0]))
-      .filter((f) => f && f !== answer)
-      .filter((f, idx, arr) => arr.indexOf(f) === idx) // dedupe
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 3)
-    while (distract.length < 3) distract.push(answer + '!')
-
-    const opts = [answer, ...distract].sort(() => Math.random() - 0.5)
-    questions.push({
-      prompt: germanToEnglish ? 'What does' : 'How do you say',
-      highlight: germanToEnglish ? word[0] : word[1],
-      opts,
-      answer: opts.indexOf(answer),
-      word,
-    })
-  }
-  return questions
 }

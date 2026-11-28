@@ -1,4 +1,4 @@
-import { PRONOUNS, KEYS, TENSES } from './conjugation-table'
+import { PRONOUNS, KEYS, TENSES } from '../../utils/conjugationTable'
 import { EndingWithPrefix } from '../../utils/endings'
 import { useConjugationProgress } from '../../context/ProgressContext'
 import SpeakButton from '../../components/SpeakButton'

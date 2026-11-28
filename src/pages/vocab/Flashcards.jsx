@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { WORDS } from '../../data/vocab'
 import { useVocabProgress } from '../../context/ProgressContext'
 import SpeakButton from '../../components/SpeakButton'
+import { gradeDecision } from '../../utils/flashcards'
 
 /**
  * Flashcards — one deck at a time, 3D flip cards.
@@ -45,12 +46,12 @@ export default function Flashcards({ deck, onDeckChange, onQuiz }) {
 
   function grade(g) {
     if (!word) return
-    if (g === 'again') {
-      markWordKnown(word[0], false)
-      // Re-queue: copy-on-write keeps this cheap for 50-word decks.
+    // Pure decision (unit-tested) → side effects applied here.
+    const decision = gradeDecision(g)
+    if (decision.known !== null) markWordKnown(word[0], decision.known)
+    if (decision.requeue) {
+      // Copy-on-write keeps this cheap for 50-word decks.
       setQueue((q) => [...q, word])
-    } else if (g === 'good' || g === 'easy') {
-      markWordKnown(word[0], true)
     }
     setFlipped(false)
     setPos((p) => p + 1)

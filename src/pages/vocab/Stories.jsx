@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { STORIES } from '../../data/stories'
 import { WORDS } from '../../data/vocab'
 import { speakGerman } from '../../utils/speech'
+import { buildVocabLookup, tokenizeParagraph, isDialogue } from '../../utils/storyTokenizer'
 
 /**
  * Stories — reading comprehension: list → reader → MCQ test.
@@ -123,24 +124,9 @@ export default function Stories({ progress }) {
 
 /* ---------- helpers & sub-components ---------- */
 
-/** Dialogue lines start with a quotation mark or "Name:" pattern. */
-function isDialogue(p) {
-  return /^[«"]|^[A-Z][a-z]+:|^"/.test(p.trim())
-}
-
-/**
- * Lookup index for vocabulary highlighting, built ONCE per session:
- * German phrase → English meaning, sorted longest-first so longer
- * phrases consume the text before their shorter substrings can.
- */
-const VOCAB_LOOKUP = [...WORDS]
-  .sort((a, b) => b[0].length - a[0].length)
-  .map((w) => ({ de: w[0], en: w[1] }))
-
-// One alternation regex over all 5,000 phrases would be slow to build;
-// instead we scan the paragraph with a single word-boundary pass and
-// check the trailing window against a Map of phrases.
-const PHRASE_MAP = new Map(VOCAB_LOOKUP.map((v) => [v.de.toLowerCase(), v.en]))
+// Lookup index built ONCE at module load (task B4: logic lives in
+// src/utils/storyTokenizer.js and is unit-tested there).
+const PHRASE_MAP = buildVocabLookup(WORDS)
 
 /**
  * Renders a paragraph, wrapping every vocabulary phrase in a <span>
@@ -154,7 +140,7 @@ const PHRASE_MAP = new Map(VOCAB_LOOKUP.map((v) => [v.de.toLowerCase(), v.en]))
  * paragraph, fast enough for one-time rendering.
  */
 function HighlightedParagraph({ text, knownSet }) {
-  const tokens = useMemo(() => tokenize(text, knownSet), [text, knownSet])
+  const tokens = useMemo(() => tokenizeParagraph(text, PHRASE_MAP, knownSet), [text, knownSet])
   return (
     <>
       {tokens.map((t, i) =>
@@ -174,33 +160,6 @@ function HighlightedParagraph({ text, knownSet }) {
       )}
     </>
   )
-}
-
-function tokenize(text, knownSet) {
-  const parts = text.split(/\s+/)
-  const tokens = []
-  let i = 0
-  while (i < parts.length) {
-    let matched = null
-    // Try 3-, 2-, then 1-word joins (longest phrase wins).
-    for (const len of [3, 2, 1]) {
-      if (i + len > parts.length) continue
-      const phrase = parts.slice(i, i + len).join(' ')
-      const en = PHRASE_MAP.get(phrase.toLowerCase())
-      if (en !== undefined) {
-        matched = { text: phrase, en, known: knownSet.has(phrase) }
-        i += len
-        break
-      }
-    }
-    if (!matched) {
-      tokens.push({ text: parts[i], match: false })
-      i++
-    } else {
-      tokens.push({ ...matched, match: true })
-    }
-  }
-  return tokens
 }
 
 /* ---------- comprehension test ---------- */
