@@ -6,4 +6,4 @@
  * (/konjugation, /vocab, …) they resolve against that route and 404.
  * Prefixing with Vite's BASE_URL makes them correct everywhere.
  */
-export const staticUrl = path => `${import.meta.env.BASE_URL}${path}`
+export const staticUrl = (path) => `${import.meta.env.BASE_URL}${path}`

@@ -35,12 +35,17 @@ export default function VocabPage() {
   return (
     <>
       <div className="flex border-b-2 border-line">
-        {tabs.map(t => (
+        {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => { setView(t.id); window.scrollTo(0, 0) }}
-            className={`flex-1 border-b-[3px] bg-none px-2 py-3 text-center text-[13px] font-extrabold cursor-pointer transition-all ${
-              view === t.id ? 'border-primary text-primary' : 'border-transparent text-muted hover:text-ink'
+            onClick={() => {
+              setView(t.id)
+              window.scrollTo(0, 0)
+            }}
+            className={`flex-1 cursor-pointer border-b-[3px] bg-none px-2 py-3 text-center text-[13px] font-extrabold transition-all ${
+              view === t.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted hover:text-ink'
             }`}
           >
             {t.label}
@@ -49,8 +54,12 @@ export default function VocabPage() {
         ))}
       </div>
 
-      {view === 'home' && <HomeView progress={progress} onStartDeck={startDeck} onQuiz={() => setView('quiz')} />}
-      {view === 'flash' && <Flashcards deck={deck} onDeckChange={startDeck} onQuiz={() => setView('quiz')} />}
+      {view === 'home' && (
+        <HomeView progress={progress} onStartDeck={startDeck} onQuiz={() => setView('quiz')} />
+      )}
+      {view === 'flash' && (
+        <Flashcards deck={deck} onDeckChange={startDeck} onQuiz={() => setView('quiz')} />
+      )}
       {view === 'quiz' && <VocabQuiz progress={progress} />}
       {view === 'story' && <Stories progress={progress} />}
     </>
@@ -78,7 +87,7 @@ const DECK_SIZE = 50
 function HomeView({ progress, onStartDeck, onQuiz }) {
   const known = progress.known.length
   const total = WORDS.length
-  const pct = total ? Math.round(known / total * 100) : 0
+  const pct = total ? Math.round((known / total) * 100) : 0
   const numDecks = Math.ceil(total / DECK_SIZE)
   const knownSet = new Set(progress.known)
 
@@ -92,7 +101,7 @@ function HomeView({ progress, onStartDeck, onQuiz }) {
   return (
     <>
       <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {stats.map(s => (
+        {stats.map((s) => (
           <div key={s.lbl} className="rounded-xl border border-line bg-surface p-2.5 text-center">
             <div className="text-[22px] font-black text-primary">{s.num}</div>
             <div className="text-[10px] font-bold tracking-wider text-muted uppercase">{s.lbl}</div>
@@ -103,10 +112,10 @@ function HomeView({ progress, onStartDeck, onQuiz }) {
       {/* Milestones */}
       <div className="card">
         <h3 className="mt-0">🏅 Milestones</h3>
-        {MILESTONES.map(m => {
+        {MILESTONES.map((m) => {
           const unlocked = known >= m.n
-          const current = !unlocked && MILESTONES.every(x => x.n <= known || x === m) // first locked = current
-          const barPct = Math.min(100, Math.round(known / m.n * 100))
+          const current = !unlocked && MILESTONES.every((x) => x.n <= known || x === m) // first locked = current
+          const barPct = Math.min(100, Math.round((known / m.n) * 100))
           return (
             <div
               key={m.n}
@@ -123,13 +132,18 @@ function HomeView({ progress, onStartDeck, onQuiz }) {
                 <b>{m.name}</b> — {m.desc}
                 {current && (
                   <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-3">
-                    <i className="block h-full rounded-full bg-good" style={{ width: `${barPct}%` }} />
+                    <i
+                      className="block h-full rounded-full bg-good"
+                      style={{ width: `${barPct}%` }}
+                    />
                   </div>
                 )}
               </div>
-              {unlocked
-                ? <span className="font-black text-good">✓</span>
-                : <span className="text-xs text-muted">{m.n} words</span>}
+              {unlocked ? (
+                <span className="font-black text-good">✓</span>
+              ) : (
+                <span className="text-xs text-muted">{m.n} words</span>
+              )}
             </div>
           )
         })}
@@ -138,12 +152,12 @@ function HomeView({ progress, onStartDeck, onQuiz }) {
       {/* Decks */}
       <div className="card">
         <h3 className="mt-0">📚 Decks</h3>
-        {Array.from({ length: numDecks }, (_, i) => i + 1).map(d => {
+        {Array.from({ length: numDecks }, (_, i) => i + 1).map((d) => {
           const words = WORDS.filter((_, idx) => Math.floor(idx / DECK_SIZE) + 1 === d)
           if (!words.length) return null
-          const k = words.filter(w => knownSet.has(w[0])).length
-          const p = Math.round(k / words.length * 100)
-          const cats = [...new Set(words.map(w => w[5]))].join(', ')
+          const k = words.filter((w) => knownSet.has(w[0])).length
+          const p = Math.round((k / words.length) * 100)
+          const cats = [...new Set(words.map((w) => w[5]))].join(', ')
           return (
             <div
               key={d}
@@ -155,17 +169,23 @@ function HomeView({ progress, onStartDeck, onQuiz }) {
               </div>
               <div className="min-w-0 flex-1">
                 <b className="text-sm">Deck {d}</b>
-                <span className="block truncate text-[11.5px] text-muted">{words.length} words · {cats}</span>
+                <span className="block truncate text-[11.5px] text-muted">
+                  {words.length} words · {cats}
+                </span>
                 <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-surface-3">
                   <i className="block h-full rounded-full bg-good" style={{ width: `${p}%` }} />
                 </div>
               </div>
-              <span className="text-[11px] font-extrabold text-good">{k}/{words.length}</span>
+              <span className="text-[11px] font-extrabold text-good">
+                {k}/{words.length}
+              </span>
             </div>
           )
         })}
         <div className="mt-4 text-center">
-          <button className="btn btn-primary" onClick={onQuiz}>Take a Quiz →</button>
+          <button className="btn btn-primary" onClick={onQuiz}>
+            Take a Quiz →
+          </button>
         </div>
       </div>
     </>

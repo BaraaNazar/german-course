@@ -7,7 +7,7 @@ export default function SpeakButton({ text, label = '🔊' }) {
       type="button"
       className="speak-btn"
       aria-label={`Pronounce: ${text}`}
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation() // do not flip cards / trigger parent click handlers
         speakGerman(text)
       }}

@@ -48,12 +48,12 @@ export default function Flashcards({ deck, onDeckChange, onQuiz }) {
     if (g === 'again') {
       markWordKnown(word[0], false)
       // Re-queue: copy-on-write keeps this cheap for 50-word decks.
-      setQueue(q => [...q, word])
+      setQueue((q) => [...q, word])
     } else if (g === 'good' || g === 'easy') {
       markWordKnown(word[0], true)
     }
     setFlipped(false)
-    setPos(p => p + 1)
+    setPos((p) => p + 1)
   }
 
   /* ---------- deck finished ---------- */
@@ -64,11 +64,17 @@ export default function Flashcards({ deck, onDeckChange, onQuiz }) {
         <h2>Deck {deck} Complete!</h2>
         <p className="text-muted">You reviewed all {total} words.</p>
         <div className="mt-4 flex flex-wrap justify-center gap-3">
-          <button className="btn btn-primary" onClick={() => onDeckChange(deck)}>↻ Restart Deck</button>
+          <button className="btn btn-primary" onClick={() => onDeckChange(deck)}>
+            ↻ Restart Deck
+          </button>
           {deck < Math.ceil(WORDS.length / DECK_SIZE) && (
-            <button className="btn btn-good" onClick={() => onDeckChange(deck + 1)}>Next Deck →</button>
+            <button className="btn btn-good" onClick={() => onDeckChange(deck + 1)}>
+              Next Deck →
+            </button>
           )}
-          <button className="btn btn-ghost" onClick={onQuiz}>Take Quiz</button>
+          <button className="btn btn-ghost" onClick={onQuiz}>
+            Take Quiz
+          </button>
         </div>
       </div>
     )
@@ -85,17 +91,19 @@ export default function Flashcards({ deck, onDeckChange, onQuiz }) {
 
       {/* Click anywhere on the card flips it (both faces) */}
       <div className={`fc-scene my-4 h-[280px] ${flipped ? 'fc-flipped' : ''}`}>
-        <div className="fc-card" onClick={() => setFlipped(f => !f)}>
+        <div className="fc-card" onClick={() => setFlipped((f) => !f)}>
           <div className="fc-face">
             <div className="text-[clamp(26px,6vw,36px)] font-black">{word[0]}</div>
-            <div className="mt-3" onClick={e => e.stopPropagation()}>
+            <div className="mt-3" onClick={(e) => e.stopPropagation()}>
               <SpeakButton text={word[0]} />
             </div>
           </div>
           <div className="fc-face fc-back">
             <div className="text-[clamp(26px,6vw,36px)] font-black">{word[0]}</div>
             <div className="mt-2.5 text-[clamp(18px,4vw,22px)] text-muted">{word[1]}</div>
-            {word[2] && <div className="mt-1.5 text-[13px] font-bold text-gold-ink">Plural: {word[2]}</div>}
+            {word[2] && (
+              <div className="mt-1.5 text-[13px] font-bold text-gold-ink">Plural: {word[2]}</div>
+            )}
             {word[3] && (
               <div className="mt-4 max-w-[480px] rounded-[10px] bg-surface-2 px-4 py-2.5 text-sm text-muted">
                 “{word[3]}”<br />
@@ -109,10 +117,18 @@ export default function Flashcards({ deck, onDeckChange, onQuiz }) {
       <p className="text-center text-sm text-muted">Click card to flip</p>
 
       <div className="mt-4 grid grid-cols-2 gap-2.5 md:grid-cols-4">
-        <button className="grade-btn g-again" onClick={() => grade('again')}>Again<small>don't know</small></button>
-        <button className="grade-btn g-hard" onClick={() => grade('hard')}>Hard<small>so-so</small></button>
-        <button className="grade-btn g-good" onClick={() => grade('good')}>Good<small>knew it</small></button>
-        <button className="grade-btn g-easy" onClick={() => grade('easy')}>Easy<small>easy!</small></button>
+        <button className="grade-btn g-again" onClick={() => grade('again')}>
+          Again<small>don’t know</small>
+        </button>
+        <button className="grade-btn g-hard" onClick={() => grade('hard')}>
+          Hard<small>so-so</small>
+        </button>
+        <button className="grade-btn g-good" onClick={() => grade('good')}>
+          Good<small>knew it</small>
+        </button>
+        <button className="grade-btn g-easy" onClick={() => grade('easy')}>
+          Easy<small>easy!</small>
+        </button>
       </div>
     </>
   )

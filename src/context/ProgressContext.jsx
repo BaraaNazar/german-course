@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { sanitizeConj, sanitizeVocab, EMPTY_CONJ, EMPTY_VOCAB } from '../utils/sanitizeProgress'
 
@@ -17,9 +17,9 @@ export function useConjugationProgress() {
   const [progress, setProgress] = useLocalStorage('conj_v2', EMPTY_CONJ, sanitizeConj)
 
   const toggleKnown = useCallback(
-    inf => {
-      setProgress(p => {
-        const known = p.known.includes(inf) ? p.known.filter(k => k !== inf) : [...p.known, inf]
+    (inf) => {
+      setProgress((p) => {
+        const known = p.known.includes(inf) ? p.known.filter((k) => k !== inf) : [...p.known, inf]
         return { ...p, known }
       })
     },
@@ -27,22 +27,22 @@ export function useConjugationProgress() {
   )
 
   const markKnown = useCallback(
-    inf => {
-      setProgress(p => (p.known.includes(inf) ? p : { ...p, known: [...p.known, inf] }))
+    (inf) => {
+      setProgress((p) => (p.known.includes(inf) ? p : { ...p, known: [...p.known, inf] }))
     },
     [setProgress],
   )
 
   const unmarkKnown = useCallback(
-    inf => {
-      setProgress(p => ({ ...p, known: p.known.filter(k => k !== inf) }))
+    (inf) => {
+      setProgress((p) => ({ ...p, known: p.known.filter((k) => k !== inf) }))
     },
     [setProgress],
   )
 
   const recordQuiz = useCallback(
     (level, percent) => {
-      setProgress(p => ({
+      setProgress((p) => ({
         ...p,
         scores: [...p.scores, percent],
         levelScores: { ...p.levelScores, [level]: [...(p.levelScores[level] ?? []), percent] },
@@ -61,9 +61,9 @@ export function useVocabProgress() {
 
   const markWordKnown = useCallback(
     (de, known = true) => {
-      setProgress(p => {
+      setProgress((p) => {
         if (known && p.known.includes(de)) return p
-        if (!known) return { ...p, known: p.known.filter(k => k !== de) }
+        if (!known) return { ...p, known: p.known.filter((k) => k !== de) }
         return { ...p, known: [...p.known, de] }
       })
     },
@@ -71,8 +71,8 @@ export function useVocabProgress() {
   )
 
   const recordQuiz = useCallback(
-    percent => {
-      setProgress(p => ({ ...p, scores: [...p.scores, percent] }))
+    (percent) => {
+      setProgress((p) => ({ ...p, scores: [...p.scores, percent] }))
     },
     [setProgress],
   )

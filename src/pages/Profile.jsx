@@ -13,7 +13,8 @@ export default function Profile() {
   const { progress: conj } = useConjugationProgress()
   const { progress: vocab } = useVocabProgress()
 
-  const avg = scores => (scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null)
+  const avg = (scores) =>
+    scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null
 
   return (
     <>
@@ -25,17 +26,30 @@ export default function Profile() {
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card">
-          <h3 className="mt-0 text-[15px] font-extrabold uppercase tracking-wider text-muted">Vocabulary</h3>
-          <Row label="Words known" value={`${vocab.known.length} / ${WORDS.length.toLocaleString()}`} />
-          <Row label="Progress" value={`${Math.round(vocab.known.length / WORDS.length * 100)}%`} />
+          <h3 className="mt-0 text-[15px] font-extrabold tracking-wider text-muted uppercase">
+            Vocabulary
+          </h3>
+          <Row
+            label="Words known"
+            value={`${vocab.known.length} / ${WORDS.length.toLocaleString()}`}
+          />
+          <Row
+            label="Progress"
+            value={`${Math.round((vocab.known.length / WORDS.length) * 100)}%`}
+          />
           <Row label="Quizzes taken" value={vocab.scores.length} />
           <Row label="Average score" value={avg(vocab.scores) ? `${avg(vocab.scores)}%` : '—'} />
         </div>
 
         <div className="card">
-          <h3 className="mt-0 text-[15px] font-extrabold uppercase tracking-wider text-muted">Conjugation</h3>
+          <h3 className="mt-0 text-[15px] font-extrabold tracking-wider text-muted uppercase">
+            Conjugation
+          </h3>
           <Row label="Verbs mastered" value={`${conj.known.length} / ${VERBS.length}`} />
-          <Row label="Progress" value={`${Math.round(conj.known.length / VERBS.length * 100)}%`} />
+          <Row
+            label="Progress"
+            value={`${Math.round((conj.known.length / VERBS.length) * 100)}%`}
+          />
           <Row label="Quizzes taken" value={conj.scores.length} />
           <Row label="Average score" value={avg(conj.scores) ? `${avg(conj.scores)}%` : '—'} />
         </div>
@@ -43,14 +57,17 @@ export default function Profile() {
 
       {conj.levelScores && Object.keys(conj.levelScores).length > 0 && (
         <div className="card">
-          <h3 className="mt-0 text-[15px] font-extrabold uppercase tracking-wider text-muted">
+          <h3 className="mt-0 text-[15px] font-extrabold tracking-wider text-muted uppercase">
             Conjugation · quiz history by level
           </h3>
           {Object.entries(conj.levelScores).map(([level, scores]) => (
             <Row
               key={level}
               label={level}
-              value={scores.slice(-5).map(s => `${s}%`).join(' · ')}
+              value={scores
+                .slice(-5)
+                .map((s) => `${s}%`)
+                .join(' · ')}
             />
           ))}
         </div>

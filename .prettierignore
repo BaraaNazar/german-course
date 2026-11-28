@@ -1,0 +1,12 @@
+# Never format generated/legacy content — only src/ and config files.
+dist
+node_modules
+package-lock.json
+kursraum
+textkurs
+hybrid
+pimsleur
+assets
+learning-records
+reference
+tools

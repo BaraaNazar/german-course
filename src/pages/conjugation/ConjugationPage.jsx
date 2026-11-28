@@ -36,12 +36,18 @@ export default function ConjugationPage() {
   return (
     <>
       <div className="flex border-b-2 border-line">
-        {tabs.map(t => (
+        {tabs.map((t) => (
           <button
             key={t.id}
-            onClick={() => { setView(t.id); setVerb(null); window.scrollTo(0, 0) }}
-            className={`flex-1 border-b-[3px] bg-none px-2 py-3 text-center text-[13px] font-extrabold cursor-pointer transition-all ${
-              view === t.id ? 'border-primary text-primary' : 'border-transparent text-muted hover:text-ink'
+            onClick={() => {
+              setView(t.id)
+              setVerb(null)
+              window.scrollTo(0, 0)
+            }}
+            className={`flex-1 cursor-pointer border-b-[3px] bg-none px-2 py-3 text-center text-[13px] font-extrabold transition-all ${
+              view === t.id
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted hover:text-ink'
             }`}
           >
             {t.label}
@@ -51,14 +57,28 @@ export default function ConjugationPage() {
       </div>
 
       {view === 'home' && (
-        <HomeView progress={progress} knownSet={knownSet} onOpenDeck={openDeck} onQuiz={lv => { setLevel(lv); setView('quiz') }} />
+        <HomeView
+          progress={progress}
+          knownSet={knownSet}
+          onOpenDeck={openDeck}
+          onQuiz={(lv) => {
+            setLevel(lv)
+            setView('quiz')
+          }}
+        />
       )}
 
       {view === 'table' && (
         <BrowseView
-          level={level} type={type} verb={verb}
+          level={level}
+          type={type}
+          verb={verb}
           knownSet={knownSet}
-          onSelectLevel={lv => { setLevel(lv); setType(null); setVerb(null) }}
+          onSelectLevel={(lv) => {
+            setLevel(lv)
+            setType(null)
+            setVerb(null)
+          }}
           onSelectVerb={setVerb}
           onBack={() => setVerb(null)}
         />
@@ -83,46 +103,57 @@ function HomeView({ progress, knownSet, onOpenDeck, onQuiz }) {
   return (
     <>
       <div className="mb-4 grid grid-cols-2 gap-2 md:grid-cols-4">
-        {stats.map(s => (
+        {stats.map((s) => (
           <div key={s.lbl} className="rounded-[10px] border border-line bg-surface p-2 text-center">
             <div className="text-xl font-black text-primary">{s.num}</div>
-            <div className="text-[9.5px] font-bold tracking-wider text-muted uppercase">{s.lbl}</div>
+            <div className="text-[9.5px] font-bold tracking-wider text-muted uppercase">
+              {s.lbl}
+            </div>
           </div>
         ))}
       </div>
 
       {/* Level sections, each with one sub-deck per verb type */}
       {Object.entries(LEVELS).map(([lvId, lv]) => {
-        const verbs = VERBS.filter(v => v.level === lvId)
-        const known = verbs.filter(v => knownSet.has(v.inf)).length
+        const verbs = VERBS.filter((v) => v.level === lvId)
+        const known = verbs.filter((v) => knownSet.has(v.inf)).length
         return (
           <div key={lvId} className="my-4">
-            <div className="mb-2 mt-5 flex items-center gap-3">
-              <span className="rounded-[10px] px-4 py-1.5 text-xl font-black text-white" style={{ background: lv.color }}>
+            <div className="mt-5 mb-2 flex items-center gap-3">
+              <span
+                className="rounded-[10px] px-4 py-1.5 text-xl font-black text-white"
+                style={{ background: lv.color }}
+              >
                 {lvId}
               </span>
               <h3 className="m-0 flex-1 text-base">{lv.name}</h3>
-              <span className="text-sm text-muted">{known}/{verbs.length}</span>
+              <span className="text-sm text-muted">
+                {known}/{verbs.length}
+              </span>
             </div>
             {Object.entries(TYPE_INFO).map(([typeName, info]) => {
-              const typeVerbs = verbs.filter(v => v.type === typeName)
+              const typeVerbs = verbs.filter((v) => v.type === typeName)
               if (!typeVerbs.length) return null
-              const tk = typeVerbs.filter(v => knownSet.has(v.inf)).length
+              const tk = typeVerbs.filter((v) => knownSet.has(v.inf)).length
               return (
                 <div
                   key={typeName}
                   onClick={() => onOpenDeck(lvId, typeName)}
                   className="my-2 flex cursor-pointer items-center gap-3.5 rounded-xl border border-line bg-surface px-4 py-3.5 transition-colors hover:border-primary"
                 >
-                  <div className="flex h-9 w-9 items-center justify-center rounded-[10px] font-mono text-[13px] font-extrabold text-white"
-                       style={{ background: info.color }}>
+                  <div
+                    className="flex h-9 w-9 items-center justify-center rounded-[10px] font-mono text-[13px] font-extrabold text-white"
+                    style={{ background: info.color }}
+                  >
                     {typeVerbs.length}
                   </div>
                   <div className="flex-1">
                     <b className="text-[15px]">{info.name}</b>
                     <span className="block text-xs text-muted">{typeVerbs.length} verbs</span>
                   </div>
-                  <span className="text-[11px] font-extrabold text-good">{tk}/{typeVerbs.length}</span>
+                  <span className="text-[11px] font-extrabold text-good">
+                    {tk}/{typeVerbs.length}
+                  </span>
                 </div>
               )
             })}
@@ -137,7 +168,11 @@ function HomeView({ progress, knownSet, onOpenDeck, onQuiz }) {
         <LevelPicker onPick={onQuiz} />
         {progress.scores.length > 0 && (
           <p className="mt-3 text-sm text-muted">
-            Recent: {progress.scores.slice(-3).map(s => `${s}%`).join(', ')}
+            Recent:{' '}
+            {progress.scores
+              .slice(-3)
+              .map((s) => `${s}%`)
+              .join(', ')}
           </p>
         )}
       </div>
@@ -149,12 +184,17 @@ function LevelPicker({ onPick }) {
   const [selected, setSelected] = useState('A1')
   return (
     <div className="flex flex-wrap justify-center gap-2">
-      {Object.keys(LEVELS).map(id => (
+      {Object.keys(LEVELS).map((id) => (
         <button
           key={id}
-          onClick={() => { setSelected(id); onPick(id) }}
-          className={`rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold cursor-pointer transition-colors ${
-            selected === id ? 'border-primary text-primary' : 'border-line bg-surface text-muted hover:border-primary'
+          onClick={() => {
+            setSelected(id)
+            onPick(id)
+          }}
+          className={`cursor-pointer rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold transition-colors ${
+            selected === id
+              ? 'border-primary text-primary'
+              : 'border-line bg-surface text-muted hover:border-primary'
           }`}
         >
           {id}
@@ -168,7 +208,7 @@ function LevelPicker({ onPick }) {
 
 function BrowseView({ level, type, verb, knownSet, onSelectLevel, onSelectVerb, onBack }) {
   const verbs = useMemo(
-    () => VERBS.filter(v => v.level === level && (!type || v.type === type)),
+    () => VERBS.filter((v) => v.level === level && (!type || v.type === type)),
     [level, type],
   )
   const typeName = type ? TYPE_INFO[type].name : 'All'
@@ -177,8 +217,10 @@ function BrowseView({ level, type, verb, knownSet, onSelectLevel, onSelectVerb, 
   if (verb) {
     return (
       <>
-        <button className="btn btn-ghost btn-sm mb-3" onClick={onBack}>← Back</button>
-        <VerbDetail verb={VERBS.find(v => v.inf === verb)} known={knownSet.has(verb)} />
+        <button className="btn btn-ghost btn-sm mb-3" onClick={onBack}>
+          ← Back
+        </button>
+        <VerbDetail verb={VERBS.find((v) => v.inf === verb)} known={knownSet.has(verb)} />
       </>
     )
   }
@@ -186,12 +228,14 @@ function BrowseView({ level, type, verb, knownSet, onSelectLevel, onSelectVerb, 
   return (
     <>
       <div className="mt-3 flex flex-wrap gap-2">
-        {Object.keys(LEVELS).map(id => (
+        {Object.keys(LEVELS).map((id) => (
           <button
             key={id}
             onClick={() => onSelectLevel(id)}
-            className={`rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold cursor-pointer transition-colors ${
-              level === id ? 'border-primary text-primary' : 'border-line bg-surface text-muted hover:border-primary'
+            className={`cursor-pointer rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold transition-colors ${
+              level === id
+                ? 'border-primary text-primary'
+                : 'border-line bg-surface text-muted hover:border-primary'
             }`}
           >
             {id}
@@ -200,26 +244,38 @@ function BrowseView({ level, type, verb, knownSet, onSelectLevel, onSelectVerb, 
       </div>
 
       <div className="card">
-        <h3 className="mt-0">{level} · {typeName} ({verbs.length})</h3>
+        <h3 className="mt-0">
+          {level} · {typeName} ({verbs.length})
+        </h3>
         <p className="text-sm text-muted">Click a verb to see its conjugation</p>
 
         {!type
           ? Object.entries(TYPE_INFO).map(([tn, ti]) => {
-              const group = verbs.filter(v => v.type === tn)
+              const group = verbs.filter((v) => v.type === tn)
               if (!group.length) return null
               return (
                 <div key={tn}>
                   <h4 className="mt-3.5 mb-1.5 text-sm font-black" style={{ color: ti.color }}>
                     {ti.name} ({group.length})
                   </h4>
-                  {group.map(v => (
-                    <VerbRow key={v.inf} verb={v} known={knownSet.has(v.inf)} onClick={() => onSelectVerb(v.inf)} />
+                  {group.map((v) => (
+                    <VerbRow
+                      key={v.inf}
+                      verb={v}
+                      known={knownSet.has(v.inf)}
+                      onClick={() => onSelectVerb(v.inf)}
+                    />
                   ))}
                 </div>
               )
             })
-          : verbs.map(v => (
-              <VerbRow key={v.inf} verb={v} known={knownSet.has(v.inf)} onClick={() => onSelectVerb(v.inf)} />
+          : verbs.map((v) => (
+              <VerbRow
+                key={v.inf}
+                verb={v}
+                known={knownSet.has(v.inf)}
+                onClick={() => onSelectVerb(v.inf)}
+              />
             ))}
       </div>
     </>

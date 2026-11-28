@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { VERBS, LEVELS } from '../../data/verbs'
 import { useConjugationProgress } from '../../context/ProgressContext'
 import { PRONOUNS, KEYS, TENSES } from './conjugation-table'
@@ -12,15 +12,10 @@ import { PRONOUNS, KEYS, TENSES } from './conjugation-table'
  * counter) so answering does not reshuffle upcoming questions.
  */
 export default function ConjugationQuiz({ level, onSelectLevel }) {
-  const [round, setRound] = useState(0) // bump → new quiz
-  const [count, setCount] = useState(10)
+  // Questions are generated ONCE per quiz run, in start() — explicit
+  // state instead of a useMemo keyed to a "round" counter.
+  const [questions, setQuestions] = useState([])
   const [started, setStarted] = useState(false)
-
-  const questions = useMemo(
-    () => (started ? buildQuiz(level, count) : []),
-    [started, level, count, round],
-  )
-
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [answered, setAnswered] = useState(null) // { picked, correct } for feedback
@@ -28,12 +23,11 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
   const { progress, recordQuiz, markKnown } = useConjugationProgress()
 
   function start(n) {
-    setCount(n)
+    setQuestions(buildQuiz(level, n))
     setStarted(true)
     setIndex(0)
     setScore(0)
     setAnswered(null)
-    setRound(r => r + 1)
   }
 
   function restart() {
@@ -53,7 +47,7 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
       if (answered) return // one answer per question
       setAnswered({ picked: pickedIndex, correct: isCorrect })
       if (isCorrect) {
-        setScore(s => s + 1)
+        setScore((s) => s + 1)
         markKnown(q.verb)
       }
     },
@@ -63,12 +57,12 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
   function next() {
     if (index + 1 >= questions.length) {
       // Quiz finished — persist the score once.
-      const pct = Math.round(score / questions.length * 100)
+      const pct = Math.round((score / questions.length) * 100)
       recordQuiz(level, pct)
       setIndex(index + 1) // pushes past the end → results screen
       setAnswered(null)
     } else {
-      setIndex(i => i + 1)
+      setIndex((i) => i + 1)
       setAnswered(null)
     }
   }
@@ -81,12 +75,14 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
         <h2>🧠 Konjugation Quiz</h2>
         <p className="text-muted">Choose a level, then start</p>
         <div className="my-3.5 flex flex-wrap justify-center gap-2">
-          {Object.keys(LEVELS).map(id => (
+          {Object.keys(LEVELS).map((id) => (
             <button
               key={id}
               onClick={() => onSelectLevel(id)}
-              className={`rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold cursor-pointer transition-colors ${
-                level === id ? 'border-primary text-primary' : 'border-line bg-surface text-muted hover:border-primary'
+              className={`cursor-pointer rounded-lg border-[1.5px] px-3.5 py-1.5 text-xs font-extrabold transition-colors ${
+                level === id
+                  ? 'border-primary text-primary'
+                  : 'border-line bg-surface text-muted hover:border-primary'
               }`}
             >
               {id}
@@ -94,12 +90,20 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
           ))}
         </div>
         <div className="flex justify-center gap-3">
-          <button className="btn btn-primary" onClick={() => start(10)}>10 Questions</button>
-          <button className="btn btn-good" onClick={() => start(20)}>20 Questions</button>
+          <button className="btn btn-primary" onClick={() => start(10)}>
+            10 Questions
+          </button>
+          <button className="btn btn-good" onClick={() => start(20)}>
+            20 Questions
+          </button>
         </div>
         {progress.levelScores[level]?.length > 0 && (
           <p className="mt-3 text-sm text-muted">
-            Recent {level} scores: {progress.levelScores[level].slice(-3).map(s => `${s}%`).join(', ')}
+            Recent {level} scores:{' '}
+            {progress.levelScores[level]
+              .slice(-3)
+              .map((s) => `${s}%`)
+              .join(', ')}
           </p>
         )}
       </div>
@@ -107,14 +111,20 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
   }
 
   if (index >= questions.length) {
-    const pct = Math.round(score / questions.length * 100)
+    const pct = Math.round((score / questions.length) * 100)
     return (
       <div className="card results-hero">
-        <div className="stars">{pct >= 90 ? '★★★' : pct >= 70 ? '★★☆' : pct >= 50 ? '★☆☆' : '☆☆☆'}</div>
+        <div className="stars">
+          {pct >= 90 ? '★★★' : pct >= 70 ? '★★☆' : pct >= 50 ? '★☆☆' : '☆☆☆'}
+        </div>
         <div className="results-score">{pct}%</div>
-        <p className="text-muted">Quiz · {level} · {score}/{questions.length} correct</p>
+        <p className="text-muted">
+          Quiz · {level} · {score}/{questions.length} correct
+        </p>
         <div className="mt-4 flex justify-center gap-3">
-          <button className="btn btn-primary" onClick={restart}>New Quiz</button>
+          <button className="btn btn-primary" onClick={restart}>
+            New Quiz
+          </button>
         </div>
       </div>
     )
@@ -149,7 +159,9 @@ export default function ConjugationQuiz({ level, onSelectLevel }) {
         <>
           <Feedback correct={answered.correct} q={q} />
           <div className="mt-3.5 flex justify-center">
-            <button className="btn btn-primary btn-sm" onClick={next}>Next →</button>
+            <button className="btn btn-primary btn-sm" onClick={next}>
+              Next →
+            </button>
           </div>
         </>
       )}
@@ -211,11 +223,13 @@ function InputQuestion({ q, answered, onAnswer }) {
         value={value}
         autoFocus
         autoComplete="off"
-        onChange={e => setValue(e.target.value)}
-        onKeyDown={e => e.key === 'Enter' && submit()}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && submit()}
       />
       <div className="mt-3.5 flex justify-center">
-        <button className="btn btn-primary" onClick={submit}>Check</button>
+        <button className="btn btn-primary" onClick={submit}>
+          Check
+        </button>
       </div>
     </>
   )
@@ -226,7 +240,9 @@ function Feedback({ correct, q }) {
     <div className={`feedback mt-3.5 ${correct ? 'ok' : 'bad'}`}>
       <div className="fb-title">{correct ? '✓ Richtig!' : '✗ Nicht ganz.'}</div>
       {!correct && (
-        <div>Richtig: <u>{q.display}</u></div>
+        <div>
+          Richtig: <u>{q.display}</u>
+        </div>
       )}
       {q.expl && <div className="mt-1 text-muted">{q.expl}</div>}
     </div>
@@ -247,7 +263,7 @@ function Feedback({ correct, q }) {
  * case of a tiny pool with identical forms.
  */
 function buildQuiz(level, count) {
-  const pool = VERBS.filter(v => v.level === level).slice()
+  const pool = VERBS.filter((v) => v.level === level).slice()
   const questions = []
 
   for (let i = 0; i < count && pool.length; i++) {
@@ -260,22 +276,31 @@ function buildQuiz(level, count) {
     if (Math.random() < 0.6) {
       // Distractors: same person, other verbs — deduplicated, never the answer.
       const wrong = pool
-        .map(x => tense.get(x)[KEYS[personIdx]])
-        .filter(f => f && f !== answer)
+        .map((x) => tense.get(x)[KEYS[personIdx]])
+        .filter((f) => f && f !== answer)
         .filter((f, idx, arr) => arr.indexOf(f) === idx)
         .sort(() => Math.random() - 0.5)
         .slice(0, 3)
       while (wrong.length < 3) wrong.push(answer + 'e') // tiny-pool fallback
       const opts = [answer, ...wrong].sort(() => Math.random() - 0.5)
       questions.push({
-        type: 'mcq', verb: verb.inf, person: PRONOUNS[personIdx], tenseLabel: tense.label,
-        opts, answer: opts.indexOf(answer), display: answer,
+        type: 'mcq',
+        verb: verb.inf,
+        person: PRONOUNS[personIdx],
+        tenseLabel: tense.label,
+        opts,
+        answer: opts.indexOf(answer),
+        display: answer,
         expl: `${verb.inf} = ${verb.en} · ${tense.label}`,
       })
     } else {
       questions.push({
-        type: 'input', verb: verb.inf, person: PRONOUNS[personIdx], tenseLabel: tense.label,
-        answer, display: answer,
+        type: 'input',
+        verb: verb.inf,
+        person: PRONOUNS[personIdx],
+        tenseLabel: tense.label,
+        answer,
+        display: answer,
         expl: `${verb.inf} = ${verb.en} · ${tense.label}`,
       })
     }

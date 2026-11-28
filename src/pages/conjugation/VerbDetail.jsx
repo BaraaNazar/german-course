@@ -32,13 +32,15 @@ export default function VerbDetail({ verb, known }) {
         <span className="rounded-full bg-surface-3 px-3 py-1 text-xs font-bold text-muted">
           {verb.level}
         </span>
-        <span className="ml-2 inline-block align-middle"><SpeakButton text={verb.inf} /></span>
+        <span className="ml-2 inline-block align-middle">
+          <SpeakButton text={verb.inf} />
+        </span>
       </div>
 
-      {TENSES.map(tense => (
+      {TENSES.map((tense) => (
         <div className="card" key={tense.key}>
           <h3 className="mt-0">{tense.label}</h3>
-          <table className="w-full overflow-hidden rounded-xl border-collapse shadow-1">
+          <table className="w-full border-collapse overflow-hidden rounded-xl shadow-1">
             <thead>
               <tr className="bg-flag-black text-left text-gold">
                 <th className="px-3.5 py-2.5 text-[11px] tracking-wider uppercase">Person</th>
@@ -64,10 +66,12 @@ export default function VerbDetail({ verb, known }) {
       {/* Perfekt: auxiliary + participle */}
       <div className="card">
         <h3 className="mt-0">Perfekt</h3>
-        <table className="w-full overflow-hidden rounded-xl border-collapse shadow-1">
+        <table className="w-full border-collapse overflow-hidden rounded-xl shadow-1">
           <tbody>
             <tr>
-              <td className="w-[100px] bg-gold-soft px-3.5 py-2.5 text-[13px] font-extrabold text-muted">ich</td>
+              <td className="w-[100px] bg-gold-soft px-3.5 py-2.5 text-[13px] font-extrabold text-muted">
+                ich
+              </td>
               <td className="px-3.5 py-2.5 text-[18px] font-bold">
                 {verb.aux} <span className="text-primary">{verb.partizip}</span>
               </td>
@@ -89,6 +93,11 @@ export default function VerbDetail({ verb, known }) {
 }
 
 const TYPE_COLORS = {
-  regular: '#16a34a', strong: '#ea580c', irregular: '#dc2626', modal: '#7c3aed',
-  separable: '#0891b2', inseparable: '#0d9488', reflexive: '#be185d',
+  regular: '#16a34a',
+  strong: '#ea580c',
+  irregular: '#dc2626',
+  modal: '#7c3aed',
+  separable: '#0891b2',
+  inseparable: '#0d9488',
+  reflexive: '#be185d',
 }

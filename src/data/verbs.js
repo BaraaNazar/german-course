@@ -2,1885 +2,6065 @@
 // Each verb: {inf, en, type, level, praesens:{...}, praeteritum:{...}, partizip, aux}
 
 function reg(inf, en, level) {
-  const stem = inf.replace(/en$/, "");
-  const needsE = /(t|d|n|m)$/.test(stem);
-  const e = needsE ? "e" : "";
-  return { inf, en, type:"regular", level,
-    praesens:{ich:stem+"e", du:stem+e+"st", er:stem+e+"t", wir:inf, ihr:stem+e+"t", sie:inf},
-    praeteritum:{ich:stem+e+"te", du:stem+e+"test", er:stem+e+"te", wir:stem+e+"ten", ihr:stem+e+"tet", sie:stem+e+"ten"},
-    partizip:"ge"+stem+e+"t", aux:"haben"};
+  const stem = inf.replace(/en$/, '')
+  const needsE = /(t|d|n|m)$/.test(stem)
+  const e = needsE ? 'e' : ''
+  return {
+    inf,
+    en,
+    type: 'regular',
+    level,
+    praesens: {
+      ich: stem + 'e',
+      du: stem + e + 'st',
+      er: stem + e + 't',
+      wir: inf,
+      ihr: stem + e + 't',
+      sie: inf,
+    },
+    praeteritum: {
+      ich: stem + e + 'te',
+      du: stem + e + 'test',
+      er: stem + e + 'te',
+      wir: stem + e + 'ten',
+      ihr: stem + e + 'tet',
+      sie: stem + e + 'ten',
+    },
+    partizip: 'ge' + stem + e + 't',
+    aux: 'haben',
+  }
 }
 function sep(inf, en, level, part) {
-  const parts = inf.split(" ");
-  const prefix = parts[0]; const stem = parts[1].replace(/en$/, "");
-  const needsE = /(t|d|n|m)$/.test(stem);
-  const e = needsE ? "e" : "";
-  const p = part || prefix + "ge" + stem + e + "t";
-  return { inf, en, type:"separable", level,
-    praesens:{ich:stem+"e "+prefix, du:stem+e+"st "+prefix, er:stem+e+"t "+prefix, wir:inf, ihr:stem+e+"t "+prefix, sie:inf},
-    praeteritum:{ich:stem+e+"te "+prefix, du:stem+e+"test "+prefix, er:stem+e+"te "+prefix, wir:stem+e+"ten "+prefix, ihr:stem+e+"tet "+prefix, sie:stem+e+"ten "+prefix},
-    partizip:p, aux:"haben"};
+  const parts = inf.split(' ')
+  const prefix = parts[0]
+  const stem = parts[1].replace(/en$/, '')
+  const needsE = /(t|d|n|m)$/.test(stem)
+  const e = needsE ? 'e' : ''
+  const p = part || prefix + 'ge' + stem + e + 't'
+  return {
+    inf,
+    en,
+    type: 'separable',
+    level,
+    praesens: {
+      ich: stem + 'e ' + prefix,
+      du: stem + e + 'st ' + prefix,
+      er: stem + e + 't ' + prefix,
+      wir: inf,
+      ihr: stem + e + 't ' + prefix,
+      sie: inf,
+    },
+    praeteritum: {
+      ich: stem + e + 'te ' + prefix,
+      du: stem + e + 'test ' + prefix,
+      er: stem + e + 'te ' + prefix,
+      wir: stem + e + 'ten ' + prefix,
+      ihr: stem + e + 'tet ' + prefix,
+      sie: stem + e + 'ten ' + prefix,
+    },
+    partizip: p,
+    aux: 'haben',
+  }
 }
 function strong(inf, en, level, du2, er3, prat, part, aux) {
-  const stem = inf.replace(/en$/, "");
-  const duStem = du2 || stem;
-  const erStem = er3 || du2 || stem;
-  const du = /(\u00df|ss)$/.test(duStem) ? duStem + "t" : (du2 && /st$/.test(du2) ? du2 : duStem + "st");
-  const er = /t$/.test(erStem) ? erStem : erStem + "t";
-  const ptDu = /(\u00df|ss|s|x)$/.test(prat) ? prat + "est" : (/t$/.test(prat) ? prat + "est" : prat + "st");
-  const ptIhr = prat + "t";
-  return { inf, en, type:"strong", level,
-    praesens:{ich:stem+"e", du, er, wir:inf, ihr:stem+"t", sie:inf},
-    praeteritum:{ich:prat, du:ptDu, er:prat, wir:prat+"en", ihr:ptIhr, sie:prat+"en"},
-    partizip:part, aux:aux||"haben"};
-}
-function irr(inf, en, level, pr, pt, part, aux) {
-  return {inf, en, type:"irregular", level, praesens:pr, praeteritum:pt, partizip:part, aux:aux||"haben"};
+  const stem = inf.replace(/en$/, '')
+  const duStem = du2 || stem
+  const erStem = er3 || du2 || stem
+  const du = /(\u00df|ss)$/.test(duStem)
+    ? duStem + 't'
+    : du2 && /st$/.test(du2)
+      ? du2
+      : duStem + 'st'
+  const er = /t$/.test(erStem) ? erStem : erStem + 't'
+  const ptDu = /(\u00df|ss|s|x)$/.test(prat)
+    ? prat + 'est'
+    : /t$/.test(prat)
+      ? prat + 'est'
+      : prat + 'st'
+  const ptIhr = prat + 't'
+  return {
+    inf,
+    en,
+    type: 'strong',
+    level,
+    praesens: { ich: stem + 'e', du, er, wir: inf, ihr: stem + 't', sie: inf },
+    praeteritum: { ich: prat, du: ptDu, er: prat, wir: prat + 'en', ihr: ptIhr, sie: prat + 'en' },
+    partizip: part,
+    aux: aux || 'haben',
+  }
 }
 function modal(inf, en, level, pr, pt) {
-  return {inf, en, type:"modal", level, praesens:pr, praeteritum:pt, partizip:"–", aux:"haben"};
+  return {
+    inf,
+    en,
+    type: 'modal',
+    level,
+    praesens: pr,
+    praeteritum: pt,
+    partizip: '–',
+    aux: 'haben',
+  }
 }
 function refl(inf, en, level, pr, pt, part) {
-  return {inf, en, type:"reflexive", level, praesens:pr, praeteritum:pt, partizip:part, aux:"haben"};
+  return {
+    inf,
+    en,
+    type: 'reflexive',
+    level,
+    praesens: pr,
+    praeteritum: pt,
+    partizip: part,
+    aux: 'haben',
+  }
 }
 
-function sepx(inf, en, level, pr, pt, part, aux) {
-  return {inf, en, type:"separable", level, praesens:pr, praeteritum:pt, partizip:part, aux:aux||"haben"};
-}
 function sepstrong(inf, en, level, du2, er3, prat, part, aux) {
-  const seg = inf.split(" ");
-  const prefix = seg[0]; const stem = seg[1].replace(/en$/, "");
-  const duStem = du2 || stem;
-  const erStem = er3 || du2 || stem;
-  const du = /(\u00df|ss)$/.test(duStem) ? duStem + "t" : duStem + "st";
-  const er = /t$/.test(erStem) ? erStem : erStem + "t";
-  const ptDu = /(\u00df|ss|s|x)$/.test(prat) ? prat + "est" : prat + "st";
-  const ppStem = part.replace(/^ge/, "");
-  return { inf, en, type:"separable", level,
-    praesens:{ich:stem+"e "+prefix, du:du+" "+prefix, er:er+" "+prefix, wir:inf, ihr:stem+"t "+prefix, sie:inf},
-    praeteritum:{ich:prat+" "+prefix, du:ptDu+" "+prefix, er:prat+" "+prefix, wir:prat+"en "+prefix, ihr:(/(t|d)$/.test(prat)?prat+"et":prat+"t")+" "+prefix, sie:prat+"en "+prefix},
-    partizip:prefix+"ge"+ppStem, aux:aux||"haben"};
+  const seg = inf.split(' ')
+  const prefix = seg[0]
+  const stem = seg[1].replace(/en$/, '')
+  const duStem = du2 || stem
+  const erStem = er3 || du2 || stem
+  const du = /(\u00df|ss)$/.test(duStem) ? duStem + 't' : duStem + 'st'
+  const er = /t$/.test(erStem) ? erStem : erStem + 't'
+  const ptDu = /(\u00df|ss|s|x)$/.test(prat) ? prat + 'est' : prat + 'st'
+  const ppStem = part.replace(/^ge/, '')
+  return {
+    inf,
+    en,
+    type: 'separable',
+    level,
+    praesens: {
+      ich: stem + 'e ' + prefix,
+      du: du + ' ' + prefix,
+      er: er + ' ' + prefix,
+      wir: inf,
+      ihr: stem + 't ' + prefix,
+      sie: inf,
+    },
+    praeteritum: {
+      ich: prat + ' ' + prefix,
+      du: ptDu + ' ' + prefix,
+      er: prat + ' ' + prefix,
+      wir: prat + 'en ' + prefix,
+      ihr: (/(t|d)$/.test(prat) ? prat + 'et' : prat + 't') + ' ' + prefix,
+      sie: prat + 'en ' + prefix,
+    },
+    partizip: prefix + 'ge' + ppStem,
+    aux: aux || 'haben',
+  }
 }
 function sepfix(inf, en, level, du2, er3, prat, part, aux) {
-  const v = sepstrong(inf, en, level, du2, er3, prat, part, aux);
-  const i = ALL.findIndex(x => x.inf === inf);
-  if (i >= 0) ALL[i] = v; else ALL.push(v);
+  const v = sepstrong(inf, en, level, du2, er3, prat, part, aux)
+  const i = ALL.findIndex((x) => x.inf === inf)
+  if (i >= 0) ALL[i] = v
+  else ALL.push(v)
 }
 // ---- Fix suppletive & irregular-encoding verbs (guaranteed correct) ----
-const FIX = [];
 function fix(inf, en, level, pr, pt, part, aux) {
-  const i = ALL.findIndex(v => v.inf === inf);
-  const entry = {inf, en, type: inferType(inf), level, praesens:pr, praeteritum:pt, partizip:part, aux};
-  if (i >= 0) ALL[i] = entry; else ALL.push(entry);
+  const i = ALL.findIndex((v) => v.inf === inf)
+  const entry = {
+    inf,
+    en,
+    type: inferType(inf),
+    level,
+    praesens: pr,
+    praeteritum: pt,
+    partizip: part,
+    aux,
+  }
+  if (i >= 0) ALL[i] = entry
+  else ALL.push(entry)
 }
 function inferType(inf) {
-  if (inf.includes(" ")) return "separable";
-  if (/^(be|ver|er|ent|zer|miss|ge|\u00fcber|unter)/.test(inf)) return "inseparable";
-  return "irregular";
+  if (inf.includes(' ')) return 'separable'
+  if (/^(be|ver|er|ent|zer|miss|ge|\u00fcber|unter)/.test(inf)) return 'inseparable'
+  return 'irregular'
 }
 
-
-const ALL = [];
-ALL.push(reg("machen","to do/make","A1"));
-ALL.push(reg("wohnen","to live","A1"));
-ALL.push(reg("lernen","to learn","A1"));
-ALL.push(reg("kaufen","to buy","A1"));
-ALL.push(reg("arbeiten","to work","A1"));
-ALL.push(reg("spielen","to play","A1"));
-ALL.push(reg("fragen","to ask","A1"));
-ALL.push(reg("antworten","to answer","A1"));
-ALL.push(reg("brauchen","to need","A1"));
-ALL.push(reg("schenken","to give","A1"));
-ALL.push(reg("öffnen","to open","A1"));
-ALL.push(reg("suchen","to search","A1"));
-ALL.push(reg("bezahlen","to pay","A1"));
-ALL.push(reg("mieten","to rent","A1"));
-ALL.push(reg("putzen","to clean","A1"));
-ALL.push(reg("sammeln","to collect","A1"));
-ALL.push(reg("bestellen","to order","A1"));
-ALL.push(reg("passen","to fit","A1"));
-ALL.push(reg("warten","to wait","A1"));
-ALL.push(reg("zeigen","to show","A1"));
-ALL.push(reg("hören","to hear","A1"));
-ALL.push(reg("lieben","to love","A1"));
-ALL.push(reg("glauben","to believe","A1"));
-ALL.push(reg("schicken","to send","A1"));
-ALL.push(reg("erzählen","to tell","A1"));
-ALL.push(reg("kosten","to cost","A1"));
-ALL.push(reg("danken","to thank","A1"));
-ALL.push(reg("melden","to report","A1"));
-ALL.push(reg("versuchen","to try","A1"));
-ALL.push(strong("sein","to be","A1",null,null,"war","gewesen","sein"));
-ALL.push(strong("haben","to have","A1",null,null,"hatte","gehabt","haben"));
-ALL.push(strong("werden","to become","A1","wirst","wird","wurde","geworden","sein"));
-ALL.push(strong("gehen","to go","A1",null,null,"ging","gegangen","sein"));
-ALL.push(strong("kommen","to come","A1",null,null,"kam","gekommen","sein"));
-ALL.push(strong("sehen","to see","A1","sieh","sieht","sah","gesehen","haben"));
-ALL.push(strong("sprechen","to speak","A1","sprich","spricht","sprach","gesprochen","haben"));
-ALL.push(strong("essen","to eat","A1","iss","isst","aß","gegessen","haben"));
-ALL.push(strong("trinken","to drink","A1",null,null,"trank","getrunken","haben"));
-ALL.push(strong("fahren","to drive","A1","fahr","fährt","fuhr","gefahren","sein"));
-ALL.push(strong("lesen","to read","A1","lies","liest","las","gelesen","haben"));
-ALL.push(strong("schreiben","to write","A1",null,null,"schrieb","geschrieben","haben"));
-ALL.push(strong("schlafen","to sleep","A1","schläf","schläft","schlief","geschlafen","haben"));
-ALL.push(strong("nehmen","to take","A1","nimm","nimmt","nahm","genommen","haben"));
-ALL.push(strong("bleiben","to stay","A1",null,null,"blieb","geblieben","sein"));
-ALL.push(strong("tragen","to carry","A1","träg","trägt","trug","getragen","haben"));
-ALL.push(strong("treffen","to meet","A1","triff","trifft","traf","getroffen","haben"));
-ALL.push(strong("verstehen","to understand","A1",null,null,"verstand","verstanden","haben"));
-ALL.push(strong("finden","to find","A1",null,null,"fand","gefunden","haben"));
-ALL.push(strong("geben","to give","A1","gib","gibt","gab","gegeben","haben"));
-ALL.push(strong("helfen","to help","A1","hilf","hilft","half","geholfen","haben"));
-ALL.push(strong("denken","to think","A1",null,null,"dachte","gedacht","haben"));
-ALL.push(strong("wissen","to know (fact)","A1",null,null,"wusste","gewusst","haben"));
-ALL.push(strong("kennen","to know (person)","A1",null,null,"kannte","gekannt","haben"));
-ALL.push(modal("können","can","A1",{ich:"kann",du:"kannst",er:"kann",wir:"können",ihr:"könnt",sie:"können"},{ich:"konnte",du:"konntest",er:"konnte",wir:"konnten",ihr:"konntet",sie:"konnten"}));
-ALL.push(modal("müssen","must","A1",{ich:"muss",du:"musst",er:"muss",wir:"müssen",ihr:"müsst",sie:"müssen"},{ich:"musste",du:"musstest",er:"musste",wir:"mussten",ihr:"musstet",sie:"mussten"}));
-ALL.push(modal("wollen","to want","A1",{ich:"will",du:"willst",er:"will",wir:"wollen",ihr:"wollt",sie:"wollen"},{ich:"wollte",du:"wolltest",er:"wollte",wir:"wollten",ihr:"wolltet",sie:"wollten"}));
-ALL.push(modal("dürfen","may","A1",{ich:"darf",du:"darfst",er:"darf",wir:"dürfen",ihr:"dürft",sie:"dürfen"},{ich:"durfte",du:"durftest",er:"durfte",wir:"durften",ihr:"durftet",sie:"durften"}));
-ALL.push(modal("sollen","should","A1",{ich:"soll",du:"sollst",er:"soll",wir:"sollen",ihr:"sollt",sie:"sollen"},{ich:"sollte",du:"solltest",er:"sollte",wir:"sollten",ihr:"solltet",sie:"sollten"}));
-ALL.push(modal("möchten","would like","A1",{ich:"möchte",du:"möchtest",er:"möchte",wir:"möchten",ihr:"möchtet",sie:"möchten"},{ich:"möchte",du:"möchtest",er:"möchte",wir:"möchten",ihr:"möchtet",sie:"möchten"}));
-ALL.push(strong("aufstehen","to get up","A1","steh","steht auf","stand auf","aufgestanden","sein"));
-ALL.push(strong("anrufen","to call","A1","ruf","ruft an","rief an","angerufen","haben"));
-ALL.push(strong("anfangen","to begin","A1","fäng","fängt an","fing an","angefangen","haben"));
-ALL.push(reg("einkaufen","to shop","A1")); // handled as regular
-ALL.push(reg("aufräumen","to tidy","A1"));
-ALL.push(reg("aufmachen","to open","A1"));
-ALL.push(reg("zumachen","to close","A1"));
-ALL.push(reg("mitkommen","to come along","A1"));
-ALL.push(reg("fernsehen","to watch TV","A1"));
-ALL.push(reg("abholen","to pick up","A1"));
-ALL.push(reg("beschreiben","to describe","A2"));
-ALL.push(reg("entscheiden","to decide","A2"));
-ALL.push(reg("vermeiden","to avoid","A2"));
-ALL.push(reg("erledigen","to complete","A2"));
-ALL.push(reg("verschieben","to postpone","A2"));
-ALL.push(reg("vorbereiten","to prepare","A2"));
-ALL.push(reg("erinnern","to remember","A2"));
-ALL.push(reg("interessieren","to interest","A2"));
-ALL.push(reg("trainieren","to train","A2"));
-ALL.push(reg("sparen","to save","A2"));
-ALL.push(reg("verdienen","to earn","A2"));
-ALL.push(reg("wechseln","to change","A2"));
-ALL.push(reg("ausfüllen","to fill out","A2"));
-ALL.push(reg("unterschreiben","to sign","A2"));
-ALL.push(reg("beantragen","to apply for","A2"));
-ALL.push(reg("kündigen","to terminate","A2"));
-ALL.push(reg("benachrichtigen","to notify","A2"));
-ALL.push(reg("versichern","to insure","A2"));
-ALL.push(reg("reparieren","to repair","A2"));
-ALL.push(reg("renovieren","to renovate","A2"));
-ALL.push(reg("organisieren","to organize","A2"));
-ALL.push(reg("reservieren","to reserve","A2"));
-ALL.push(reg("buchen","to book","A2"));
-ALL.push(reg("empfehlen","to recommend","A2"));
-ALL.push(strong("bieten","to offer","A2",null,null,"bot","geboten","haben"));
-ALL.push(strong("fallen","to fall","A2","fäl","fällt","fiel","gefallen","sein"));
-ALL.push(strong("singen","to sing","A2",null,null,"sang","gesungen","haben"));
-ALL.push(strong("vergleichen","to compare","A2",null,null,"verglich","verglichen","haben"));
-ALL.push(strong("versprechen","to promise","A2","versprich","verspricht","versprach","versprochen","haben"));
-ALL.push(strong("werfen","to throw","A2","wirf","wirft","warf","geworfen","haben"));
-ALL.push(strong("ziehen","to pull","A2",null,null,"zog","gezogen","haben"));
-ALL.push(strong("bitten","to request","A2",null,null,"bat","gebeten","haben"));
-ALL.push(strong("halten","to hold","A2","hält","hält","hielt","gehalten","haben"));
-ALL.push(strong("streiten","to argue","A2",null,null,"stritt","gestritten","haben"));
-ALL.push(strong("vergessen","to forget","A2","vergiss","vergisst","vergaß","vergessen","haben"));
-ALL.push(strong("erscheinen","to appear","A2",null,null,"erschien","erschienen","sein"));
-ALL.push(strong("steigen","to climb","A2",null,null,"stieg","gestiegen","sein"));
-ALL.push(strong("schneiden","to cut","A2",null,null,"schnitt","geschnitten","haben"));
-ALL.push(strong("binden","to bind","A2",null,null,"band","gebunden","haben"));
-ALL.push(strong("waschen","to wash","A2","wäsch","wäscht","wusch","gewaschen","haben"));
-ALL.push(strong("laufen","to run","A2","läuf","läuft","lief","gelaufen","sein"));
-ALL.push(strong("empfehlen","to recommend","A2","empfiehl","empfiehlt","empfahl","empfohlen","haben"));
-ALL.push(strong("beginnen","to begin","A2",null,null,"begann","begonnen","haben"));
-ALL.push(strong("gewinnen","to win","A2",null,null,"gewann","gewonnen","haben"));
-ALL.push(refl("sich freuen","to be happy","A2",{ich:"freue mich",du:"freust dich",er:"freut sich",wir:"freuen uns",ihr:"freut euch",sie:"freuen sich"},{ich:"freute mich",du:"freutest dich",er:"freute sich",wir:"freuten uns",ihr:"freutet euch",sie:"freuten sich"},"gefreut"));
-ALL.push(refl("sich treffen","to meet","A2",{ich:"treffe mich",du:"triffst dich",er:"trifft sich",wir:"treffen uns",ihr:"trefft euch",sie:"treffen sich"},{ich:"traf mich",du:"trafst dich",er:"traf sich",wir:"trafen uns",ihr:"traft euch",sie:"trafen sich"},"getroffen"));
-ALL.push(refl("sich erinnern","to remember","A2",{ich:"erinnere mich",du:"erinnerst dich",er:"erinnert sich",wir:"erinnern uns",ihr:"erinnert euch",sie:"erinnern sich"},{ich:"erinnerte mich",du:"erinnertest dich",er:"erinnerte sich",wir:"erinnerten uns",ihr:"erinnertet euch",sie:"erinnerten sich"},"erinnert"));
-ALL.push(refl("sich interessieren","to be interested","A2",{ich:"interessiere mich",du:"interessierst dich",er:"interessiert sich",wir:"interessieren uns",ihr:"interessiert euch",sie:"interessieren sich"},{ich:"interessierte mich",du:"interessiertest dich",er:"interessierte sich",wir:"interessierten uns",ihr:"interessiertet euch",sie:"interessierten sich"},"interessiert"));
-ALL.push(refl("sich duschen","to shower","A2",{ich:"dusche mich",du:"duschst dich",er:"duscht sich",wir:"duschen uns",ihr:"duscht euch",sie:"duschen sich"},{ich:"duschte mich",du:"duschtest dich",er:"duschte sich",wir:"duschten uns",ihr:"duschtet euch",sie:"duschten sich"},"geduscht"));
-ALL.push(refl("sich beeilen","to hurry","A2",{ich:"beeile mich",du:"beeilst dich",er:"beeilt sich",wir:"beeilen uns",ihr:"beeilt euch",sie:"beeilen sich"},{ich:"beeilte mich",du:"beeiltest dich",er:"beeilte sich",wir:"beeilten uns",ihr:"beeiltet euch",sie:"beeilten sich"},"beeilt"));
-ALL.push(refl("sich bewerben","to apply","A2",{ich:"bewerbe mich",du:"bewirbst dich",er:"bewirbt sich",wir:"bewerben uns",ihr:"bewirbt euch",sie:"bewerben sich"},{ich:"bewarb mich",du:"bewarbst dich",er:"bewarb sich",wir:"bewarben uns",ihr:"bewarbt euch",sie:"bewarben sich"},"beworben"));
-ALL.push(reg("beeinflussen","to influence","B1"));
-ALL.push(reg("differenzieren","to differentiate","B1"));
-ALL.push(reg("dokumentieren","to document","B1"));
-ALL.push(reg("evaluieren","to evaluate","B1"));
-ALL.push(reg("formulieren","to formulate","B1"));
-ALL.push(reg("koordinieren","to coordinate","B1"));
-ALL.push(reg("motivieren","to motivate","B1"));
-ALL.push(reg("optimieren","to optimize","B1"));
-ALL.push(reg("priorisieren","to prioritize","B1"));
-ALL.push(reg("reduzieren","to reduce","B1"));
-ALL.push(reg("strukturieren","to structure","B1"));
-ALL.push(reg("verhandeln","to negotiate","B1"));
-ALL.push(reg("vermitteln","to convey","B1"));
-ALL.push(reg("wahrnehmen","to perceive","B1"));
-ALL.push(reg("berücksichtigen","to consider","B1"));
-ALL.push(reg("ermitteln","to investigate","B1"));
-ALL.push(reg("durchführen","to carry out","B1"));
-ALL.push(reg("umsetzen","to implement","B1"));
-ALL.push(reg("vorantreiben","to drive forward","B1"));
-ALL.push(strong("beschließen","to resolve","B1","beschließ","beschließt","beschloss","beschlossen","haben"));
-ALL.push(strong("gelingen","to succeed","B1",null,"gelingt","gelang","gelungen","sein"));
-ALL.push(strong("geschehen","to happen","B1",null,"geschieht","geschah","geschehen","sein"));
-ALL.push(strong("leiden","to suffer","B1",null,null,"litt","gelitten","haben"));
-ALL.push(strong("riechen","to smell","B1",null,null,"roch","gerochen","haben"));
-ALL.push(strong("schweigen","to be silent","B1",null,null,"schwieg","geschwiegen","haben"));
-ALL.push(strong("wachsen","to grow","B1","wächs","wächst","wuchs","gewachsen","sein"));
-ALL.push(strong("brechen","to break","B1","brich","bricht","brach","gebrochen","haben"));
-ALL.push(strong("brennen","to burn","B1",null,null,"brannte","gebrannt","haben"));
-ALL.push(strong("klingen","to sound","B1",null,null,"klang","geklungen","haben"));
-ALL.push(strong("scheinen","to shine","B1",null,null,"schien","geschienen","haben"));
-ALL.push(strong("verzeihen","to forgive","B1",null,null,"verzieh","verziehen","haben"));
-ALL.push(strong("weichen","to yield","B1",null,null,"wich","gewichen","sein"));
-ALL.push(strong("treiben","to drive","B1",null,null,"trieb","getrieben","haben"));
-ALL.push(strong("braten","to roast","B1","brät","brät","briet","gebraten","haben"));
-ALL.push(reg("annektieren","to annex","B2"));
-ALL.push(reg("genehmigen","to approve","B2"));
-ALL.push(reg("gewährleisten","to guarantee","B2"));
-ALL.push(reg("legalisieren","to legalize","B2"));
-ALL.push(reg("subventionieren","to subsidize","B2"));
-ALL.push(reg("verschlüsseln","to encrypt","B2"));
-ALL.push(reg("drosseln","to throttle","B2"));
-ALL.push(reg("mobilmachen","to mobilize","B2"));
-ALL.push(reg("haftbar machen","to hold liable","B2"));
-ALL.push(reg("beanstanden","to object to","C1"));
-ALL.push(reg("gewähren","to grant","C1"));
-ALL.push(reg("erkunden","to explore","C1"));
-ALL.push(reg("legalisieren","to legalize","C1"));
-ALL.push(reg("kultivieren","to cultivate","C2"));
-ALL.push(reg("rekapitulieren","to recapitulate","C2"));
-ALL.push(strong("beruhen auf","to be based on","B2",null,"beruht","beruhte","beruht","haben"));
-ALL.push(strong("enthüllen","to reveal","B2",null,null,"enthuellte","enthuellt","haben"));
-ALL.push(strong("erschließen","to develop","B2",null,null,"erschloss","erschlossen","haben"));
-ALL.push(strong("vorantreiben","to propel","B2","treib","treibt voran","trieb voran","vorangetrieben","haben"));
-ALL.push(strong("auseinandersetzen","to examine","B1","setzt","setzt auseinander","setzte auseinander","auseinandergesetzt","haben"));
-ALL.push(strong("beruhen","to be based","C1",null,"beruht","beruhte","beruht","haben"));
-ALL.push(strong("durchsetzen","to enforce","C1","setzt","setzt durch","setzte durch","durchgesetzt","haben"));
-ALL.push(strong("wahrnehmen","to perceive","C1","nimm","nimmt wahr","nahm wahr","wahrgenommen","haben"));
-ALL.push(strong("durchdringen","to penetrate","C1","dring","dringt durch","drang durch","durchdrungen","haben"));
-ALL.push(strong("sich verinnerlichen","to internalize","C1",null,null,"verinnerlichte","verinnerlicht","haben"));
-ALL.push(strong("verschweigen","to conceal","C2",null,null,"verschwieg","verschwiegen","haben"));
-ALL.push(strong("beschreiten","to tread","C2",null,null,"beschritt","beschritten","haben"));
-ALL.push(strong("entlarven","to expose","C2",null,null,"entlarvte","entlarvt","haben"));
-
+const ALL = []
+ALL.push(reg('machen', 'to do/make', 'A1'))
+ALL.push(reg('wohnen', 'to live', 'A1'))
+ALL.push(reg('lernen', 'to learn', 'A1'))
+ALL.push(reg('kaufen', 'to buy', 'A1'))
+ALL.push(reg('arbeiten', 'to work', 'A1'))
+ALL.push(reg('spielen', 'to play', 'A1'))
+ALL.push(reg('fragen', 'to ask', 'A1'))
+ALL.push(reg('antworten', 'to answer', 'A1'))
+ALL.push(reg('brauchen', 'to need', 'A1'))
+ALL.push(reg('schenken', 'to give', 'A1'))
+ALL.push(reg('öffnen', 'to open', 'A1'))
+ALL.push(reg('suchen', 'to search', 'A1'))
+ALL.push(reg('bezahlen', 'to pay', 'A1'))
+ALL.push(reg('mieten', 'to rent', 'A1'))
+ALL.push(reg('putzen', 'to clean', 'A1'))
+ALL.push(reg('sammeln', 'to collect', 'A1'))
+ALL.push(reg('bestellen', 'to order', 'A1'))
+ALL.push(reg('passen', 'to fit', 'A1'))
+ALL.push(reg('warten', 'to wait', 'A1'))
+ALL.push(reg('zeigen', 'to show', 'A1'))
+ALL.push(reg('hören', 'to hear', 'A1'))
+ALL.push(reg('lieben', 'to love', 'A1'))
+ALL.push(reg('glauben', 'to believe', 'A1'))
+ALL.push(reg('schicken', 'to send', 'A1'))
+ALL.push(reg('erzählen', 'to tell', 'A1'))
+ALL.push(reg('kosten', 'to cost', 'A1'))
+ALL.push(reg('danken', 'to thank', 'A1'))
+ALL.push(reg('melden', 'to report', 'A1'))
+ALL.push(reg('versuchen', 'to try', 'A1'))
+ALL.push(strong('sein', 'to be', 'A1', null, null, 'war', 'gewesen', 'sein'))
+ALL.push(strong('haben', 'to have', 'A1', null, null, 'hatte', 'gehabt', 'haben'))
+ALL.push(strong('werden', 'to become', 'A1', 'wirst', 'wird', 'wurde', 'geworden', 'sein'))
+ALL.push(strong('gehen', 'to go', 'A1', null, null, 'ging', 'gegangen', 'sein'))
+ALL.push(strong('kommen', 'to come', 'A1', null, null, 'kam', 'gekommen', 'sein'))
+ALL.push(strong('sehen', 'to see', 'A1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben'))
+ALL.push(strong('sprechen', 'to speak', 'A1', 'sprich', 'spricht', 'sprach', 'gesprochen', 'haben'))
+ALL.push(strong('essen', 'to eat', 'A1', 'iss', 'isst', 'aß', 'gegessen', 'haben'))
+ALL.push(strong('trinken', 'to drink', 'A1', null, null, 'trank', 'getrunken', 'haben'))
+ALL.push(strong('fahren', 'to drive', 'A1', 'fahr', 'fährt', 'fuhr', 'gefahren', 'sein'))
+ALL.push(strong('lesen', 'to read', 'A1', 'lies', 'liest', 'las', 'gelesen', 'haben'))
+ALL.push(strong('schreiben', 'to write', 'A1', null, null, 'schrieb', 'geschrieben', 'haben'))
+ALL.push(
+  strong('schlafen', 'to sleep', 'A1', 'schläf', 'schläft', 'schlief', 'geschlafen', 'haben'),
+)
+ALL.push(strong('nehmen', 'to take', 'A1', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben'))
+ALL.push(strong('bleiben', 'to stay', 'A1', null, null, 'blieb', 'geblieben', 'sein'))
+ALL.push(strong('tragen', 'to carry', 'A1', 'träg', 'trägt', 'trug', 'getragen', 'haben'))
+ALL.push(strong('treffen', 'to meet', 'A1', 'triff', 'trifft', 'traf', 'getroffen', 'haben'))
+ALL.push(strong('verstehen', 'to understand', 'A1', null, null, 'verstand', 'verstanden', 'haben'))
+ALL.push(strong('finden', 'to find', 'A1', null, null, 'fand', 'gefunden', 'haben'))
+ALL.push(strong('geben', 'to give', 'A1', 'gib', 'gibt', 'gab', 'gegeben', 'haben'))
+ALL.push(strong('helfen', 'to help', 'A1', 'hilf', 'hilft', 'half', 'geholfen', 'haben'))
+ALL.push(strong('denken', 'to think', 'A1', null, null, 'dachte', 'gedacht', 'haben'))
+ALL.push(strong('wissen', 'to know (fact)', 'A1', null, null, 'wusste', 'gewusst', 'haben'))
+ALL.push(strong('kennen', 'to know (person)', 'A1', null, null, 'kannte', 'gekannt', 'haben'))
+ALL.push(
+  modal(
+    'können',
+    'can',
+    'A1',
+    { ich: 'kann', du: 'kannst', er: 'kann', wir: 'können', ihr: 'könnt', sie: 'können' },
+    { ich: 'konnte', du: 'konntest', er: 'konnte', wir: 'konnten', ihr: 'konntet', sie: 'konnten' },
+  ),
+)
+ALL.push(
+  modal(
+    'müssen',
+    'must',
+    'A1',
+    { ich: 'muss', du: 'musst', er: 'muss', wir: 'müssen', ihr: 'müsst', sie: 'müssen' },
+    { ich: 'musste', du: 'musstest', er: 'musste', wir: 'mussten', ihr: 'musstet', sie: 'mussten' },
+  ),
+)
+ALL.push(
+  modal(
+    'wollen',
+    'to want',
+    'A1',
+    { ich: 'will', du: 'willst', er: 'will', wir: 'wollen', ihr: 'wollt', sie: 'wollen' },
+    { ich: 'wollte', du: 'wolltest', er: 'wollte', wir: 'wollten', ihr: 'wolltet', sie: 'wollten' },
+  ),
+)
+ALL.push(
+  modal(
+    'dürfen',
+    'may',
+    'A1',
+    { ich: 'darf', du: 'darfst', er: 'darf', wir: 'dürfen', ihr: 'dürft', sie: 'dürfen' },
+    { ich: 'durfte', du: 'durftest', er: 'durfte', wir: 'durften', ihr: 'durftet', sie: 'durften' },
+  ),
+)
+ALL.push(
+  modal(
+    'sollen',
+    'should',
+    'A1',
+    { ich: 'soll', du: 'sollst', er: 'soll', wir: 'sollen', ihr: 'sollt', sie: 'sollen' },
+    { ich: 'sollte', du: 'solltest', er: 'sollte', wir: 'sollten', ihr: 'solltet', sie: 'sollten' },
+  ),
+)
+ALL.push(
+  modal(
+    'möchten',
+    'would like',
+    'A1',
+    { ich: 'möchte', du: 'möchtest', er: 'möchte', wir: 'möchten', ihr: 'möchtet', sie: 'möchten' },
+    { ich: 'möchte', du: 'möchtest', er: 'möchte', wir: 'möchten', ihr: 'möchtet', sie: 'möchten' },
+  ),
+)
+ALL.push(
+  strong('aufstehen', 'to get up', 'A1', 'steh', 'steht auf', 'stand auf', 'aufgestanden', 'sein'),
+)
+ALL.push(strong('anrufen', 'to call', 'A1', 'ruf', 'ruft an', 'rief an', 'angerufen', 'haben'))
+ALL.push(strong('anfangen', 'to begin', 'A1', 'fäng', 'fängt an', 'fing an', 'angefangen', 'haben'))
+ALL.push(reg('einkaufen', 'to shop', 'A1')) // handled as regular
+ALL.push(reg('aufräumen', 'to tidy', 'A1'))
+ALL.push(reg('aufmachen', 'to open', 'A1'))
+ALL.push(reg('zumachen', 'to close', 'A1'))
+ALL.push(reg('mitkommen', 'to come along', 'A1'))
+ALL.push(reg('fernsehen', 'to watch TV', 'A1'))
+ALL.push(reg('abholen', 'to pick up', 'A1'))
+ALL.push(reg('beschreiben', 'to describe', 'A2'))
+ALL.push(reg('entscheiden', 'to decide', 'A2'))
+ALL.push(reg('vermeiden', 'to avoid', 'A2'))
+ALL.push(reg('erledigen', 'to complete', 'A2'))
+ALL.push(reg('verschieben', 'to postpone', 'A2'))
+ALL.push(reg('vorbereiten', 'to prepare', 'A2'))
+ALL.push(reg('erinnern', 'to remember', 'A2'))
+ALL.push(reg('interessieren', 'to interest', 'A2'))
+ALL.push(reg('trainieren', 'to train', 'A2'))
+ALL.push(reg('sparen', 'to save', 'A2'))
+ALL.push(reg('verdienen', 'to earn', 'A2'))
+ALL.push(reg('wechseln', 'to change', 'A2'))
+ALL.push(reg('ausfüllen', 'to fill out', 'A2'))
+ALL.push(reg('unterschreiben', 'to sign', 'A2'))
+ALL.push(reg('beantragen', 'to apply for', 'A2'))
+ALL.push(reg('kündigen', 'to terminate', 'A2'))
+ALL.push(reg('benachrichtigen', 'to notify', 'A2'))
+ALL.push(reg('versichern', 'to insure', 'A2'))
+ALL.push(reg('reparieren', 'to repair', 'A2'))
+ALL.push(reg('renovieren', 'to renovate', 'A2'))
+ALL.push(reg('organisieren', 'to organize', 'A2'))
+ALL.push(reg('reservieren', 'to reserve', 'A2'))
+ALL.push(reg('buchen', 'to book', 'A2'))
+ALL.push(reg('empfehlen', 'to recommend', 'A2'))
+ALL.push(strong('bieten', 'to offer', 'A2', null, null, 'bot', 'geboten', 'haben'))
+ALL.push(strong('fallen', 'to fall', 'A2', 'fäl', 'fällt', 'fiel', 'gefallen', 'sein'))
+ALL.push(strong('singen', 'to sing', 'A2', null, null, 'sang', 'gesungen', 'haben'))
+ALL.push(strong('vergleichen', 'to compare', 'A2', null, null, 'verglich', 'verglichen', 'haben'))
+ALL.push(
+  strong(
+    'versprechen',
+    'to promise',
+    'A2',
+    'versprich',
+    'verspricht',
+    'versprach',
+    'versprochen',
+    'haben',
+  ),
+)
+ALL.push(strong('werfen', 'to throw', 'A2', 'wirf', 'wirft', 'warf', 'geworfen', 'haben'))
+ALL.push(strong('ziehen', 'to pull', 'A2', null, null, 'zog', 'gezogen', 'haben'))
+ALL.push(strong('bitten', 'to request', 'A2', null, null, 'bat', 'gebeten', 'haben'))
+ALL.push(strong('halten', 'to hold', 'A2', 'hält', 'hält', 'hielt', 'gehalten', 'haben'))
+ALL.push(strong('streiten', 'to argue', 'A2', null, null, 'stritt', 'gestritten', 'haben'))
+ALL.push(
+  strong('vergessen', 'to forget', 'A2', 'vergiss', 'vergisst', 'vergaß', 'vergessen', 'haben'),
+)
+ALL.push(strong('erscheinen', 'to appear', 'A2', null, null, 'erschien', 'erschienen', 'sein'))
+ALL.push(strong('steigen', 'to climb', 'A2', null, null, 'stieg', 'gestiegen', 'sein'))
+ALL.push(strong('schneiden', 'to cut', 'A2', null, null, 'schnitt', 'geschnitten', 'haben'))
+ALL.push(strong('binden', 'to bind', 'A2', null, null, 'band', 'gebunden', 'haben'))
+ALL.push(strong('waschen', 'to wash', 'A2', 'wäsch', 'wäscht', 'wusch', 'gewaschen', 'haben'))
+ALL.push(strong('laufen', 'to run', 'A2', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein'))
+ALL.push(
+  strong(
+    'empfehlen',
+    'to recommend',
+    'A2',
+    'empfiehl',
+    'empfiehlt',
+    'empfahl',
+    'empfohlen',
+    'haben',
+  ),
+)
+ALL.push(strong('beginnen', 'to begin', 'A2', null, null, 'begann', 'begonnen', 'haben'))
+ALL.push(strong('gewinnen', 'to win', 'A2', null, null, 'gewann', 'gewonnen', 'haben'))
+ALL.push(
+  refl(
+    'sich freuen',
+    'to be happy',
+    'A2',
+    {
+      ich: 'freue mich',
+      du: 'freust dich',
+      er: 'freut sich',
+      wir: 'freuen uns',
+      ihr: 'freut euch',
+      sie: 'freuen sich',
+    },
+    {
+      ich: 'freute mich',
+      du: 'freutest dich',
+      er: 'freute sich',
+      wir: 'freuten uns',
+      ihr: 'freutet euch',
+      sie: 'freuten sich',
+    },
+    'gefreut',
+  ),
+)
+ALL.push(
+  refl(
+    'sich treffen',
+    'to meet',
+    'A2',
+    {
+      ich: 'treffe mich',
+      du: 'triffst dich',
+      er: 'trifft sich',
+      wir: 'treffen uns',
+      ihr: 'trefft euch',
+      sie: 'treffen sich',
+    },
+    {
+      ich: 'traf mich',
+      du: 'trafst dich',
+      er: 'traf sich',
+      wir: 'trafen uns',
+      ihr: 'traft euch',
+      sie: 'trafen sich',
+    },
+    'getroffen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich erinnern',
+    'to remember',
+    'A2',
+    {
+      ich: 'erinnere mich',
+      du: 'erinnerst dich',
+      er: 'erinnert sich',
+      wir: 'erinnern uns',
+      ihr: 'erinnert euch',
+      sie: 'erinnern sich',
+    },
+    {
+      ich: 'erinnerte mich',
+      du: 'erinnertest dich',
+      er: 'erinnerte sich',
+      wir: 'erinnerten uns',
+      ihr: 'erinnertet euch',
+      sie: 'erinnerten sich',
+    },
+    'erinnert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich interessieren',
+    'to be interested',
+    'A2',
+    {
+      ich: 'interessiere mich',
+      du: 'interessierst dich',
+      er: 'interessiert sich',
+      wir: 'interessieren uns',
+      ihr: 'interessiert euch',
+      sie: 'interessieren sich',
+    },
+    {
+      ich: 'interessierte mich',
+      du: 'interessiertest dich',
+      er: 'interessierte sich',
+      wir: 'interessierten uns',
+      ihr: 'interessiertet euch',
+      sie: 'interessierten sich',
+    },
+    'interessiert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich duschen',
+    'to shower',
+    'A2',
+    {
+      ich: 'dusche mich',
+      du: 'duschst dich',
+      er: 'duscht sich',
+      wir: 'duschen uns',
+      ihr: 'duscht euch',
+      sie: 'duschen sich',
+    },
+    {
+      ich: 'duschte mich',
+      du: 'duschtest dich',
+      er: 'duschte sich',
+      wir: 'duschten uns',
+      ihr: 'duschtet euch',
+      sie: 'duschten sich',
+    },
+    'geduscht',
+  ),
+)
+ALL.push(
+  refl(
+    'sich beeilen',
+    'to hurry',
+    'A2',
+    {
+      ich: 'beeile mich',
+      du: 'beeilst dich',
+      er: 'beeilt sich',
+      wir: 'beeilen uns',
+      ihr: 'beeilt euch',
+      sie: 'beeilen sich',
+    },
+    {
+      ich: 'beeilte mich',
+      du: 'beeiltest dich',
+      er: 'beeilte sich',
+      wir: 'beeilten uns',
+      ihr: 'beeiltet euch',
+      sie: 'beeilten sich',
+    },
+    'beeilt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bewerben',
+    'to apply',
+    'A2',
+    {
+      ich: 'bewerbe mich',
+      du: 'bewirbst dich',
+      er: 'bewirbt sich',
+      wir: 'bewerben uns',
+      ihr: 'bewirbt euch',
+      sie: 'bewerben sich',
+    },
+    {
+      ich: 'bewarb mich',
+      du: 'bewarbst dich',
+      er: 'bewarb sich',
+      wir: 'bewarben uns',
+      ihr: 'bewarbt euch',
+      sie: 'bewarben sich',
+    },
+    'beworben',
+  ),
+)
+ALL.push(reg('beeinflussen', 'to influence', 'B1'))
+ALL.push(reg('differenzieren', 'to differentiate', 'B1'))
+ALL.push(reg('dokumentieren', 'to document', 'B1'))
+ALL.push(reg('evaluieren', 'to evaluate', 'B1'))
+ALL.push(reg('formulieren', 'to formulate', 'B1'))
+ALL.push(reg('koordinieren', 'to coordinate', 'B1'))
+ALL.push(reg('motivieren', 'to motivate', 'B1'))
+ALL.push(reg('optimieren', 'to optimize', 'B1'))
+ALL.push(reg('priorisieren', 'to prioritize', 'B1'))
+ALL.push(reg('reduzieren', 'to reduce', 'B1'))
+ALL.push(reg('strukturieren', 'to structure', 'B1'))
+ALL.push(reg('verhandeln', 'to negotiate', 'B1'))
+ALL.push(reg('vermitteln', 'to convey', 'B1'))
+ALL.push(reg('wahrnehmen', 'to perceive', 'B1'))
+ALL.push(reg('berücksichtigen', 'to consider', 'B1'))
+ALL.push(reg('ermitteln', 'to investigate', 'B1'))
+ALL.push(reg('durchführen', 'to carry out', 'B1'))
+ALL.push(reg('umsetzen', 'to implement', 'B1'))
+ALL.push(reg('vorantreiben', 'to drive forward', 'B1'))
+ALL.push(
+  strong(
+    'beschließen',
+    'to resolve',
+    'B1',
+    'beschließ',
+    'beschließt',
+    'beschloss',
+    'beschlossen',
+    'haben',
+  ),
+)
+ALL.push(strong('gelingen', 'to succeed', 'B1', null, 'gelingt', 'gelang', 'gelungen', 'sein'))
+ALL.push(strong('geschehen', 'to happen', 'B1', null, 'geschieht', 'geschah', 'geschehen', 'sein'))
+ALL.push(strong('leiden', 'to suffer', 'B1', null, null, 'litt', 'gelitten', 'haben'))
+ALL.push(strong('riechen', 'to smell', 'B1', null, null, 'roch', 'gerochen', 'haben'))
+ALL.push(strong('schweigen', 'to be silent', 'B1', null, null, 'schwieg', 'geschwiegen', 'haben'))
+ALL.push(strong('wachsen', 'to grow', 'B1', 'wächs', 'wächst', 'wuchs', 'gewachsen', 'sein'))
+ALL.push(strong('brechen', 'to break', 'B1', 'brich', 'bricht', 'brach', 'gebrochen', 'haben'))
+ALL.push(strong('brennen', 'to burn', 'B1', null, null, 'brannte', 'gebrannt', 'haben'))
+ALL.push(strong('klingen', 'to sound', 'B1', null, null, 'klang', 'geklungen', 'haben'))
+ALL.push(strong('scheinen', 'to shine', 'B1', null, null, 'schien', 'geschienen', 'haben'))
+ALL.push(strong('verzeihen', 'to forgive', 'B1', null, null, 'verzieh', 'verziehen', 'haben'))
+ALL.push(strong('weichen', 'to yield', 'B1', null, null, 'wich', 'gewichen', 'sein'))
+ALL.push(strong('treiben', 'to drive', 'B1', null, null, 'trieb', 'getrieben', 'haben'))
+ALL.push(strong('braten', 'to roast', 'B1', 'brät', 'brät', 'briet', 'gebraten', 'haben'))
+ALL.push(reg('annektieren', 'to annex', 'B2'))
+ALL.push(reg('genehmigen', 'to approve', 'B2'))
+ALL.push(reg('gewährleisten', 'to guarantee', 'B2'))
+ALL.push(reg('legalisieren', 'to legalize', 'B2'))
+ALL.push(reg('subventionieren', 'to subsidize', 'B2'))
+ALL.push(reg('verschlüsseln', 'to encrypt', 'B2'))
+ALL.push(reg('drosseln', 'to throttle', 'B2'))
+ALL.push(reg('mobilmachen', 'to mobilize', 'B2'))
+ALL.push(reg('haftbar machen', 'to hold liable', 'B2'))
+ALL.push(reg('beanstanden', 'to object to', 'C1'))
+ALL.push(reg('gewähren', 'to grant', 'C1'))
+ALL.push(reg('erkunden', 'to explore', 'C1'))
+ALL.push(reg('legalisieren', 'to legalize', 'C1'))
+ALL.push(reg('kultivieren', 'to cultivate', 'C2'))
+ALL.push(reg('rekapitulieren', 'to recapitulate', 'C2'))
+ALL.push(
+  strong('beruhen auf', 'to be based on', 'B2', null, 'beruht', 'beruhte', 'beruht', 'haben'),
+)
+ALL.push(strong('enthüllen', 'to reveal', 'B2', null, null, 'enthuellte', 'enthuellt', 'haben'))
+ALL.push(strong('erschließen', 'to develop', 'B2', null, null, 'erschloss', 'erschlossen', 'haben'))
+ALL.push(
+  strong(
+    'vorantreiben',
+    'to propel',
+    'B2',
+    'treib',
+    'treibt voran',
+    'trieb voran',
+    'vorangetrieben',
+    'haben',
+  ),
+)
+ALL.push(
+  strong(
+    'auseinandersetzen',
+    'to examine',
+    'B1',
+    'setzt',
+    'setzt auseinander',
+    'setzte auseinander',
+    'auseinandergesetzt',
+    'haben',
+  ),
+)
+ALL.push(strong('beruhen', 'to be based', 'C1', null, 'beruht', 'beruhte', 'beruht', 'haben'))
+ALL.push(
+  strong(
+    'durchsetzen',
+    'to enforce',
+    'C1',
+    'setzt',
+    'setzt durch',
+    'setzte durch',
+    'durchgesetzt',
+    'haben',
+  ),
+)
+ALL.push(
+  strong(
+    'wahrnehmen',
+    'to perceive',
+    'C1',
+    'nimm',
+    'nimmt wahr',
+    'nahm wahr',
+    'wahrgenommen',
+    'haben',
+  ),
+)
+ALL.push(
+  strong(
+    'durchdringen',
+    'to penetrate',
+    'C1',
+    'dring',
+    'dringt durch',
+    'drang durch',
+    'durchdrungen',
+    'haben',
+  ),
+)
+ALL.push(
+  strong(
+    'sich verinnerlichen',
+    'to internalize',
+    'C1',
+    null,
+    null,
+    'verinnerlichte',
+    'verinnerlicht',
+    'haben',
+  ),
+)
+ALL.push(
+  strong('verschweigen', 'to conceal', 'C2', null, null, 'verschwieg', 'verschwiegen', 'haben'),
+)
+ALL.push(strong('beschreiten', 'to tread', 'C2', null, null, 'beschritt', 'beschritten', 'haben'))
+ALL.push(strong('entlarven', 'to expose', 'C2', null, null, 'entlarvte', 'entlarvt', 'haben'))
 
 // ===== EXPANDED VERB SET =====
-ALL.push(reg("lachen","to laugh","A1"));
-ALL.push(reg("weinen","to cry","A1"));
-ALL.push(reg("tanzen","to dance","A1"));
-ALL.push(reg("malen","to paint","A1"));
-ALL.push(reg("zeichnen","to draw","A2"));
-ALL.push(reg("fotografieren","to photograph","A2"));
-ALL.push(reg("kochen","to cook","A1"));
-ALL.push(reg("backen","to bake","A2"));
-ALL.push(reg("braten","to roast","A2"));
-ALL.push(reg("grillen","to grill","A2"));
-ALL.push(reg("schmecken","to taste","A1"));
-ALL.push(reg("riechen","to smell","A2"));
-ALL.push(reg("putzen","to clean","A1"));
-ALL.push(reg("waschen","to wash","A1"));
-ALL.push(reg("bügeln","to iron","A2"));
-ALL.push(reg("saugen","to vacuum","A2"));
-ALL.push(reg("kehren","to sweep","A2"));
-ALL.push(reg("spülen","to rinse","A1"));
-ALL.push(reg("trocknen","to dry","A1"));
-ALL.push(reg("nähen","to sew","A2"));
-ALL.push(reg("stricken","to knit","C1"));
-ALL.push(reg("bauen","to build","A1"));
-ALL.push(reg("reparieren","to repair","A1"));
-ALL.push(reg("installieren","to install","B1"));
-ALL.push(reg("legen","to lay","A1"));
-ALL.push(reg("stellen","to place","A1"));
-ALL.push(reg("setzen","to set","A1"));
-ALL.push(reg("stecken","to stick","A2"));
-ALL.push(reg("hängen","to hang","A1"));
-ALL.push(reg("schubsen","to push","A2"));
-ALL.push(reg("drücken","to press","A1"));
-ALL.push(reg("ziehen","to pull","A1"));
-ALL.push(reg("schieben","to push","A1"));
-ALL.push(reg("werfen","to throw","A1"));
-ALL.push(reg("fangen","to catch","A2"));
-ALL.push(reg("heben","to lift","A2"));
-ALL.push(reg("tragen","to carry","A1"));
-ALL.push(reg("liefern","to deliver","B1"));
-ALL.push(reg("senden","to send","B1"));
-ALL.push(reg("transportieren","to transport","B1"));
-ALL.push(reg("verschieben","to move/shift","B1"));
-ALL.push(reg("verbauen","to block","B2"));
-ALL.push(reg("aufbewahren","to store","B1"));
-ALL.push(reg("verstecken","to hide","A2"));
-ALL.push(reg("suchen","to search","A1"));
-ALL.push(reg("finden","to find","A1"));
-ALL.push(reg("entdecken","to discover","B1"));
-ALL.push(reg("untersuchen","to examine","B1"));
-ALL.push(reg("prüfen","to check","B1"));
-ALL.push(reg("kontrollieren","to control","B1"));
-ALL.push(reg("testen","to test","A2"));
-ALL.push(reg("messen","to measure","B1"));
-ALL.push(reg("wiegen","to weigh","B1"));
-ALL.push(reg("zählen","to count","A1"));
-ALL.push(reg("rechnen","to calculate","A1"));
-ALL.push(reg("addieren","to add","B1"));
-ALL.push(reg("subtrahieren","to subtract","B1"));
-ALL.push(reg("teilen","to divide","A2"));
-ALL.push(reg("multiplizieren","to multiply","B1"));
-ALL.push(reg("sagen","to say","A1"));
-ALL.push(reg("reden","to talk","A1"));
-ALL.push(reg("erzählen","to tell","A1"));
-ALL.push(reg("berichten","to report","B1"));
-ALL.push(reg("informieren","to inform","B1"));
-ALL.push(reg("benachrichtigen","to notify","B1"));
-ALL.push(reg("warnen","to warn","A2"));
-ALL.push(reg("versichern","to assure","B1"));
-ALL.push(reg("versprechen","to promise","A2"));
-ALL.push(reg("betonen","to emphasize","B1"));
-ALL.push(reg("beteuern","to insist","B2"));
-ALL.push(reg("erwidern","to reply","B2"));
-ALL.push(reg("widersprechen","to contradict","B1"));
-ALL.push(reg("zustimmen","to agree","A2"));
-ALL.push(reg("ablehnen","to reject","B1"));
-ALL.push(reg("verweigern","to refuse","B2"));
-ALL.push(reg("verbieten","to forbid","B1"));
-ALL.push(reg("erlauben","to permit","A2"));
-ALL.push(reg("empfehlen","to recommend","A2"));
-ALL.push(reg("vorschlagen","to suggest","B1"));
-ALL.push(reg("diskutieren","to discuss","A2"));
-ALL.push(reg("debattieren","to debate","B2"));
-ALL.push(reg("argumentieren","to argue","B1"));
-ALL.push(reg("kommentieren","to comment","A2"));
-ALL.push(reg("bewerten","to evaluate","B1"));
-ALL.push(reg("kritisieren","to criticize","B1"));
-ALL.push(reg("loben","to praise","B1"));
-ALL.push(reg("beleidigen","to insult","B2"));
-ALL.push(reg("entschuldigen","to apologize","A1"));
-ALL.push(reg("danken","to thank","A1"));
-ALL.push(reg("gratulieren","to congratulate","A1"));
-ALL.push(reg("wünschen","to wish","A1"));
-ALL.push(reg("einladen","to invite","A1"));
-ALL.push(reg("begrüßen","to greet","A1"));
-ALL.push(reg("verabschieden","to say goodbye","A2"));
-ALL.push(reg("vorstellen","to introduce","A1"));
-ALL.push(reg("bekannt geben","to announce","B1"));
-ALL.push(reg("veröffentlichen","to publish","B1"));
-ALL.push(reg("übersetzen","to translate","A2"));
-ALL.push(reg("erklären","to explain","A1"));
-ALL.push(reg("beschreiben","to describe","A2"));
-ALL.push(reg("definieren","to define","B1"));
-ALL.push(reg("charakterisieren","to characterize","B2"));
-ALL.push(reg("bezeichnen","to designate","B2"));
-ALL.push(reg("lernen","to learn","A1"));
-ALL.push(reg("studieren","to study","A1"));
-ALL.push(reg("üben","to practice","A1"));
-ALL.push(reg("wiederholen","to repeat","A1"));
-ALL.push(reg("memorieren","to memorize","B2"));
-ALL.push(reg("vergessen","to forget","A1"));
-ALL.push(reg("erinnern","to remember","A2"));
-ALL.push(reg("verstehen","to understand","A1"));
-ALL.push(reg("missverstehen","to misunderstand","B1"));
-ALL.push(reg("bemerken","to notice","B1"));
-ALL.push(reg("beobachten","to observe","A2"));
-ALL.push(reg("konzentrieren","to concentrate","B1"));
-ALL.push(reg("nachdenken","to reflect","B1"));
-ALL.push(reg("überlegen","to consider","A2"));
-ALL.push(reg("planen","to plan","A1"));
-ALL.push(reg("entscheiden","to decide","A2"));
-ALL.push(reg("wählen","to choose","A1"));
-ALL.push(reg("auswählen","to select","B1"));
-ALL.push(reg("vergleichen","to compare","A2"));
-ALL.push(reg("unterscheiden","to differentiate","B1"));
-ALL.push(reg("ordnen","to order","B1"));
-ALL.push(reg("sortieren","to sort","A2"));
-ALL.push(reg("organisieren","to organize","A2"));
-ALL.push(reg("koordinieren","to coordinate","B1"));
-ALL.push(reg("verwalten","to manage/administer","B1"));
-ALL.push(reg("leiten","to lead/direct","B1"));
-ALL.push(reg("führen","to lead","A1"));
-ALL.push(reg("steuern","to steer","B1"));
-ALL.push(reg("regeln","to regulate","B1"));
-ALL.push(reg("einstellen","to adjust","B1"));
-ALL.push(reg("optimieren","to optimize","B1"));
-ALL.push(reg("verbessern","to improve","A2"));
-ALL.push(reg("verschlechtern","to worsen","B1"));
-ALL.push(reg("erweitern","to expand","B1"));
-ALL.push(reg("vergrößern","to enlarge","A2"));
-ALL.push(reg("verkleinern","to shrink","B1"));
-ALL.push(reg("erhöhen","to increase","B1"));
-ALL.push(reg("senken","to lower","B1"));
-ALL.push(reg("steigern","to boost","B1"));
-ALL.push(reg("reduzieren","to reduce","B1"));
-ALL.push(reg("beschränken","to limit","B2"));
-ALL.push(reg("arbeiten","to work","A1"));
-ALL.push(reg("helfen","to help","A1"));
-ALL.push(reg("dienen","to serve","B1"));
-ALL.push(reg("funktionieren","to function","A2"));
-ALL.push(reg("bedienen","to operate","B1"));
-ALL.push(reg("benutzen","to use","A1"));
-ALL.push(reg("verwenden","to apply/use","A2"));
-ALL.push(reg("anwenden","to apply","B1"));
-ALL.push(reg("brauchen","to need","A1"));
-ALL.push(reg("benötigen","to require","B1"));
-ALL.push(reg("erfordern","to demand","B2"));
-ALL.push(reg("herstellen","to manufacture","B1"));
-ALL.push(reg("produzieren","to produce","B1"));
-ALL.push(reg("verarbeiten","to process","B1"));
-ALL.push(reg("fertigen","to fabricate","B2"));
-ALL.push(reg("montieren","to assemble","B1"));
-ALL.push(reg("programmieren","to program","A2"));
-ALL.push(reg("coden","to code","A2"));
-ALL.push(reg("debuggen","to debug","B1"));
-ALL.push(reg("aktualisieren","to update","B1"));
-ALL.push(reg("konfigurieren","to configure","B1"));
-ALL.push(reg("synchronisieren","to sync","B2"));
-ALL.push(reg("speichern","to save","A2"));
-ALL.push(reg("löschen","to delete","A2"));
-ALL.push(reg("kopieren","to copy","A2"));
-ALL.push(reg("einfügen","to paste","A2"));
-ALL.push(reg("drucken","to print","A1"));
-ALL.push(reg("scannen","to scan","A2"));
-ALL.push(reg("versenden","to send","B1"));
-ALL.push(reg("empfangen","to receive","B1"));
-ALL.push(reg("übertragen","to transfer","B1"));
-ALL.push(reg("downloaden","to download","A2"));
-ALL.push(reg("uploaden","to upload","A2"));
-ALL.push(reg("posten","to post","A2"));
-ALL.push(reg("liken","to like","A2"));
-ALL.push(reg("folgen","to follow","A1"));
-ALL.push(reg("blockieren","to block","A2"));
-ALL.push(reg("melden","to report","A2"));
-ALL.push(reg("abonnieren","to subscribe","A2"));
-ALL.push(strong("biegen","to bend","A2",null,null,"bog","gebogen","haben"));
-ALL.push(strong("bieten","to offer","A2",null,null,"bot","geboten","haben"));
-ALL.push(strong("binden","to bind","A2",null,null,"band","gebunden","haben"));
-ALL.push(strong("bitte","to request","A2",null,null,"bat","gebeten","haben"));
-ALL.push(strong("bleiben","to stay","A1",null,null,"blieb","geblieben","sein"));
-ALL.push(strong("brauchen","to need","A1",null,null,"brauchte","gebraucht","haben"));
-ALL.push(strong("brechen","to break","B1","brich","bricht","brach","gebrochen","haben"));
-ALL.push(strong("brennen","to burn","B1",null,null,"brannte","gebrannt","haben"));
-ALL.push(strong("denken","to think","A1",null,null,"dachte","gedacht","haben"));
-ALL.push(strong("dringen","to penetrate","B2",null,"dringt","drang","gedrungen","haben"));
-ALL.push(strong("empfehlen","to recommend","A2","empfiehl","empfiehlt","empfahl","empfohlen","haben"));
-ALL.push(strong("essen","to eat","A1","iss","isst","aß","gegessen","haben"));
-ALL.push(strong("fahren","to drive","A1","fahr","fährt","fuhr","gefahren","sein"));
-ALL.push(strong("fallen","to fall","A2","fäl","fällt","fiel","gefallen","sein"));
-ALL.push(strong("finden","to find","A1",null,null,"fand","gefunden","haben"));
-ALL.push(strong("fliegen","to fly","A1",null,null,"flog","geflogen","sein"));
-ALL.push(strong("fliehen","to flee","B2",null,null,"floh","geflohen","sein"));
-ALL.push(strong("fließen","to flow","B1",null,"fließt","floss","geflossen","haben"));
-ALL.push(strong("fressen","to devour","B2","friss","frisst","fraß","gefressen","haben"));
-ALL.push(strong("frieren","to freeze","A2",null,null,"fror","gefroren","haben"));
-ALL.push(strong("gebären","to give birth","C1",null,"gebärt","gebar","geboren","haben"));
-ALL.push(strong("geben","to give","A1","gib","gibt","gab","gegeben","haben"));
-ALL.push(strong("gedeihen","to thrive","C2",null,"gedeiht","gedieh","gediehen","sein"));
-ALL.push(strong("gehen","to go","A1",null,"geht","ging","gegangen","sein"));
-ALL.push(strong("gelingen","to succeed","B1",null,"gelingt","gelang","gelungen","sein"));
-ALL.push(strong("genesen","to recover","C1",null,"genest","genas","genesen","sein"));
-ALL.push(strong("gewinnen","to win","A2",null,null,"gewann","gewonnen","haben"));
-ALL.push(strong("gießen","to pour","B1",null,"gießt","goss","gegossen","haben"));
-ALL.push(strong("gleichen","to resemble","B2",null,null,"glich","geglichen","haben"));
-ALL.push(strong("gleiten","to glide","B2",null,null,"glitt","geglitten","sein"));
-ALL.push(strong("graben","to dig","B1","gräb","gräbt","grub","gegraben","haben"));
-ALL.push(strong("greifen","to grab","B1","greif","greift","griff","gegriffen","haben"));
-ALL.push(strong("haben","to have","A1",null,null,"hatte","gehabt","haben"));
-ALL.push(strong("halten","to hold","A1","hält","hält","hielt","gehalten","haben"));
-ALL.push(strong("hängen","to hang","A1",null,"hängt","hing","gehangen","haben"));
-ALL.push(strong("hauen","to hit","B2",null,null,"haute","gehauen","haben"));
-ALL.push(strong("heben","to lift","A2",null,null,"hob","gehoben","haben"));
-ALL.push(strong("heißen","to be called","A1",null,null,"hieß","geheißen","haben"));
-ALL.push(strong("helfen","to help","A1","hilf","hilft","half","geholfen","haben"));
-ALL.push(strong("kennen","to know (person)","A1",null,null,"kannte","gekannt","haben"));
-ALL.push(strong("klingen","to sound","B1",null,null,"klang","geklungen","haben"));
-ALL.push(strong("kommen","to come","A1",null,"kommt","kam","gekommen","sein"));
-ALL.push(strong("können","can","A1",null,"kann","konnte","gekonnt","haben"));
-ALL.push(strong("kriechen","to creep","B2",null,"kriecht","kroch","gekrochen","sein"));
-ALL.push(strong("laden","to load","B1","läd","lädt","lud","geladen","haben"));
-ALL.push(strong("lassen","to let","A1","lässt","lässt","ließ","gelassen","haben"));
-ALL.push(strong("laufen","to run","A1","läuf","läuft","lief","gelaufen","sein"));
-ALL.push(strong("leiden","to suffer","B1",null,null,"litt","gelitten","haben"));
-ALL.push(strong("leihen","to lend","B1",null,null,"lieh","geliehen","haben"));
-ALL.push(strong("lesen","to read","A1","lies","liest","las","gelesen","haben"));
-ALL.push(strong("liegen","to lie","A1",null,"liegt","lag","gelegen","haben"));
-ALL.push(strong("lügen","to lie (tell falsehood)","B1",null,"lügt","log","gelogen","haben"));
-ALL.push(strong("meiden","to avoid","B2",null,"meidet","mied","gemieden","haben"));
-ALL.push(strong("misslingen","to fail","B2",null,"misslingt","misslang","misslungen","sein"));
-ALL.push(strong("mögen","to like","A1",null,"mag","mochte","gemocht","haben"));
-ALL.push(strong("müssen","must","A1",null,"muss","musste","gemusst","haben"));
-ALL.push(strong("nehmen","to take","A1","nimm","nimmt","nahm","genommen","haben"));
-ALL.push(strong("nennen","to name","A2",null,"nennt","nannte","genannt","haben"));
-ALL.push(strong("pfeifen","to whistle","B2",null,"pfeift","pfiff","gepfiffen","haben"));
-ALL.push(strong("quellen","to well up","C2",null,"quillt","quoll","gequollen","sein"));
-ALL.push(strong("raten","to advise","B1","räts","rät","riet","geraten","haben"));
-ALL.push(strong("reiben","to rub","B2",null,null,"rieb","gerieben","haben"));
-ALL.push(strong("reißen","to tear","B1",null,"reißt","riß","gerissen","haben"));
-ALL.push(strong("reiten","to ride","A2",null,null,"ritt","geritten","sein"));
-ALL.push(strong("rennen","to run","A2",null,null,"rannte","gerannt","sein"));
-ALL.push(strong("riechen","to smell","B1",null,null,"roch","gerochen","haben"));
-ALL.push(strong("ringen","to wrestle","B2",null,null,"rang","gerungen","haben"));
-ALL.push(strong("rufen","to call","A1",null,"ruft","rief","gerufen","haben"));
-ALL.push(strong("saufen","to booze","C1","säuf","säuft","soff","gesoffen","haben"));
-ALL.push(strong("schaffen","to achieve/create","B1",null,"schafft","schuf","geschaffen","haben"));
-ALL.push(strong("scheiden","to separate","B2",null,"scheidet","schied","geschieden","haben"));
-ALL.push(strong("scheinen","to shine/seem","B1",null,"scheint","schien","geschienen","haben"));
-ALL.push(strong("schieben","to push","B1",null,"schiebt","schob","geschoben","haben"));
-ALL.push(strong("schießen","to shoot","B1",null,"schießt","schoss","geschossen","haben"));
-ALL.push(strong("schlafen","to sleep","A1","schläf","schläft","schlief","geschlafen","haben"));
-ALL.push(strong("schlagen","to hit","B1","schlägst","schlägt","schlug","geschlagen","haben"));
-ALL.push(strong("schließen","to close","A1",null,"schließt","schloss","geschlossen","haben"));
-ALL.push(strong("schneiden","to cut","B1",null,null,"schnitt","geschnitten","haben"));
-ALL.push(strong("schreiben","to write","A1",null,null,"schrieb","geschrieben","haben"));
-ALL.push(strong("schreien","to scream","A2",null,"schreit","schrie","geschrien","haben"));
-ALL.push(strong("schreiten","to stride","C1",null,"schreitet","schritt","geschritten","sein"));
-ALL.push(strong("schweigen","to be silent","B1",null,null,"schwieg","geschwiegen","haben"));
-ALL.push(strong("schwimmen","to swim","A1",null,null,"schwamm","geschwommen","haben"));
-ALL.push(strong("schwingen","to swing","B2",null,null,"schwang","geschwungen","haben"));
-ALL.push(strong("sehen","to see","A1","sieh","sieht","sah","gesehen","haben"));
-ALL.push(strong("sein","to be","A1",null,"ist","war","gewesen","sein"));
-ALL.push(strong("senden","to send","B1",null,"sendet","sandte","gesandt","haben"));
-ALL.push(strong("singen","to sing","A1",null,null,"sang","gesungen","haben"));
-ALL.push(strong("sinken","to sink","B1",null,"sinkt","sank","gesunken","sein"));
-ALL.push(strong("sitzen","to sit","A1",null,"sitzt","saß","gesessen","haben"));
-ALL.push(strong("sprechen","to speak","A1","sprich","spricht","sprach","gesprochen","haben"));
-ALL.push(strong("sprießen","to sprout","C2",null,"sprießt","sproß","gesprossen","sein"));
-ALL.push(strong("stecken","to stick","A2",null,"steckt","steckte","gesteckt","haben"));
-ALL.push(strong("stehen","to stand","A1",null,"steht","stand","gestanden","haben"));
-ALL.push(strong("steigen","to climb","A2",null,"steigt","stieg","gestiegen","sein"));
-ALL.push(strong("sterben","to die","B1","stirbst","stirbt","starb","gestorben","sein"));
-ALL.push(strong("stinken","to stink","B1",null,"stinkt","stank","gestunken","haben"));
-ALL.push(strong("stoßen","to push/shock","B1","stößt","stößt","stieß","gestoßen","haben"));
-ALL.push(strong("streichen","to stroke/delete","B1",null,null,"strich","gestrichen","haben"));
-ALL.push(strong("streiten","to argue","A2",null,null,"stritt","gestritten","haben"));
-ALL.push(strong("tragen","to carry/wear","A1","trägst","trägt","trug","getragen","haben"));
-ALL.push(strong("treffen","to meet","A1","triffst","trifft","traf","getroffen","haben"));
-ALL.push(strong("treiben","to drive","B1",null,"treibt","trieb","getrieben","haben"));
-ALL.push(strong("treten","to step","A2","trittst","tritt","trat","getreten","haben"));
-ALL.push(strong("trinken","to drink","A1",null,"trinkt","trank","getrunken","haben"));
-ALL.push(strong("tun","to do","A1",null,"tut","tat","getan","haben"));
-ALL.push(strong("verbieten","to forbid","B1","verbietest","verbietet","verbot","verboten","haben"));
-ALL.push(strong("verdrießen","to annoy","C2",null,"verdrießt","verdroß","verdrossen","haben"));
-ALL.push(strong("vergessen","to forget","A1","vergisst","vergisst","vergaß","vergessen","haben"));
-ALL.push(strong("verlieren","to lose","A1",null,"verliert","verlor","verloren","haben"));
-ALL.push(strong("verschwinden","to disappear","B1",null,"verschwindet","verschwand","verschwunden","sein"));
-ALL.push(strong("verzeihen","to forgive","B1",null,"verzeiht","verzieh","verziehen","haben"));
-ALL.push(strong("waschen","to wash","A1","wäschst","wäscht","wusch","gewaschen","haben"));
-ALL.push(strong("weichen","to yield","B2",null,"weicht","wich","gewichen","sein"));
-ALL.push(strong("weisen","to show/indicate","B2",null,"weist","wies","gewiesen","haben"));
-ALL.push(strong("werden","to become","A1","wirst","wird","wurde","geworden","sein"));
-ALL.push(strong("werfen","to throw","A1","wirfst","wirft","warf","geworfen","haben"));
-ALL.push(strong("wiegen","to weigh","B1",null,"wiegt","wog","gewogen","haben"));
-ALL.push(strong("wissen","to know (fact)","A1",null,"weiß","wusste","gewusst","haben"));
-ALL.push(strong("wollen","to want","A1",null,"will","wollte","gewollt","haben"));
-ALL.push(strong("ziehen","to pull","A1",null,"zieht","zog","gezogen","haben"));
-ALL.push(strong("zwingen","to force","B1",null,"zwingt","zwang","gezwungen","haben"));
-ALL.push(reg("abbauen","to reduce","B2"));
-ALL.push(reg("abwickeln","to process","B2"));
-ALL.push(reg("anfallen","to accrue","B2"));
-ALL.push(reg("anhaeufen","to accumulate","C1"));
-ALL.push(reg("anklagen","to accuse","B2"));
-ALL.push(reg("annektieren","to annex","C2"));
-ALL.push(reg("anpraengern","to denounce","C1"));
-ALL.push(reg("aufbringen","to raise","B2"));
-ALL.push(reg("ausloesen","to trigger","B2"));
-ALL.push(reg("ausschoepfen","to exhaust","C1"));
-ALL.push(reg("beantragen","to apply for","B1"));
-ALL.push(reg("beauftragen","to commission","B2"));
-ALL.push(reg("bedingen","to condition/entail","C2"));
-ALL.push(reg("beeintraechtigen","to impair","B2"));
-ALL.push(reg("befoerdern","to promote","B1"));
-ALL.push(reg("befriedigen","to satisfy","C1"));
-ALL.push(reg("begleichen","to settle","B2"));
-ALL.push(reg("behaupten","to claim","B1"));
-ALL.push(reg("belasten","to burden","B1"));
-ALL.push(reg("bemängeln","to criticize","B2"));
-ALL.push(reg("benachteiligen","to disadvantage","B2"));
-ALL.push(reg("beruecksichtigen","to consider","B1"));
-ALL.push(reg("beruhen auf","to be based on","B2"));
-ALL.push(reg("beschaeftigen","to occupy","B1"));
-ALL.push(reg("beschraenken","to restrict","B2"));
-ALL.push(reg("beschaedigen","to damage","A2"));
-ALL.push(reg("beteiligen","to participate","B1"));
-ALL.push(reg("betreiben","to operate","B1"));
-ALL.push(reg("bevormunden","to patronize","C2"));
-ALL.push(reg("bewerkstelligen","to accomplish","C1"));
-ALL.push(reg("bewilligen","to approve","C1"));
-ALL.push(reg("boykottieren","to boycott","B2"));
-ALL.push(reg("differenzieren","to differentiate","B2"));
-ALL.push(reg("diskriminieren","to discriminate","B2"));
-ALL.push(reg("dokumentieren","to document","B1"));
-ALL.push(reg("drosseln","to throttle","B2"));
-ALL.push(reg("durchsetzen","to enforce","B1"));
-ALL.push(reg("einbuergerern","to naturalize","C2"));
-ALL.push(reg("einklagen","to sue for","C2"));
-ALL.push(reg("einleiten","to initiate","B1"));
-ALL.push(reg("einraeumen","to concede","B2"));
-ALL.push(reg("einschraenken","to restrict","B1"));
-ALL.push(reg("entfalten","to unfold","C1"));
-ALL.push(reg("entgleisen","to derail","B2"));
-ALL.push(reg("enthüllen","to reveal","B2"));
-ALL.push(reg("entkräften","to refute","C1"));
-ALL.push(reg("entlasten","to relieve","B1"));
-ALL.push(reg("entziehen","to withdraw","B1"));
-ALL.push(reg("ermitteln","to investigate","B2"));
-ALL.push(reg("erneuern","to renew","B1"));
-ALL.push(reg("erschließen","to develop","C1"));
-ALL.push(reg("erschoepfen","to exhaust","C1"));
-ALL.push(reg("erstatten","to reimburse","B2"));
-ALL.push(reg("erwaegen","to consider","C1"));
-ALL.push(reg("foerdern","to promote","B1"));
-ALL.push(reg("fordern","to demand","B1"));
-ALL.push(reg("foerderen","to promote","B1"));
-ALL.push(reg("gebaehren","to be due","C2"));
-ALL.push(reg("gegensteuern","to counter-steer","C1"));
-ALL.push(reg("genehmigen","to approve","B2"));
-ALL.push(reg("gewähren","to grant","C1"));
-ALL.push(reg("gewährleisten","to guarantee","B2"));
-ALL.push(reg("haftbar","to hold liable","B2"));
-ALL.push(reg("hervorrufen","to cause","B2"));
-ALL.push(reg("hinterfragen","to question","B1"));
-ALL.push(reg("hindern","to hinder","B1"));
-ALL.push(reg("hinweisen","to point out","B1"));
-ALL.push(reg("implementieren","to implement","B1"));
-ALL.push(reg("initiieren","to initiate","C1"));
-ALL.push(reg("kalkulieren","to calculate","B1"));
-ALL.push(reg("kultivieren","to cultivate","C2"));
-ALL.push(reg("legalisieren","to legalize","B2"));
-ALL.push(reg("missachten","to disregard","C1"));
-ALL.push(reg("missbilligen","to disapprove","C1"));
-ALL.push(reg("mobilmachen","to mobilize","B2"));
-ALL.push(reg("nullifizieren","to nullify","C2"));
-ALL.push(reg("priorisieren","to prioritize","B1"));
-ALL.push(reg("rekapitulieren","to recapitulate","C2"));
-ALL.push(reg("reservieren","to reserve","A2"));
-ALL.push(reg("revanchieren","to take revenge","C2"));
-ALL.push(reg("schmaelern","to diminish","C2"));
-ALL.push(reg("subventionieren","to subsidize","B2"));
-ALL.push(reg("verstaatlichen","to nationalize","C2"));
-ALL.push(reg("verschachteln","to nest","C2"));
-ALL.push(reg("verschlüsseln","to encrypt","B2"));
-ALL.push(reg("verschweigen","to conceal","C2"));
-ALL.push(reg("verstaerken","to reinforce","B1"));
-ALL.push(reg("vertnetzen","to network","C2"));
-ALL.push(reg("vorantreiben","to drive forward","B1"));
-ALL.push(reg("vorbeugen","to prevent","B1"));
-ALL.push(reg("wahrnehmen","to perceive","B1"));
-ALL.push(reg("wiederlegen","to refute","B1"));
-ALL.push(reg("zugaenglich machen","to make accessible","C1"));
-ALL.push(reg("zunichte machen","to thwart","C2"));
-ALL.push(reg("zusehends","to increasingly","C2"));
+ALL.push(reg('lachen', 'to laugh', 'A1'))
+ALL.push(reg('weinen', 'to cry', 'A1'))
+ALL.push(reg('tanzen', 'to dance', 'A1'))
+ALL.push(reg('malen', 'to paint', 'A1'))
+ALL.push(reg('zeichnen', 'to draw', 'A2'))
+ALL.push(reg('fotografieren', 'to photograph', 'A2'))
+ALL.push(reg('kochen', 'to cook', 'A1'))
+ALL.push(reg('backen', 'to bake', 'A2'))
+ALL.push(reg('braten', 'to roast', 'A2'))
+ALL.push(reg('grillen', 'to grill', 'A2'))
+ALL.push(reg('schmecken', 'to taste', 'A1'))
+ALL.push(reg('riechen', 'to smell', 'A2'))
+ALL.push(reg('putzen', 'to clean', 'A1'))
+ALL.push(reg('waschen', 'to wash', 'A1'))
+ALL.push(reg('bügeln', 'to iron', 'A2'))
+ALL.push(reg('saugen', 'to vacuum', 'A2'))
+ALL.push(reg('kehren', 'to sweep', 'A2'))
+ALL.push(reg('spülen', 'to rinse', 'A1'))
+ALL.push(reg('trocknen', 'to dry', 'A1'))
+ALL.push(reg('nähen', 'to sew', 'A2'))
+ALL.push(reg('stricken', 'to knit', 'C1'))
+ALL.push(reg('bauen', 'to build', 'A1'))
+ALL.push(reg('reparieren', 'to repair', 'A1'))
+ALL.push(reg('installieren', 'to install', 'B1'))
+ALL.push(reg('legen', 'to lay', 'A1'))
+ALL.push(reg('stellen', 'to place', 'A1'))
+ALL.push(reg('setzen', 'to set', 'A1'))
+ALL.push(reg('stecken', 'to stick', 'A2'))
+ALL.push(reg('hängen', 'to hang', 'A1'))
+ALL.push(reg('schubsen', 'to push', 'A2'))
+ALL.push(reg('drücken', 'to press', 'A1'))
+ALL.push(reg('ziehen', 'to pull', 'A1'))
+ALL.push(reg('schieben', 'to push', 'A1'))
+ALL.push(reg('werfen', 'to throw', 'A1'))
+ALL.push(reg('fangen', 'to catch', 'A2'))
+ALL.push(reg('heben', 'to lift', 'A2'))
+ALL.push(reg('tragen', 'to carry', 'A1'))
+ALL.push(reg('liefern', 'to deliver', 'B1'))
+ALL.push(reg('senden', 'to send', 'B1'))
+ALL.push(reg('transportieren', 'to transport', 'B1'))
+ALL.push(reg('verschieben', 'to move/shift', 'B1'))
+ALL.push(reg('verbauen', 'to block', 'B2'))
+ALL.push(reg('aufbewahren', 'to store', 'B1'))
+ALL.push(reg('verstecken', 'to hide', 'A2'))
+ALL.push(reg('suchen', 'to search', 'A1'))
+ALL.push(reg('finden', 'to find', 'A1'))
+ALL.push(reg('entdecken', 'to discover', 'B1'))
+ALL.push(reg('untersuchen', 'to examine', 'B1'))
+ALL.push(reg('prüfen', 'to check', 'B1'))
+ALL.push(reg('kontrollieren', 'to control', 'B1'))
+ALL.push(reg('testen', 'to test', 'A2'))
+ALL.push(reg('messen', 'to measure', 'B1'))
+ALL.push(reg('wiegen', 'to weigh', 'B1'))
+ALL.push(reg('zählen', 'to count', 'A1'))
+ALL.push(reg('rechnen', 'to calculate', 'A1'))
+ALL.push(reg('addieren', 'to add', 'B1'))
+ALL.push(reg('subtrahieren', 'to subtract', 'B1'))
+ALL.push(reg('teilen', 'to divide', 'A2'))
+ALL.push(reg('multiplizieren', 'to multiply', 'B1'))
+ALL.push(reg('sagen', 'to say', 'A1'))
+ALL.push(reg('reden', 'to talk', 'A1'))
+ALL.push(reg('erzählen', 'to tell', 'A1'))
+ALL.push(reg('berichten', 'to report', 'B1'))
+ALL.push(reg('informieren', 'to inform', 'B1'))
+ALL.push(reg('benachrichtigen', 'to notify', 'B1'))
+ALL.push(reg('warnen', 'to warn', 'A2'))
+ALL.push(reg('versichern', 'to assure', 'B1'))
+ALL.push(reg('versprechen', 'to promise', 'A2'))
+ALL.push(reg('betonen', 'to emphasize', 'B1'))
+ALL.push(reg('beteuern', 'to insist', 'B2'))
+ALL.push(reg('erwidern', 'to reply', 'B2'))
+ALL.push(reg('widersprechen', 'to contradict', 'B1'))
+ALL.push(reg('zustimmen', 'to agree', 'A2'))
+ALL.push(reg('ablehnen', 'to reject', 'B1'))
+ALL.push(reg('verweigern', 'to refuse', 'B2'))
+ALL.push(reg('verbieten', 'to forbid', 'B1'))
+ALL.push(reg('erlauben', 'to permit', 'A2'))
+ALL.push(reg('empfehlen', 'to recommend', 'A2'))
+ALL.push(reg('vorschlagen', 'to suggest', 'B1'))
+ALL.push(reg('diskutieren', 'to discuss', 'A2'))
+ALL.push(reg('debattieren', 'to debate', 'B2'))
+ALL.push(reg('argumentieren', 'to argue', 'B1'))
+ALL.push(reg('kommentieren', 'to comment', 'A2'))
+ALL.push(reg('bewerten', 'to evaluate', 'B1'))
+ALL.push(reg('kritisieren', 'to criticize', 'B1'))
+ALL.push(reg('loben', 'to praise', 'B1'))
+ALL.push(reg('beleidigen', 'to insult', 'B2'))
+ALL.push(reg('entschuldigen', 'to apologize', 'A1'))
+ALL.push(reg('danken', 'to thank', 'A1'))
+ALL.push(reg('gratulieren', 'to congratulate', 'A1'))
+ALL.push(reg('wünschen', 'to wish', 'A1'))
+ALL.push(reg('einladen', 'to invite', 'A1'))
+ALL.push(reg('begrüßen', 'to greet', 'A1'))
+ALL.push(reg('verabschieden', 'to say goodbye', 'A2'))
+ALL.push(reg('vorstellen', 'to introduce', 'A1'))
+ALL.push(reg('bekannt geben', 'to announce', 'B1'))
+ALL.push(reg('veröffentlichen', 'to publish', 'B1'))
+ALL.push(reg('übersetzen', 'to translate', 'A2'))
+ALL.push(reg('erklären', 'to explain', 'A1'))
+ALL.push(reg('beschreiben', 'to describe', 'A2'))
+ALL.push(reg('definieren', 'to define', 'B1'))
+ALL.push(reg('charakterisieren', 'to characterize', 'B2'))
+ALL.push(reg('bezeichnen', 'to designate', 'B2'))
+ALL.push(reg('lernen', 'to learn', 'A1'))
+ALL.push(reg('studieren', 'to study', 'A1'))
+ALL.push(reg('üben', 'to practice', 'A1'))
+ALL.push(reg('wiederholen', 'to repeat', 'A1'))
+ALL.push(reg('memorieren', 'to memorize', 'B2'))
+ALL.push(reg('vergessen', 'to forget', 'A1'))
+ALL.push(reg('erinnern', 'to remember', 'A2'))
+ALL.push(reg('verstehen', 'to understand', 'A1'))
+ALL.push(reg('missverstehen', 'to misunderstand', 'B1'))
+ALL.push(reg('bemerken', 'to notice', 'B1'))
+ALL.push(reg('beobachten', 'to observe', 'A2'))
+ALL.push(reg('konzentrieren', 'to concentrate', 'B1'))
+ALL.push(reg('nachdenken', 'to reflect', 'B1'))
+ALL.push(reg('überlegen', 'to consider', 'A2'))
+ALL.push(reg('planen', 'to plan', 'A1'))
+ALL.push(reg('entscheiden', 'to decide', 'A2'))
+ALL.push(reg('wählen', 'to choose', 'A1'))
+ALL.push(reg('auswählen', 'to select', 'B1'))
+ALL.push(reg('vergleichen', 'to compare', 'A2'))
+ALL.push(reg('unterscheiden', 'to differentiate', 'B1'))
+ALL.push(reg('ordnen', 'to order', 'B1'))
+ALL.push(reg('sortieren', 'to sort', 'A2'))
+ALL.push(reg('organisieren', 'to organize', 'A2'))
+ALL.push(reg('koordinieren', 'to coordinate', 'B1'))
+ALL.push(reg('verwalten', 'to manage/administer', 'B1'))
+ALL.push(reg('leiten', 'to lead/direct', 'B1'))
+ALL.push(reg('führen', 'to lead', 'A1'))
+ALL.push(reg('steuern', 'to steer', 'B1'))
+ALL.push(reg('regeln', 'to regulate', 'B1'))
+ALL.push(reg('einstellen', 'to adjust', 'B1'))
+ALL.push(reg('optimieren', 'to optimize', 'B1'))
+ALL.push(reg('verbessern', 'to improve', 'A2'))
+ALL.push(reg('verschlechtern', 'to worsen', 'B1'))
+ALL.push(reg('erweitern', 'to expand', 'B1'))
+ALL.push(reg('vergrößern', 'to enlarge', 'A2'))
+ALL.push(reg('verkleinern', 'to shrink', 'B1'))
+ALL.push(reg('erhöhen', 'to increase', 'B1'))
+ALL.push(reg('senken', 'to lower', 'B1'))
+ALL.push(reg('steigern', 'to boost', 'B1'))
+ALL.push(reg('reduzieren', 'to reduce', 'B1'))
+ALL.push(reg('beschränken', 'to limit', 'B2'))
+ALL.push(reg('arbeiten', 'to work', 'A1'))
+ALL.push(reg('helfen', 'to help', 'A1'))
+ALL.push(reg('dienen', 'to serve', 'B1'))
+ALL.push(reg('funktionieren', 'to function', 'A2'))
+ALL.push(reg('bedienen', 'to operate', 'B1'))
+ALL.push(reg('benutzen', 'to use', 'A1'))
+ALL.push(reg('verwenden', 'to apply/use', 'A2'))
+ALL.push(reg('anwenden', 'to apply', 'B1'))
+ALL.push(reg('brauchen', 'to need', 'A1'))
+ALL.push(reg('benötigen', 'to require', 'B1'))
+ALL.push(reg('erfordern', 'to demand', 'B2'))
+ALL.push(reg('herstellen', 'to manufacture', 'B1'))
+ALL.push(reg('produzieren', 'to produce', 'B1'))
+ALL.push(reg('verarbeiten', 'to process', 'B1'))
+ALL.push(reg('fertigen', 'to fabricate', 'B2'))
+ALL.push(reg('montieren', 'to assemble', 'B1'))
+ALL.push(reg('programmieren', 'to program', 'A2'))
+ALL.push(reg('coden', 'to code', 'A2'))
+ALL.push(reg('debuggen', 'to debug', 'B1'))
+ALL.push(reg('aktualisieren', 'to update', 'B1'))
+ALL.push(reg('konfigurieren', 'to configure', 'B1'))
+ALL.push(reg('synchronisieren', 'to sync', 'B2'))
+ALL.push(reg('speichern', 'to save', 'A2'))
+ALL.push(reg('löschen', 'to delete', 'A2'))
+ALL.push(reg('kopieren', 'to copy', 'A2'))
+ALL.push(reg('einfügen', 'to paste', 'A2'))
+ALL.push(reg('drucken', 'to print', 'A1'))
+ALL.push(reg('scannen', 'to scan', 'A2'))
+ALL.push(reg('versenden', 'to send', 'B1'))
+ALL.push(reg('empfangen', 'to receive', 'B1'))
+ALL.push(reg('übertragen', 'to transfer', 'B1'))
+ALL.push(reg('downloaden', 'to download', 'A2'))
+ALL.push(reg('uploaden', 'to upload', 'A2'))
+ALL.push(reg('posten', 'to post', 'A2'))
+ALL.push(reg('liken', 'to like', 'A2'))
+ALL.push(reg('folgen', 'to follow', 'A1'))
+ALL.push(reg('blockieren', 'to block', 'A2'))
+ALL.push(reg('melden', 'to report', 'A2'))
+ALL.push(reg('abonnieren', 'to subscribe', 'A2'))
+ALL.push(strong('biegen', 'to bend', 'A2', null, null, 'bog', 'gebogen', 'haben'))
+ALL.push(strong('bieten', 'to offer', 'A2', null, null, 'bot', 'geboten', 'haben'))
+ALL.push(strong('binden', 'to bind', 'A2', null, null, 'band', 'gebunden', 'haben'))
+ALL.push(strong('bitte', 'to request', 'A2', null, null, 'bat', 'gebeten', 'haben'))
+ALL.push(strong('bleiben', 'to stay', 'A1', null, null, 'blieb', 'geblieben', 'sein'))
+ALL.push(strong('brauchen', 'to need', 'A1', null, null, 'brauchte', 'gebraucht', 'haben'))
+ALL.push(strong('brechen', 'to break', 'B1', 'brich', 'bricht', 'brach', 'gebrochen', 'haben'))
+ALL.push(strong('brennen', 'to burn', 'B1', null, null, 'brannte', 'gebrannt', 'haben'))
+ALL.push(strong('denken', 'to think', 'A1', null, null, 'dachte', 'gedacht', 'haben'))
+ALL.push(strong('dringen', 'to penetrate', 'B2', null, 'dringt', 'drang', 'gedrungen', 'haben'))
+ALL.push(
+  strong(
+    'empfehlen',
+    'to recommend',
+    'A2',
+    'empfiehl',
+    'empfiehlt',
+    'empfahl',
+    'empfohlen',
+    'haben',
+  ),
+)
+ALL.push(strong('essen', 'to eat', 'A1', 'iss', 'isst', 'aß', 'gegessen', 'haben'))
+ALL.push(strong('fahren', 'to drive', 'A1', 'fahr', 'fährt', 'fuhr', 'gefahren', 'sein'))
+ALL.push(strong('fallen', 'to fall', 'A2', 'fäl', 'fällt', 'fiel', 'gefallen', 'sein'))
+ALL.push(strong('finden', 'to find', 'A1', null, null, 'fand', 'gefunden', 'haben'))
+ALL.push(strong('fliegen', 'to fly', 'A1', null, null, 'flog', 'geflogen', 'sein'))
+ALL.push(strong('fliehen', 'to flee', 'B2', null, null, 'floh', 'geflohen', 'sein'))
+ALL.push(strong('fließen', 'to flow', 'B1', null, 'fließt', 'floss', 'geflossen', 'haben'))
+ALL.push(strong('fressen', 'to devour', 'B2', 'friss', 'frisst', 'fraß', 'gefressen', 'haben'))
+ALL.push(strong('frieren', 'to freeze', 'A2', null, null, 'fror', 'gefroren', 'haben'))
+ALL.push(strong('gebären', 'to give birth', 'C1', null, 'gebärt', 'gebar', 'geboren', 'haben'))
+ALL.push(strong('geben', 'to give', 'A1', 'gib', 'gibt', 'gab', 'gegeben', 'haben'))
+ALL.push(strong('gedeihen', 'to thrive', 'C2', null, 'gedeiht', 'gedieh', 'gediehen', 'sein'))
+ALL.push(strong('gehen', 'to go', 'A1', null, 'geht', 'ging', 'gegangen', 'sein'))
+ALL.push(strong('gelingen', 'to succeed', 'B1', null, 'gelingt', 'gelang', 'gelungen', 'sein'))
+ALL.push(strong('genesen', 'to recover', 'C1', null, 'genest', 'genas', 'genesen', 'sein'))
+ALL.push(strong('gewinnen', 'to win', 'A2', null, null, 'gewann', 'gewonnen', 'haben'))
+ALL.push(strong('gießen', 'to pour', 'B1', null, 'gießt', 'goss', 'gegossen', 'haben'))
+ALL.push(strong('gleichen', 'to resemble', 'B2', null, null, 'glich', 'geglichen', 'haben'))
+ALL.push(strong('gleiten', 'to glide', 'B2', null, null, 'glitt', 'geglitten', 'sein'))
+ALL.push(strong('graben', 'to dig', 'B1', 'gräb', 'gräbt', 'grub', 'gegraben', 'haben'))
+ALL.push(strong('greifen', 'to grab', 'B1', 'greif', 'greift', 'griff', 'gegriffen', 'haben'))
+ALL.push(strong('haben', 'to have', 'A1', null, null, 'hatte', 'gehabt', 'haben'))
+ALL.push(strong('halten', 'to hold', 'A1', 'hält', 'hält', 'hielt', 'gehalten', 'haben'))
+ALL.push(strong('hängen', 'to hang', 'A1', null, 'hängt', 'hing', 'gehangen', 'haben'))
+ALL.push(strong('hauen', 'to hit', 'B2', null, null, 'haute', 'gehauen', 'haben'))
+ALL.push(strong('heben', 'to lift', 'A2', null, null, 'hob', 'gehoben', 'haben'))
+ALL.push(strong('heißen', 'to be called', 'A1', null, null, 'hieß', 'geheißen', 'haben'))
+ALL.push(strong('helfen', 'to help', 'A1', 'hilf', 'hilft', 'half', 'geholfen', 'haben'))
+ALL.push(strong('kennen', 'to know (person)', 'A1', null, null, 'kannte', 'gekannt', 'haben'))
+ALL.push(strong('klingen', 'to sound', 'B1', null, null, 'klang', 'geklungen', 'haben'))
+ALL.push(strong('kommen', 'to come', 'A1', null, 'kommt', 'kam', 'gekommen', 'sein'))
+ALL.push(strong('können', 'can', 'A1', null, 'kann', 'konnte', 'gekonnt', 'haben'))
+ALL.push(strong('kriechen', 'to creep', 'B2', null, 'kriecht', 'kroch', 'gekrochen', 'sein'))
+ALL.push(strong('laden', 'to load', 'B1', 'läd', 'lädt', 'lud', 'geladen', 'haben'))
+ALL.push(strong('lassen', 'to let', 'A1', 'lässt', 'lässt', 'ließ', 'gelassen', 'haben'))
+ALL.push(strong('laufen', 'to run', 'A1', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein'))
+ALL.push(strong('leiden', 'to suffer', 'B1', null, null, 'litt', 'gelitten', 'haben'))
+ALL.push(strong('leihen', 'to lend', 'B1', null, null, 'lieh', 'geliehen', 'haben'))
+ALL.push(strong('lesen', 'to read', 'A1', 'lies', 'liest', 'las', 'gelesen', 'haben'))
+ALL.push(strong('liegen', 'to lie', 'A1', null, 'liegt', 'lag', 'gelegen', 'haben'))
+ALL.push(strong('lügen', 'to lie (tell falsehood)', 'B1', null, 'lügt', 'log', 'gelogen', 'haben'))
+ALL.push(strong('meiden', 'to avoid', 'B2', null, 'meidet', 'mied', 'gemieden', 'haben'))
+ALL.push(strong('misslingen', 'to fail', 'B2', null, 'misslingt', 'misslang', 'misslungen', 'sein'))
+ALL.push(strong('mögen', 'to like', 'A1', null, 'mag', 'mochte', 'gemocht', 'haben'))
+ALL.push(strong('müssen', 'must', 'A1', null, 'muss', 'musste', 'gemusst', 'haben'))
+ALL.push(strong('nehmen', 'to take', 'A1', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben'))
+ALL.push(strong('nennen', 'to name', 'A2', null, 'nennt', 'nannte', 'genannt', 'haben'))
+ALL.push(strong('pfeifen', 'to whistle', 'B2', null, 'pfeift', 'pfiff', 'gepfiffen', 'haben'))
+ALL.push(strong('quellen', 'to well up', 'C2', null, 'quillt', 'quoll', 'gequollen', 'sein'))
+ALL.push(strong('raten', 'to advise', 'B1', 'räts', 'rät', 'riet', 'geraten', 'haben'))
+ALL.push(strong('reiben', 'to rub', 'B2', null, null, 'rieb', 'gerieben', 'haben'))
+ALL.push(strong('reißen', 'to tear', 'B1', null, 'reißt', 'riß', 'gerissen', 'haben'))
+ALL.push(strong('reiten', 'to ride', 'A2', null, null, 'ritt', 'geritten', 'sein'))
+ALL.push(strong('rennen', 'to run', 'A2', null, null, 'rannte', 'gerannt', 'sein'))
+ALL.push(strong('riechen', 'to smell', 'B1', null, null, 'roch', 'gerochen', 'haben'))
+ALL.push(strong('ringen', 'to wrestle', 'B2', null, null, 'rang', 'gerungen', 'haben'))
+ALL.push(strong('rufen', 'to call', 'A1', null, 'ruft', 'rief', 'gerufen', 'haben'))
+ALL.push(strong('saufen', 'to booze', 'C1', 'säuf', 'säuft', 'soff', 'gesoffen', 'haben'))
+ALL.push(
+  strong('schaffen', 'to achieve/create', 'B1', null, 'schafft', 'schuf', 'geschaffen', 'haben'),
+)
+ALL.push(strong('scheiden', 'to separate', 'B2', null, 'scheidet', 'schied', 'geschieden', 'haben'))
+ALL.push(
+  strong('scheinen', 'to shine/seem', 'B1', null, 'scheint', 'schien', 'geschienen', 'haben'),
+)
+ALL.push(strong('schieben', 'to push', 'B1', null, 'schiebt', 'schob', 'geschoben', 'haben'))
+ALL.push(strong('schießen', 'to shoot', 'B1', null, 'schießt', 'schoss', 'geschossen', 'haben'))
+ALL.push(
+  strong('schlafen', 'to sleep', 'A1', 'schläf', 'schläft', 'schlief', 'geschlafen', 'haben'),
+)
+ALL.push(strong('schlagen', 'to hit', 'B1', 'schlägst', 'schlägt', 'schlug', 'geschlagen', 'haben'))
+ALL.push(strong('schließen', 'to close', 'A1', null, 'schließt', 'schloss', 'geschlossen', 'haben'))
+ALL.push(strong('schneiden', 'to cut', 'B1', null, null, 'schnitt', 'geschnitten', 'haben'))
+ALL.push(strong('schreiben', 'to write', 'A1', null, null, 'schrieb', 'geschrieben', 'haben'))
+ALL.push(strong('schreien', 'to scream', 'A2', null, 'schreit', 'schrie', 'geschrien', 'haben'))
+ALL.push(
+  strong('schreiten', 'to stride', 'C1', null, 'schreitet', 'schritt', 'geschritten', 'sein'),
+)
+ALL.push(strong('schweigen', 'to be silent', 'B1', null, null, 'schwieg', 'geschwiegen', 'haben'))
+ALL.push(strong('schwimmen', 'to swim', 'A1', null, null, 'schwamm', 'geschwommen', 'haben'))
+ALL.push(strong('schwingen', 'to swing', 'B2', null, null, 'schwang', 'geschwungen', 'haben'))
+ALL.push(strong('sehen', 'to see', 'A1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben'))
+ALL.push(strong('sein', 'to be', 'A1', null, 'ist', 'war', 'gewesen', 'sein'))
+ALL.push(strong('senden', 'to send', 'B1', null, 'sendet', 'sandte', 'gesandt', 'haben'))
+ALL.push(strong('singen', 'to sing', 'A1', null, null, 'sang', 'gesungen', 'haben'))
+ALL.push(strong('sinken', 'to sink', 'B1', null, 'sinkt', 'sank', 'gesunken', 'sein'))
+ALL.push(strong('sitzen', 'to sit', 'A1', null, 'sitzt', 'saß', 'gesessen', 'haben'))
+ALL.push(strong('sprechen', 'to speak', 'A1', 'sprich', 'spricht', 'sprach', 'gesprochen', 'haben'))
+ALL.push(strong('sprießen', 'to sprout', 'C2', null, 'sprießt', 'sproß', 'gesprossen', 'sein'))
+ALL.push(strong('stecken', 'to stick', 'A2', null, 'steckt', 'steckte', 'gesteckt', 'haben'))
+ALL.push(strong('stehen', 'to stand', 'A1', null, 'steht', 'stand', 'gestanden', 'haben'))
+ALL.push(strong('steigen', 'to climb', 'A2', null, 'steigt', 'stieg', 'gestiegen', 'sein'))
+ALL.push(strong('sterben', 'to die', 'B1', 'stirbst', 'stirbt', 'starb', 'gestorben', 'sein'))
+ALL.push(strong('stinken', 'to stink', 'B1', null, 'stinkt', 'stank', 'gestunken', 'haben'))
+ALL.push(strong('stoßen', 'to push/shock', 'B1', 'stößt', 'stößt', 'stieß', 'gestoßen', 'haben'))
+ALL.push(strong('streichen', 'to stroke/delete', 'B1', null, null, 'strich', 'gestrichen', 'haben'))
+ALL.push(strong('streiten', 'to argue', 'A2', null, null, 'stritt', 'gestritten', 'haben'))
+ALL.push(strong('tragen', 'to carry/wear', 'A1', 'trägst', 'trägt', 'trug', 'getragen', 'haben'))
+ALL.push(strong('treffen', 'to meet', 'A1', 'triffst', 'trifft', 'traf', 'getroffen', 'haben'))
+ALL.push(strong('treiben', 'to drive', 'B1', null, 'treibt', 'trieb', 'getrieben', 'haben'))
+ALL.push(strong('treten', 'to step', 'A2', 'trittst', 'tritt', 'trat', 'getreten', 'haben'))
+ALL.push(strong('trinken', 'to drink', 'A1', null, 'trinkt', 'trank', 'getrunken', 'haben'))
+ALL.push(strong('tun', 'to do', 'A1', null, 'tut', 'tat', 'getan', 'haben'))
+ALL.push(
+  strong('verbieten', 'to forbid', 'B1', 'verbietest', 'verbietet', 'verbot', 'verboten', 'haben'),
+)
+ALL.push(
+  strong('verdrießen', 'to annoy', 'C2', null, 'verdrießt', 'verdroß', 'verdrossen', 'haben'),
+)
+ALL.push(
+  strong('vergessen', 'to forget', 'A1', 'vergisst', 'vergisst', 'vergaß', 'vergessen', 'haben'),
+)
+ALL.push(strong('verlieren', 'to lose', 'A1', null, 'verliert', 'verlor', 'verloren', 'haben'))
+ALL.push(
+  strong(
+    'verschwinden',
+    'to disappear',
+    'B1',
+    null,
+    'verschwindet',
+    'verschwand',
+    'verschwunden',
+    'sein',
+  ),
+)
+ALL.push(strong('verzeihen', 'to forgive', 'B1', null, 'verzeiht', 'verzieh', 'verziehen', 'haben'))
+ALL.push(strong('waschen', 'to wash', 'A1', 'wäschst', 'wäscht', 'wusch', 'gewaschen', 'haben'))
+ALL.push(strong('weichen', 'to yield', 'B2', null, 'weicht', 'wich', 'gewichen', 'sein'))
+ALL.push(strong('weisen', 'to show/indicate', 'B2', null, 'weist', 'wies', 'gewiesen', 'haben'))
+ALL.push(strong('werden', 'to become', 'A1', 'wirst', 'wird', 'wurde', 'geworden', 'sein'))
+ALL.push(strong('werfen', 'to throw', 'A1', 'wirfst', 'wirft', 'warf', 'geworfen', 'haben'))
+ALL.push(strong('wiegen', 'to weigh', 'B1', null, 'wiegt', 'wog', 'gewogen', 'haben'))
+ALL.push(strong('wissen', 'to know (fact)', 'A1', null, 'weiß', 'wusste', 'gewusst', 'haben'))
+ALL.push(strong('wollen', 'to want', 'A1', null, 'will', 'wollte', 'gewollt', 'haben'))
+ALL.push(strong('ziehen', 'to pull', 'A1', null, 'zieht', 'zog', 'gezogen', 'haben'))
+ALL.push(strong('zwingen', 'to force', 'B1', null, 'zwingt', 'zwang', 'gezwungen', 'haben'))
+ALL.push(reg('abbauen', 'to reduce', 'B2'))
+ALL.push(reg('abwickeln', 'to process', 'B2'))
+ALL.push(reg('anfallen', 'to accrue', 'B2'))
+ALL.push(reg('anhaeufen', 'to accumulate', 'C1'))
+ALL.push(reg('anklagen', 'to accuse', 'B2'))
+ALL.push(reg('annektieren', 'to annex', 'C2'))
+ALL.push(reg('anpraengern', 'to denounce', 'C1'))
+ALL.push(reg('aufbringen', 'to raise', 'B2'))
+ALL.push(reg('ausloesen', 'to trigger', 'B2'))
+ALL.push(reg('ausschoepfen', 'to exhaust', 'C1'))
+ALL.push(reg('beantragen', 'to apply for', 'B1'))
+ALL.push(reg('beauftragen', 'to commission', 'B2'))
+ALL.push(reg('bedingen', 'to condition/entail', 'C2'))
+ALL.push(reg('beeintraechtigen', 'to impair', 'B2'))
+ALL.push(reg('befoerdern', 'to promote', 'B1'))
+ALL.push(reg('befriedigen', 'to satisfy', 'C1'))
+ALL.push(reg('begleichen', 'to settle', 'B2'))
+ALL.push(reg('behaupten', 'to claim', 'B1'))
+ALL.push(reg('belasten', 'to burden', 'B1'))
+ALL.push(reg('bemängeln', 'to criticize', 'B2'))
+ALL.push(reg('benachteiligen', 'to disadvantage', 'B2'))
+ALL.push(reg('beruecksichtigen', 'to consider', 'B1'))
+ALL.push(reg('beruhen auf', 'to be based on', 'B2'))
+ALL.push(reg('beschaeftigen', 'to occupy', 'B1'))
+ALL.push(reg('beschraenken', 'to restrict', 'B2'))
+ALL.push(reg('beschaedigen', 'to damage', 'A2'))
+ALL.push(reg('beteiligen', 'to participate', 'B1'))
+ALL.push(reg('betreiben', 'to operate', 'B1'))
+ALL.push(reg('bevormunden', 'to patronize', 'C2'))
+ALL.push(reg('bewerkstelligen', 'to accomplish', 'C1'))
+ALL.push(reg('bewilligen', 'to approve', 'C1'))
+ALL.push(reg('boykottieren', 'to boycott', 'B2'))
+ALL.push(reg('differenzieren', 'to differentiate', 'B2'))
+ALL.push(reg('diskriminieren', 'to discriminate', 'B2'))
+ALL.push(reg('dokumentieren', 'to document', 'B1'))
+ALL.push(reg('drosseln', 'to throttle', 'B2'))
+ALL.push(reg('durchsetzen', 'to enforce', 'B1'))
+ALL.push(reg('einbuergerern', 'to naturalize', 'C2'))
+ALL.push(reg('einklagen', 'to sue for', 'C2'))
+ALL.push(reg('einleiten', 'to initiate', 'B1'))
+ALL.push(reg('einraeumen', 'to concede', 'B2'))
+ALL.push(reg('einschraenken', 'to restrict', 'B1'))
+ALL.push(reg('entfalten', 'to unfold', 'C1'))
+ALL.push(reg('entgleisen', 'to derail', 'B2'))
+ALL.push(reg('enthüllen', 'to reveal', 'B2'))
+ALL.push(reg('entkräften', 'to refute', 'C1'))
+ALL.push(reg('entlasten', 'to relieve', 'B1'))
+ALL.push(reg('entziehen', 'to withdraw', 'B1'))
+ALL.push(reg('ermitteln', 'to investigate', 'B2'))
+ALL.push(reg('erneuern', 'to renew', 'B1'))
+ALL.push(reg('erschließen', 'to develop', 'C1'))
+ALL.push(reg('erschoepfen', 'to exhaust', 'C1'))
+ALL.push(reg('erstatten', 'to reimburse', 'B2'))
+ALL.push(reg('erwaegen', 'to consider', 'C1'))
+ALL.push(reg('foerdern', 'to promote', 'B1'))
+ALL.push(reg('fordern', 'to demand', 'B1'))
+ALL.push(reg('foerderen', 'to promote', 'B1'))
+ALL.push(reg('gebaehren', 'to be due', 'C2'))
+ALL.push(reg('gegensteuern', 'to counter-steer', 'C1'))
+ALL.push(reg('genehmigen', 'to approve', 'B2'))
+ALL.push(reg('gewähren', 'to grant', 'C1'))
+ALL.push(reg('gewährleisten', 'to guarantee', 'B2'))
+ALL.push(reg('haftbar', 'to hold liable', 'B2'))
+ALL.push(reg('hervorrufen', 'to cause', 'B2'))
+ALL.push(reg('hinterfragen', 'to question', 'B1'))
+ALL.push(reg('hindern', 'to hinder', 'B1'))
+ALL.push(reg('hinweisen', 'to point out', 'B1'))
+ALL.push(reg('implementieren', 'to implement', 'B1'))
+ALL.push(reg('initiieren', 'to initiate', 'C1'))
+ALL.push(reg('kalkulieren', 'to calculate', 'B1'))
+ALL.push(reg('kultivieren', 'to cultivate', 'C2'))
+ALL.push(reg('legalisieren', 'to legalize', 'B2'))
+ALL.push(reg('missachten', 'to disregard', 'C1'))
+ALL.push(reg('missbilligen', 'to disapprove', 'C1'))
+ALL.push(reg('mobilmachen', 'to mobilize', 'B2'))
+ALL.push(reg('nullifizieren', 'to nullify', 'C2'))
+ALL.push(reg('priorisieren', 'to prioritize', 'B1'))
+ALL.push(reg('rekapitulieren', 'to recapitulate', 'C2'))
+ALL.push(reg('reservieren', 'to reserve', 'A2'))
+ALL.push(reg('revanchieren', 'to take revenge', 'C2'))
+ALL.push(reg('schmaelern', 'to diminish', 'C2'))
+ALL.push(reg('subventionieren', 'to subsidize', 'B2'))
+ALL.push(reg('verstaatlichen', 'to nationalize', 'C2'))
+ALL.push(reg('verschachteln', 'to nest', 'C2'))
+ALL.push(reg('verschlüsseln', 'to encrypt', 'B2'))
+ALL.push(reg('verschweigen', 'to conceal', 'C2'))
+ALL.push(reg('verstaerken', 'to reinforce', 'B1'))
+ALL.push(reg('vertnetzen', 'to network', 'C2'))
+ALL.push(reg('vorantreiben', 'to drive forward', 'B1'))
+ALL.push(reg('vorbeugen', 'to prevent', 'B1'))
+ALL.push(reg('wahrnehmen', 'to perceive', 'B1'))
+ALL.push(reg('wiederlegen', 'to refute', 'B1'))
+ALL.push(reg('zugaenglich machen', 'to make accessible', 'C1'))
+ALL.push(reg('zunichte machen', 'to thwart', 'C2'))
+ALL.push(reg('zusehends', 'to increasingly', 'C2'))
 
-ALL.push(refl("sich anziehen","to get dressed","A2",{ich:"ziehe mich an",du:"ziehst dich an",er:"zieht sich an",wir:"ziehen uns an",ihr:"zieht euch an",sie:"ziehen sich an"},{ich:"zog mich an",du:"zogst dich an",er:"zog sich an",wir:"zogen uns an",ihr:"zogt euch an",sie:"zogen sich an"},"angezogen"));
-ALL.push(refl("sich waschen","to wash oneself","A2",{ich:"wasche mich",du:"wäschst dich",er:"wäscht sich",wir:"waschen uns",ihr:"wascht euch",sie:"waschen sich"},{ich:"wusch mich",du:"wuschst dich",er:"wusch sich",wir:"wuschen uns",ihr:"wuscht euch",sie:"wuschen sich"},"gewaschen"));
-ALL.push(refl("sich kämmen","to comb hair","A2",{ich:"kämme mich",du:"kämst dich",er:"kämmt sich",wir:"kämmen uns",ihr:"kämmt euch",sie:"kämmen sich"},{ich:"kämte mich",du:"kämtest dich",er:"kämte sich",wir:"kämten uns",ihr:"kämtet euch",sie:"kämten sich"},"gekämmt"));
-ALL.push(refl("sich rasieren","to shave","A2",{ich:"rasiere mich",du:"rasierst dich",er:"rasiert sich",wir:"rasieren uns",ihr:"rasiert euch",sie:"rasieren sich"},{ich:"rasierte mich",du:"rasiertest dich",er:"rasierte sich",wir:"rasierten uns",ihr:"rasiertet euch",sie:"rasierten sich"},"rasiert"));
-ALL.push(refl("sich vorstellen","to imagine","B1",{ich:"stelle mich vor",du:"stellst dich vor",er:"stellt sich vor",wir:"stellen uns vor",ihr:"stellt euch vor",sie:"stellen sich vor"},{ich:"stellte mich vor",du:"stelltest dich vor",er:"stellte sich vor",wir:"stellten uns vor",ihr:"stelltet euch vor",sie:"stellten sich vor"},"vorgestellt"));
-ALL.push(refl("sich konzentrieren","to concentrate","B1",{ich:"konzentriere mich",du:"konzentrierst dich",er:"konzentriert sich",wir:"konzentrieren uns",ihr:"konzentriert euch",sie:"konzentrieren sich"},{ich:"konzentrierte mich",du:"konzentriertest dich",er:"konzentrierte sich",wir:"konzentrierten uns",ihr:"konzentriertet euch",sie:"konzentrierten sich"},"konzentriert"));
-ALL.push(refl("sich erlauben","to allow oneself","B1",{ich:"erlaube mir",du:"erlaubst dir",er:"erlaubt sich",wir:"erlauben uns",ihr:"erlaubt euch",sie:"erlauben sich"},{ich:"erlaubte mir",du:"erlaubtest dir",er:"erlaubte sich",wir:"erlaubten uns",ihr:"erlaubtet euch",sie:"erlaubten sich"},"erlaubt"));
-ALL.push(refl("sich gewöhnen","to get used to","B1",{ich:"gewöhne mich",du:"gewöhnst dich",er:"gewöhnt sich",wir:"gewöhnen uns",ihr:"gewöhnt euch",sie:"gewöhnen sich"},{ich:"gewöhnte mich",du:"gewöhntest dich",er:"gewöhnte sich",wir:"gewöhnten uns",ihr:"gewöhntet euch",sie:"gewöhnten sich"},"gewöhnt"));
-ALL.push(refl("sich bewerben","to apply","B1",{ich:"bewerbe mich",du:"bewirbst dich",er:"bewirbt sich",wir:"bewerben uns",ihr:"bewirbt euch",sie:"bewerben sich"},{ich:"bewarb mich",du:"bewarbst dich",er:"bewarb sich",wir:"bewarben uns",ihr:"bewarbt euch",sie:"bewarben sich"},"beworben"));
-ALL.push(refl("sich verspäten","to be late","A2",{ich:"verspäte mich",du:"verspätest dich",er:"verspätet sich",wir:"verspäten uns",ihr:"verspätet euch",sie:"verspäten sich"},{ich:"verspäte mich",du:"verspätest dich",er:"verspätet sich",wir:"verspäten uns",ihr:"verspätet euch",sie:"verspäten sich"},"verspätet"));
-ALL.push(refl("sich aufregen","to get upset","B1",{ich:"rege mich auf",du:"regst dich auf",er:"regt sich auf",wir:"regen uns auf",ihr:"regt euch auf",sie:"regen sich auf"},{ich:"regte mich auf",du:"regtest dich auf",er:"regte sich auf",wir:"regten uns auf",ihr:"regtet euch auf",sie:"regten sich auf"},"aufgeregt"));
-ALL.push(refl("sich unterhalten","to converse","B1",{ich:"unterhalte mich",du:"unterhältst dich",er:"unterhält sich",wir:"unterhalten uns",ihr:"unterhaltet euch",sie:"unterhalten sich"},{ich:"unterhielt mich",du:"unterhieltest dich",er:"unterhielt sich",wir:"unterhielten uns",ihr:"unterhieltet euch",sie:"unterhielten sich"},"unterhalten"));
-ALL.push(refl("sich verabreden","to arrange to meet","A2",{ich:"verabrede mich",du:"verabredest dich",er:"verabredet sich",wir:"verabreden uns",ihr:"verabredet euch",sie:"verabreden sich"},{ich:"verabrede mich",du:"verabredest dich",er:"verabredet sich",wir:"verabreden uns",ihr:"verabredet euch",sie:"verabreden sich"},"verabredet"));
-ALL.push(refl("sich irren","to be wrong","B1",{ich:"irre mich",du:"irrst dich",er:"irrt sich",wir:"irren uns",ihr:"irrt euch",sie:"irren sich"},{ich:"irrte mich",du:"irrtest dich",er:"irrte sich",wir:"irrten uns",ihr:"irrtet euch",sie:"irrten sich"},"geirrt"));
-ALL.push(refl("sich schämen","to be ashamed","B1",{ich:"schäme mich",du:"schämst dich",er:"schämt sich",wir:"schämen uns",ihr:"schämt euch",sie:"schämen sich"},{ich:"schämte mich",du:"schämtest dich",er:"schämte sich",wir:"schämten uns",ihr:"schämtet euch",sie:"schämten sich"},"geschämt"));
+ALL.push(
+  refl(
+    'sich anziehen',
+    'to get dressed',
+    'A2',
+    {
+      ich: 'ziehe mich an',
+      du: 'ziehst dich an',
+      er: 'zieht sich an',
+      wir: 'ziehen uns an',
+      ihr: 'zieht euch an',
+      sie: 'ziehen sich an',
+    },
+    {
+      ich: 'zog mich an',
+      du: 'zogst dich an',
+      er: 'zog sich an',
+      wir: 'zogen uns an',
+      ihr: 'zogt euch an',
+      sie: 'zogen sich an',
+    },
+    'angezogen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich waschen',
+    'to wash oneself',
+    'A2',
+    {
+      ich: 'wasche mich',
+      du: 'wäschst dich',
+      er: 'wäscht sich',
+      wir: 'waschen uns',
+      ihr: 'wascht euch',
+      sie: 'waschen sich',
+    },
+    {
+      ich: 'wusch mich',
+      du: 'wuschst dich',
+      er: 'wusch sich',
+      wir: 'wuschen uns',
+      ihr: 'wuscht euch',
+      sie: 'wuschen sich',
+    },
+    'gewaschen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich kämmen',
+    'to comb hair',
+    'A2',
+    {
+      ich: 'kämme mich',
+      du: 'kämst dich',
+      er: 'kämmt sich',
+      wir: 'kämmen uns',
+      ihr: 'kämmt euch',
+      sie: 'kämmen sich',
+    },
+    {
+      ich: 'kämte mich',
+      du: 'kämtest dich',
+      er: 'kämte sich',
+      wir: 'kämten uns',
+      ihr: 'kämtet euch',
+      sie: 'kämten sich',
+    },
+    'gekämmt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich rasieren',
+    'to shave',
+    'A2',
+    {
+      ich: 'rasiere mich',
+      du: 'rasierst dich',
+      er: 'rasiert sich',
+      wir: 'rasieren uns',
+      ihr: 'rasiert euch',
+      sie: 'rasieren sich',
+    },
+    {
+      ich: 'rasierte mich',
+      du: 'rasiertest dich',
+      er: 'rasierte sich',
+      wir: 'rasierten uns',
+      ihr: 'rasiertet euch',
+      sie: 'rasierten sich',
+    },
+    'rasiert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich vorstellen',
+    'to imagine',
+    'B1',
+    {
+      ich: 'stelle mich vor',
+      du: 'stellst dich vor',
+      er: 'stellt sich vor',
+      wir: 'stellen uns vor',
+      ihr: 'stellt euch vor',
+      sie: 'stellen sich vor',
+    },
+    {
+      ich: 'stellte mich vor',
+      du: 'stelltest dich vor',
+      er: 'stellte sich vor',
+      wir: 'stellten uns vor',
+      ihr: 'stelltet euch vor',
+      sie: 'stellten sich vor',
+    },
+    'vorgestellt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich konzentrieren',
+    'to concentrate',
+    'B1',
+    {
+      ich: 'konzentriere mich',
+      du: 'konzentrierst dich',
+      er: 'konzentriert sich',
+      wir: 'konzentrieren uns',
+      ihr: 'konzentriert euch',
+      sie: 'konzentrieren sich',
+    },
+    {
+      ich: 'konzentrierte mich',
+      du: 'konzentriertest dich',
+      er: 'konzentrierte sich',
+      wir: 'konzentrierten uns',
+      ihr: 'konzentriertet euch',
+      sie: 'konzentrierten sich',
+    },
+    'konzentriert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich erlauben',
+    'to allow oneself',
+    'B1',
+    {
+      ich: 'erlaube mir',
+      du: 'erlaubst dir',
+      er: 'erlaubt sich',
+      wir: 'erlauben uns',
+      ihr: 'erlaubt euch',
+      sie: 'erlauben sich',
+    },
+    {
+      ich: 'erlaubte mir',
+      du: 'erlaubtest dir',
+      er: 'erlaubte sich',
+      wir: 'erlaubten uns',
+      ihr: 'erlaubtet euch',
+      sie: 'erlaubten sich',
+    },
+    'erlaubt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich gewöhnen',
+    'to get used to',
+    'B1',
+    {
+      ich: 'gewöhne mich',
+      du: 'gewöhnst dich',
+      er: 'gewöhnt sich',
+      wir: 'gewöhnen uns',
+      ihr: 'gewöhnt euch',
+      sie: 'gewöhnen sich',
+    },
+    {
+      ich: 'gewöhnte mich',
+      du: 'gewöhntest dich',
+      er: 'gewöhnte sich',
+      wir: 'gewöhnten uns',
+      ihr: 'gewöhntet euch',
+      sie: 'gewöhnten sich',
+    },
+    'gewöhnt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bewerben',
+    'to apply',
+    'B1',
+    {
+      ich: 'bewerbe mich',
+      du: 'bewirbst dich',
+      er: 'bewirbt sich',
+      wir: 'bewerben uns',
+      ihr: 'bewirbt euch',
+      sie: 'bewerben sich',
+    },
+    {
+      ich: 'bewarb mich',
+      du: 'bewarbst dich',
+      er: 'bewarb sich',
+      wir: 'bewarben uns',
+      ihr: 'bewarbt euch',
+      sie: 'bewarben sich',
+    },
+    'beworben',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verspäten',
+    'to be late',
+    'A2',
+    {
+      ich: 'verspäte mich',
+      du: 'verspätest dich',
+      er: 'verspätet sich',
+      wir: 'verspäten uns',
+      ihr: 'verspätet euch',
+      sie: 'verspäten sich',
+    },
+    {
+      ich: 'verspäte mich',
+      du: 'verspätest dich',
+      er: 'verspätet sich',
+      wir: 'verspäten uns',
+      ihr: 'verspätet euch',
+      sie: 'verspäten sich',
+    },
+    'verspätet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich aufregen',
+    'to get upset',
+    'B1',
+    {
+      ich: 'rege mich auf',
+      du: 'regst dich auf',
+      er: 'regt sich auf',
+      wir: 'regen uns auf',
+      ihr: 'regt euch auf',
+      sie: 'regen sich auf',
+    },
+    {
+      ich: 'regte mich auf',
+      du: 'regtest dich auf',
+      er: 'regte sich auf',
+      wir: 'regten uns auf',
+      ihr: 'regtet euch auf',
+      sie: 'regten sich auf',
+    },
+    'aufgeregt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich unterhalten',
+    'to converse',
+    'B1',
+    {
+      ich: 'unterhalte mich',
+      du: 'unterhältst dich',
+      er: 'unterhält sich',
+      wir: 'unterhalten uns',
+      ihr: 'unterhaltet euch',
+      sie: 'unterhalten sich',
+    },
+    {
+      ich: 'unterhielt mich',
+      du: 'unterhieltest dich',
+      er: 'unterhielt sich',
+      wir: 'unterhielten uns',
+      ihr: 'unterhieltet euch',
+      sie: 'unterhielten sich',
+    },
+    'unterhalten',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verabreden',
+    'to arrange to meet',
+    'A2',
+    {
+      ich: 'verabrede mich',
+      du: 'verabredest dich',
+      er: 'verabredet sich',
+      wir: 'verabreden uns',
+      ihr: 'verabredet euch',
+      sie: 'verabreden sich',
+    },
+    {
+      ich: 'verabrede mich',
+      du: 'verabredest dich',
+      er: 'verabredet sich',
+      wir: 'verabreden uns',
+      ihr: 'verabredet euch',
+      sie: 'verabreden sich',
+    },
+    'verabredet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich irren',
+    'to be wrong',
+    'B1',
+    {
+      ich: 'irre mich',
+      du: 'irrst dich',
+      er: 'irrt sich',
+      wir: 'irren uns',
+      ihr: 'irrt euch',
+      sie: 'irren sich',
+    },
+    {
+      ich: 'irrte mich',
+      du: 'irrtest dich',
+      er: 'irrte sich',
+      wir: 'irrten uns',
+      ihr: 'irrtet euch',
+      sie: 'irrten sich',
+    },
+    'geirrt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich schämen',
+    'to be ashamed',
+    'B1',
+    {
+      ich: 'schäme mich',
+      du: 'schämst dich',
+      er: 'schämt sich',
+      wir: 'schämen uns',
+      ihr: 'schämt euch',
+      sie: 'schämen sich',
+    },
+    {
+      ich: 'schämte mich',
+      du: 'schämtest dich',
+      er: 'schämte sich',
+      wir: 'schämten uns',
+      ihr: 'schämtet euch',
+      sie: 'schämten sich',
+    },
+    'geschämt',
+  ),
+)
 
-
-const VERBS = ALL;
+const VERBS = ALL
 const LEVELS = {
-  A1: { name: "A1 · Beginner", color: "#16a34a" },
-  A2: { name: "A2 · Elementary", color: "#2563eb" },
-  B1: { name: "B1 · Intermediate", color: "#ea580c" },
-  B2: { name: "B2 · Upper Intermediate", color: "#7c3aed" },
-  C1: { name: "C1 · Advanced", color: "#be185d" },
-  C2: { name: "C2 · Mastery", color: "#0f172a" },
-};
+  A1: { name: 'A1 · Beginner', color: '#16a34a' },
+  A2: { name: 'A2 · Elementary', color: '#2563eb' },
+  B1: { name: 'B1 · Intermediate', color: '#ea580c' },
+  B2: { name: 'B2 · Upper Intermediate', color: '#7c3aed' },
+  C1: { name: 'C1 · Advanced', color: '#be185d' },
+  C2: { name: 'C2 · Mastery', color: '#0f172a' },
+}
 
 // ===== CORRECTED CORE VERBS + 430 NEW VERBS =====
-fix("sein","to be","A1",{ich:"bin",du:"bist",er:"ist",wir:"sind",ihr:"seid",sie:"sind"},{ich:"war",du:"warst",er:"war",wir:"waren",ihr:"wart",sie:"waren"},"gewesen","sein");
-fix("haben","to have","A1",{ich:"habe",du:"hast",er:"hat",wir:"haben",ihr:"habt",sie:"haben"},{ich:"hatte",du:"hattest",er:"hatte",wir:"hatten",ihr:"hattet",sie:"hatten"},"gehabt","haben");
-fix("werden","to become","A1",{ich:"werde",du:"wirst",er:"wird",wir:"werden",ihr:"werdet",sie:"werden"},{ich:"wurde",du:"wurdest",er:"wurde",wir:"wurden",ihr:"wurdet",sie:"wurden"},"geworden","sein");
-fix("wissen","to know (fact)","A1",{ich:"weiß",du:"weißt",er:"weiß",wir:"wissen",ihr:"wisst",sie:"wissen"},{ich:"wusste",du:"wusstest",er:"wusste",wir:"wussten",ihr:"wusstet",sie:"wussten"},"gewusst","haben");
-fix("kennen","to know (person)","A1",{ich:"kenne",du:"kennst",er:"kennt",wir:"kennen",ihr:"kennt",sie:"kennen"},{ich:"kannte",du:"kanntest",er:"kannte",wir:"kannten",ihr:"kanntet",sie:"kannten"},"gekannt","haben");
-fix("bringen","to bring","A1",{ich:"bringe",du:"bringst",er:"bringt",wir:"bringen",ihr:"bringt",sie:"bringen"},{ich:"brachte",du:"brachtest",er:"brachte",wir:"brachten",ihr:"brachtet",sie:"brachten"},"gebracht","haben");
-fix("denken","to think","A1",{ich:"denke",du:"denkst",er:"denkt",wir:"denken",ihr:"denkt",sie:"denken"},{ich:"dachte",du:"dachtest",er:"dachte",wir:"dachten",ihr:"dachtet",sie:"dachten"},"gedacht","haben");
-fix("essen","to eat","A1",{ich:"esse",du:"isst",er:"isst",wir:"essen",ihr:"esst",sie:"essen"},{ich:"aß",du:"aßest",er:"aß",wir:"aßen",ihr:"aßt",sie:"aßen"},"gegessen","haben");
-fix("lesen","to read","A1",{ich:"lese",du:"liest",er:"liest",wir:"lesen",ihr:"lest",sie:"lesen"},{ich:"las",du:"last",er:"las",wir:"lasen",ihr:"last",sie:"lasen"},"gelesen","haben");
-fix("sehen","to see","A1",{ich:"sehe",du:"siehst",er:"sieht",wir:"sehen",ihr:"seht",sie:"sehen"},{ich:"sah",du:"sahst",er:"sah",wir:"sahen",ihr:"saht",sie:"sahen"},"gesehen","haben");
-fix("sprechen","to speak","A1",{ich:"spreche",du:"sprichst",er:"spricht",wir:"sprechen",ihr:"sprecht",sie:"sprechen"},{ich:"sprach",du:"sprachst",er:"sprach",wir:"sprachen",ihr:"spracht",sie:"sprachen"},"gesprochen","haben");
-fix("nehmen","to take","A1",{ich:"nehme",du:"nimmst",er:"nimmt",wir:"nehmen",ihr:"nehmt",sie:"nehmen"},{ich:"nahm",du:"nahmst",er:"nahm",wir:"nahmen",ihr:"nahmt",sie:"nahmen"},"genommen","haben");
-fix("fahren","to drive","A1",{ich:"fahre",du:"fährst",er:"fährt",wir:"fahren",ihr:"fahrt",sie:"fahren"},{ich:"fuhr",du:"fuhrst",er:"fuhr",wir:"fuhren",ihr:"fuhrt",sie:"fuhren"},"gefahren","sein");
-fix("tragen","to carry","A1",{ich:"trage",du:"trägst",er:"trägt",wir:"tragen",ihr:"tragt",sie:"tragen"},{ich:"trug",du:"trugst",er:"trug",wir:"trugen",ihr:"trugt",sie:"trugen"},"getragen","haben");
-fix("schlafen","to sleep","A1",{ich:"schlafe",du:"schläfst",er:"schläft",wir:"schlafen",ihr:"schlaft",sie:"schlafen"},{ich:"schlief",du:"schliefst",er:"schlief",wir:"schliefen",ihr:"schlieft",sie:"schliefen"},"geschlafen","haben");
-fix("helfen","to help","A1",{ich:"helfe",du:"hilfst",er:"hilft",wir:"helfen",ihr:"helft",sie:"helfen"},{ich:"half",du:"halfst",er:"half",wir:"halfen",ihr:"halft",sie:"halfen"},"geholfen","haben");
-fix("treffen","to meet","A1",{ich:"treffe",du:"triffst",er:"trifft",wir:"treffen",ihr:"trefft",sie:"treffen"},{ich:"traf",du:"trafst",er:"traf",wir:"trafen",ihr:"traft",sie:"trafen"},"getroffen","haben");
-fix("geben","to give","A1",{ich:"gebe",du:"gibst",er:"gibt",wir:"geben",ihr:"gebt",sie:"geben"},{ich:"gab",du:"gabst",er:"gab",wir:"gaben",ihr:"gabt",sie:"gaben"},"gegeben","haben");
-fix("halten","to hold","A1",{ich:"halte",du:"hältst",er:"hält",wir:"halten",ihr:"haltet",sie:"halten"},{ich:"hielt",du:"hieltst",er:"hielt",wir:"hielten",ihr:"hieltet",sie:"hielten"},"gehalten","haben");
-fix("fallen","to fall","A1",{ich:"falle",du:"fällst",er:"fällt",wir:"fallen",ihr:"fallt",sie:"fallen"},{ich:"fiel",du:"fielst",er:"fiel",wir:"fielen",ihr:"fielt",sie:"fielen"},"gefallen","sein");
-fix("laufen","to run","A1",{ich:"laufe",du:"läufst",er:"läuft",wir:"laufen",ihr:"lauft",sie:"laufen"},{ich:"lief",du:"liefst",er:"lief",wir:"liefen",ihr:"lieft",sie:"liefen"},"gelaufen","sein");
-fix("waschen","to wash","A2",{ich:"wasche",du:"wäschst",er:"wäscht",wir:"waschen",ihr:"wascht",sie:"waschen"},{ich:"wusch",du:"wuschst",er:"wusch",wir:"wuschen",ihr:"wuscht",sie:"wuschen"},"gewaschen","haben");
-fix("lassen","to let","A2",{ich:"lasse",du:"lässt",er:"lässt",wir:"lassen",ihr:"lasst",sie:"lassen"},{ich:"ließ",du:"ließest",er:"ließ",wir:"ließen",ihr:"ließt",sie:"ließen"},"gelassen","haben");
-fix("vergessen","to forget","A1",{ich:"vergesse",du:"vergisst",er:"vergisst",wir:"vergessen",ihr:"vergesst",sie:"vergessen"},{ich:"vergaß",du:"vergaßest",er:"vergaß",wir:"vergaßen",ihr:"vergaßt",sie:"vergaßen"},"vergessen","haben");
-fix("nennen","to name","A2",{ich:"nenne",du:"nennst",er:"nennt",wir:"nennen",ihr:"nennt",sie:"nennen"},{ich:"nannte",du:"nanntest",er:"nannte",wir:"nannten",ihr:"nanntet",sie:"nannten"},"genannt","haben");
-fix("brennen","to burn","A2",{ich:"brenne",du:"brennst",er:"brennt",wir:"brennen",ihr:"brennt",sie:"brennen"},{ich:"brannte",du:"branntest",er:"brannte",wir:"brannten",ihr:"branntet",sie:"brannten"},"gebrannt","haben");
-fix("rennen","to run","A2",{ich:"renne",du:"rennst",er:"rennt",wir:"rennen",ihr:"rennt",sie:"rennen"},{ich:"rannte",du:"ranntest",er:"rannte",wir:"rannten",ihr:"ranntet",sie:"rannten"},"gerannt","sein");
-fix("sitzen","to sit","A2",{ich:"sitze",du:"sitzt",er:"sitzt",wir:"sitzen",ihr:"sitzt",sie:"sitzen"},{ich:"saß",du:"saßest",er:"saß",wir:"saßen",ihr:"saßt",sie:"saßen"},"gesessen","haben");
-fix("schneiden","to cut","B1",{ich:"schneide",du:"schneidest",er:"schneidet",wir:"schneiden",ihr:"schneidet",sie:"schneiden"},{ich:"schnitt",du:"schnittst",er:"schnitt",wir:"schnitten",ihr:"schnittet",sie:"schnitten"},"geschnitten","haben");
-fix("entscheiden","to decide","B1",{ich:"entscheide",du:"entscheidest",er:"entscheidet",wir:"entscheiden",ihr:"entscheidet",sie:"entscheiden"},{ich:"entschied",du:"entschiedest",er:"entschied",wir:"entschieden",ihr:"entschiedet",sie:"entschieden"},"entschieden","haben");
-fix("leiden","to suffer","B1",{ich:"leide",du:"leidest",er:"leidet",wir:"leiden",ihr:"leidet",sie:"leiden"},{ich:"litt",du:"littst",er:"litt",wir:"litten",ihr:"littet",sie:"litten"},"gelitten","haben");
-fix("reiten","to ride","A2",{ich:"reite",du:"reitest",er:"reitet",wir:"reiten",ihr:"reitet",sie:"reiten"},{ich:"ritt",du:"rittst",er:"ritt",wir:"ritten",ihr:"rittet",sie:"ritten"},"geritten","haben");
-fix("scheiden","to separate","B2",{ich:"scheide",du:"scheidest",er:"scheidet",wir:"scheiden",ihr:"scheidet",sie:"scheiden"},{ich:"schied",du:"schiedest",er:"schied",wir:"schieden",ihr:"schiedet",sie:"schieden"},"geschieden","haben");
-fix("stoßen","to push","B1",{ich:"stoße",du:"stößt",er:"stößt",wir:"stoßen",ihr:"stoßt",sie:"stoßen"},{ich:"stieß",du:"stießest",er:"stieß",wir:"stießen",ihr:"stießt",sie:"stießen"},"gestoßen","haben");
-fix("raten","to advise","B1",{ich:"rate",du:"rätst",er:"rät",wir:"raten",ihr:"ratet",sie:"raten"},{ich:"riet",du:"rietest",er:"riet",wir:"rieten",ihr:"rietet",sie:"rieten"},"geraten","haben");
-fix("braten","to roast","B2",{ich:"brate",du:"brätst",er:"brät",wir:"braten",ihr:"bratet",sie:"braten"},{ich:"briet",du:"brietest",er:"briet",wir:"brieten",ihr:"brietet",sie:"brieten"},"gebraten","haben");
-fix("laden","to load","B2",{ich:"lade",du:"lädst",er:"lädt",wir:"laden",ihr:"ladt",sie:"laden"},{ich:"lud",du:"ludst",er:"lud",wir:"luden",ihr:"ludt",sie:"luden"},"geladen","haben");
-fix("empfehlen","to recommend","B1",{ich:"empfehle",du:"empfiehlst",er:"empfiehlt",wir:"empfehlen",ihr:"empfehlt",sie:"empfehlen"},{ich:"empfahl",du:"empfahlst",er:"empfahl",wir:"empfahlen",ihr:"empfahlt",sie:"empfahlen"},"empfohlen","haben");
-fix("weisen","to show","B2",{ich:"weise",du:"weist",er:"weist",wir:"weisen",ihr:"weist",sie:"weisen"},{ich:"wies",du:"wiesest",er:"wies",wir:"wiesen",ihr:"wiest",sie:"wiesen"},"gewiesen","haben");
-fix("preisen","to praise","C1",{ich:"preise",du:"preist",er:"preist",wir:"preisen",ihr:"preist",sie:"preisen"},{ich:"pries",du:"priesest",er:"pries",wir:"priesen",ihr:"priest",sie:"priesen"},"gepriesen","haben");
-fix("auf stehen","to get up","A1",{ich:"stehe auf",du:"stehst auf",er:"steht auf",wir:"stehen auf",ihr:"steht auf",sie:"stehen auf"},{ich:"stand auf",du:"standst auf",er:"stand auf",wir:"standen auf",ihr:"standt auf",sie:"standen auf"},"aufgestanden","sein");
-fix("an fangen","to begin","A1",{ich:"fange an",du:"fängst an",er:"fängt an",wir:"fangen an",ihr:"fangt an",sie:"fangen an"},{ich:"fing an",du:"fingst an",er:"fing an",wir:"fingen an",ihr:"fingt an",sie:"fingen an"},"angefangen","haben");
-fix("ein laden","to invite","A1",{ich:"lade ein",du:"lädst ein",er:"lädt ein",wir:"laden ein",ihr:"ladet ein",sie:"laden ein"},{ich:"lud ein",du:"ludst ein",er:"lud ein",wir:"luden ein",ihr:"ludt ein",sie:"luden ein"},"eingeladen","haben");
-fix("mit bringen","to bring along","A1",{ich:"bringe mit",du:"bringst mit",er:"bringt mit",wir:"bringen mit",ihr:"bringt mit",sie:"bringen mit"},{ich:"brachte mit",du:"brachtest mit",er:"brachte mit",wir:"brachten mit",ihr:"brachtet mit",sie:"brachten mit"},"mitgebracht","haben");
-fix("auf geben","to give up","B1",{ich:"gebe auf",du:"gibst auf",er:"gibt auf",wir:"geben auf",ihr:"gebt auf",sie:"geben auf"},{ich:"gab auf",du:"gabst auf",er:"gab auf",wir:"gaben auf",ihr:"gabt auf",sie:"gaben auf"},"aufgegeben","haben");
-fix("vor schlagen","to suggest","B1",{ich:"schlage vor",du:"schlägst vor",er:"schlägt vor",wir:"schlagen vor",ihr:"schlagt vor",sie:"schlagen vor"},{ich:"schlug vor",du:"schlugst vor",er:"schlug vor",wir:"schlugen vor",ihr:"schlugt vor",sie:"schlugen vor"},"vorgeschlagen","haben");
-fix("teil nehmen","to participate","A1",{ich:"nehme teil",du:"nimmst teil",er:"nimmt teil",wir:"nehmen teil",ihr:"nehmt teil",sie:"nehmen teil"},{ich:"nahm teil",du:"nahmst teil",er:"nahm teil",wir:"nahmen teil",ihr:"nahmt teil",sie:"nahmen teil"},"teilgenommen","haben");
-fix("zurück kommen","to return","A1",{ich:"komme zurück",du:"kommst zurück",er:"kommt zurück",wir:"kommen zurück",ihr:"kommt zurück",sie:"kommen zurück"},{ich:"kam zurück",du:"kamst zurück",er:"kam zurück",wir:"kamen zurück",ihr:"kamt zurück",sie:"kamen zurück"},"zurückgekommen","sein");
-fix("an bieten","to offer","A2",{ich:"biete an",du:"bietest an",er:"bietet an",wir:"bieten an",ihr:"bietet an",sie:"bieten an"},{ich:"bot an",du:"botest an",er:"bot an",wir:"boten an",ihr:"botet an",sie:"boten an"},"angeboten","haben");
-fix("ein schlafen","to fall asleep","A2",{ich:"schlafe ein",du:"schläfst ein",er:"schläft ein",wir:"schlafen ein",ihr:"schlaft ein",sie:"schlafen ein"},{ich:"schlief ein",du:"schliefst ein",er:"schlief ein",wir:"schliefen ein",ihr:"schlieft ein",sie:"schliefen ein"},"eingeschlafen","sein");
-fix("mit nehmen","to take along","A1",{ich:"nehme mit",du:"nimmst mit",er:"nimmt mit",wir:"nehmen mit",ihr:"nehmt mit",sie:"nehmen mit"},{ich:"nahm mit",du:"nahmst mit",er:"nahm mit",wir:"nahmen mit",ihr:"nahmt mit",sie:"nahmen mit"},"mitgenommen","haben");
-fix("an rufen","to call","A1",{ich:"rufe an",du:"rufst an",er:"ruft an",wir:"rufen an",ihr:"ruft an",sie:"rufen an"},{ich:"rief an",du:"riefst an",er:"rief an",wir:"riefen an",ihr:"rieft an",sie:"riefen an"},"angerufen","haben");
-fix("fern sehen","to watch TV","A1",{ich:"sehe fern",du:"siehst fern",er:"sieht fern",wir:"sehen fern",ihr:"seht fern",sie:"sehen fern"},{ich:"sah fern",du:"sahst fern",er:"sah fern",wir:"sahen fern",ihr:"saht fern",sie:"sahen fern"},"ferngesehen","haben");
-fix("ein steigen","to board","A2",{ich:"steige ein",du:"steigst ein",er:"steigt ein",wir:"steigen ein",ihr:"steigt ein",sie:"steigen ein"},{ich:"stieg ein",du:"stiegst ein",er:"stieg ein",wir:"stiegen ein",ihr:"stiegt ein",sie:"stiegen ein"},"eingestiegen","sein");
-fix("aus steigen","to get off","A2",{ich:"steige aus",du:"steigst aus",er:"steigt aus",wir:"steigen aus",ihr:"steigt aus",sie:"steigen aus"},{ich:"stieg aus",du:"stiegst aus",er:"stieg aus",wir:"stiegen aus",ihr:"stiegt aus",sie:"stiegen aus"},"ausgestiegen","sein");
-fix("um ziehen","to move house","A2",{ich:"ziehe um",du:"ziehst um",er:"zieht um",wir:"ziehen um",ihr:"zieht um",sie:"ziehen um"},{ich:"zog um",du:"zogst um",er:"zog um",wir:"zogen um",ihr:"zogt um",sie:"zogen um"},"umgezogen","sein");
-fix("bei tragen","to contribute","B1",{ich:"trage bei",du:"trägst bei",er:"trägt bei",wir:"tragen bei",ihr:"tragt bei",sie:"tragen bei"},{ich:"trug bei",du:"trugst bei",er:"trug bei",wir:"trugen bei",ihr:"trugt bei",sie:"trugen bei"},"beigetragen","haben");
-fix("statt finden","to take place","B1",{ich:"finde statt",du:"findest statt",er:"findet statt",wir:"finden statt",ihr:"findet statt",sie:"finden statt"},{ich:"fand statt",du:"fandst statt",er:"fand statt",wir:"fanden statt",ihr:"fandt statt",sie:"fanden statt"},"stattgefunden","haben");
-fix("vor kommen","to happen","B1",{ich:"komme vor",du:"kommst vor",er:"kommt vor",wir:"kommen vor",ihr:"kommt vor",sie:"kommen vor"},{ich:"kam vor",du:"kamst vor",er:"kam vor",wir:"kamen vor",ihr:"kamt vor",sie:"kamen vor"},"vorgekommen","sein");
-fix("ab geben","to hand in","B1",{ich:"gebe ab",du:"gibst ab",er:"gibt ab",wir:"geben ab",ihr:"gebt ab",sie:"geben ab"},{ich:"gab ab",du:"gabst ab",er:"gab ab",wir:"gaben ab",ihr:"gabt ab",sie:"gaben ab"},"abgegeben","haben");
-fix("aus gehen","to go out","A2",{ich:"gehe aus",du:"gehst aus",er:"geht aus",wir:"gehen aus",ihr:"geht aus",sie:"gehen aus"},{ich:"ging aus",du:"gingst aus",er:"ging aus",wir:"gingen aus",ihr:"gingt aus",sie:"gingen aus"},"ausgegangen","sein");
-fix("aus ziehen","to move out","A2",{ich:"ziehe aus",du:"ziehst aus",er:"zieht aus",wir:"ziehen aus",ihr:"zieht aus",sie:"ziehen aus"},{ich:"zog aus",du:"zogst aus",er:"zog aus",wir:"zogen aus",ihr:"zogt aus",sie:"zogen aus"},"ausgezogen","sein");
-fix("nach denken","to reflect","B1",{ich:"denke nach",du:"denkst nach",er:"denkt nach",wir:"denken nach",ihr:"denkt nach",sie:"denken nach"},{ich:"dachte nach",du:"dachtest nach",er:"dachte nach",wir:"dachten nach",ihr:"dachtet nach",sie:"dachten nach"},"nachgedacht","haben");
-ALL.push(strong("erlöschen","to go out","C1","erlisch","erlischt","erlosch","erloschen","sein"));
-ALL.push(strong("erschrecken","to be frightened","B2","erschrick","erschrickt","erschrak","erschrocken","sein"));
-ALL.push(strong("flechten","to braid","C2","flicht","flicht","flocht","geflochten","haben"));
-ALL.push(strong("schlingen","to wind","C2",null,null,"schlang","geschlungen","haben"));
-ALL.push(strong("winden","to twist","C2",null,null,"wand","gewunden","haben"));
-ALL.push(reg("bearbeiten","to process/edit","B1"));
-ALL.push(reg("beaufsichtigen","to supervise","B2"));
-ALL.push(reg("beeilen","to hurry (impersonal)","B1"));
-ALL.push(reg("befassen","to deal with","B2"));
-ALL.push(reg("befestigen","to fasten","B2"));
-ALL.push(reg("befinden","to find oneself","B2"));
-ALL.push(reg("befrieden","to pacify","C2"));
-ALL.push(reg("begleiten","to accompany","A2"));
-ALL.push(reg("behandeln","to treat","B1"));
-ALL.push(reg("beherbergen","to house","C1"));
-ALL.push(reg("beherrschen","to master","B1"));
-ALL.push(reg("behindern","to obstruct","B2"));
-ALL.push(reg("beinhalten","to include","B2"));
-ALL.push(reg("beitragen","to contribute","B1"));
-ALL.push(reg("bemessen","to measure out","C2"));
-ALL.push(reg("beraten","to advise","B1"));
-ALL.push(reg("bereichern","to enrich","B2"));
-ALL.push(reg("bergen","to rescue","C1"));
-ALL.push(reg("berühren","to touch","A2"));
-ALL.push(reg("besagen","to state","B2"));
-ALL.push(reg("beschriften","to label","B1"));
-ALL.push(reg("besetzen","to occupy","B1"));
-ALL.push(reg("besitzen","to own","B1"));
-ALL.push(reg("besonder","to particularize","C2"));
-ALL.push(reg("bestrafen","to punish","B1"));
-ALL.push(reg("bestreiten","to deny","B2"));
-ALL.push(reg("betrügen","to deceive","C1"));
-ALL.push(reg("bevorstehend","to be imminent","C2"));
-ALL.push(reg("bewachen","to guard","B2"));
-ALL.push(reg("bewaffnen","to arm","C1"));
-ALL.push(reg("bewahren","to preserve","B1"));
-ALL.push(reg("bewegen","to move","A2"));
-ALL.push(reg("bewerben","to apply","B1"));
-ALL.push(reg("bezeugen","to testify","C1"));
-ALL.push(reg("bezichtigen","to accuse of","C2"));
-ALL.push(reg("entlang","to follow along","C2"));
-ALL.push(reg("entarten","to degenerate","C2"));
-ALL.push(reg("enteignen","to expropriate","C2"));
-ALL.push(reg("entfremden","to alienate","C2"));
-ALL.push(reg("entgegenwirken","to counteract","C2"));
-ALL.push(reg("entkrampfen","to relax","C2"));
-ALL.push(reg("entmannen","to emasculate","C2"));
-ALL.push(reg("entmutigen","to discourage","B1"));
-ALL.push(reg("entratschen","to dethrone","C2"));
-ALL.push(reg("entrechten","to disenfranchise","C2"));
-ALL.push(reg("entschlüsseln","to decrypt","B2"));
-ALL.push(reg("entsiegeln","to unseal","C2"));
-ALL.push(reg("entvölkern","to depopulate","C2"));
-ALL.push(reg("entwaffnen","to disarm","C1"));
-ALL.push(reg("entwässern","to drain","C1"));
-ALL.push(reg("entzaubern","to disenchant","C2"));
-ALL.push(reg("zerbröckeln","to crumble","C1"));
-ALL.push(reg("zerdrücken","to crush","C2"));
-ALL.push(reg("zerfasern","to fray","C2"));
-ALL.push(reg("zerfließen","to melt away","C2"));
-ALL.push(reg("zerhacken","to chop up","C2"));
-ALL.push(reg("zerkleinern","to crush","B2"));
-ALL.push(reg("zerquetschen","to squash","C1"));
-ALL.push(reg("zerrinnen","to trickle away","C2"));
-ALL.push(reg("zerschmettern","to shatter","C2"));
-ALL.push(reg("zerstreuen","to scatter","B2"));
-ALL.push(reg("zerteilen","to divide up","B1"));
-ALL.push(reg("zertrümmern","to smash","C2"));
-ALL.push(reg("missdeuten","to misinterpret","C2"));
-ALL.push(reg("missfallen","to displease","C2"));
-ALL.push(reg("missglücken","to fail","C2"));
-ALL.push(reg("misshandeln","to mistreat","C2"));
-ALL.push(reg("misskreditieren","to discredit","C2"));
-ALL.push(reg("gehorchen","to obey","B1"));
-ALL.push(reg("gehören","to belong","A1"));
-ALL.push(reg("gedenken","to commemorate","C2"));
-ALL.push(reg("gelten","to be valid","B1"));
-ALL.push(reg("genießen","to enjoy","B1"));
-ALL.push(reg("geraten","to get into","B1"));
-ALL.push(reg("gestatten","to permit","B1"));
-ALL.push(reg("gestehen","to confess","B1"));
-ALL.push(reg("erahnen","to sense","C2"));
-ALL.push(reg("erbarmen","to take pity","C2"));
-ALL.push(reg("erblinden","to go blind","C2"));
-ALL.push(reg("erdichten","to fabricate","C2"));
-ALL.push(reg("erdenken","to devise","C1"));
-ALL.push(reg("erdulden","to endure","C2"));
-ALL.push(reg("erfahren","to experience","B1"));
-ALL.push(reg("erfrechen","to presume","C2"));
-ALL.push(reg("erfüllen","to fulfill","A2"));
-ALL.push(reg("ergänzen","to complement","B1"));
-ALL.push(reg("ergreifen","to seize","B1"));
-ALL.push(reg("erhalten","to receive","B1"));
-ALL.push(reg("erhitzen","to heat up","B1"));
-ALL.push(reg("erkälten","to catch a cold","A2"));
-ALL.push(reg("erkennen","to recognize","B1"));
-ALL.push(reg("erkundigen","to inquire","B1"));
-ALL.push(reg("erleben","to experience","A2"));
-ALL.push(reg("erleichtern","to ease","B1"));
-ALL.push(reg("ermöglichen","to enable","B1"));
-ALL.push(reg("ermüden","to tire","B2"));
-ALL.push(reg("ernähren","to nourish","B2"));
-ALL.push(reg("erreichen","to reach","A2"));
-ALL.push(reg("errichten","to erect","B1"));
-ALL.push(reg("erschießen","to shoot dead","C1"));
-ALL.push(reg("erschöpfen","to exhaust","B2"));
-ALL.push(reg("erschweren","to complicate","B2"));
-ALL.push(reg("ersetzen","to replace","B1"));
-ALL.push(reg("erstrecken","to extend","B2"));
-ALL.push(reg("erteilen","to grant","B2"));
-ALL.push(reg("erwähnen","to mention","B1"));
-ALL.push(reg("erwarten","to expect","A2"));
-ALL.push(reg("erweichen","to soften","C1"));
-ALL.push(reg("erzeugen","to generate","B1"));
-ALL.push(reg("erziehen","to raise/educate","B1"));
-ALL.push(sep("auf wachen","to wake up","A1",null));
-ALL.push(sep("auf legen","to put on","A2",null));
-ALL.push(sep("auf schreiben","to write down","A2","aufgeschrieben"));
-ALL.push(sep("auf teilen","to divide","B1",null));
-ALL.push(sep("aus drucken","to print out","A2",null));
-ALL.push(sep("aus ruhen","to rest (non-reflexive)","A2",null));
-ALL.push(sep("aus probieren","to try on","A2",null));
-ALL.push(sep("aus tauschen","to exchange","B1",null));
-ALL.push(sep("bei spielen","to play along","C1",null));
-ALL.push(sep("bei tragen","to contribute (weak form)","B1","beigetragen"));
-ALL.push(sep("da liegen","to be situated","C1",null));
-ALL.push(sep("da stehen","to stand there","B1",null));
-ALL.push(sep("ein Atmen","to breathe in","B1","eingeatmet"));
-ALL.push(sep("ein setzen","to insert","B1",null));
+fix(
+  'sein',
+  'to be',
+  'A1',
+  { ich: 'bin', du: 'bist', er: 'ist', wir: 'sind', ihr: 'seid', sie: 'sind' },
+  { ich: 'war', du: 'warst', er: 'war', wir: 'waren', ihr: 'wart', sie: 'waren' },
+  'gewesen',
+  'sein',
+)
+fix(
+  'haben',
+  'to have',
+  'A1',
+  { ich: 'habe', du: 'hast', er: 'hat', wir: 'haben', ihr: 'habt', sie: 'haben' },
+  { ich: 'hatte', du: 'hattest', er: 'hatte', wir: 'hatten', ihr: 'hattet', sie: 'hatten' },
+  'gehabt',
+  'haben',
+)
+fix(
+  'werden',
+  'to become',
+  'A1',
+  { ich: 'werde', du: 'wirst', er: 'wird', wir: 'werden', ihr: 'werdet', sie: 'werden' },
+  { ich: 'wurde', du: 'wurdest', er: 'wurde', wir: 'wurden', ihr: 'wurdet', sie: 'wurden' },
+  'geworden',
+  'sein',
+)
+fix(
+  'wissen',
+  'to know (fact)',
+  'A1',
+  { ich: 'weiß', du: 'weißt', er: 'weiß', wir: 'wissen', ihr: 'wisst', sie: 'wissen' },
+  { ich: 'wusste', du: 'wusstest', er: 'wusste', wir: 'wussten', ihr: 'wusstet', sie: 'wussten' },
+  'gewusst',
+  'haben',
+)
+fix(
+  'kennen',
+  'to know (person)',
+  'A1',
+  { ich: 'kenne', du: 'kennst', er: 'kennt', wir: 'kennen', ihr: 'kennt', sie: 'kennen' },
+  { ich: 'kannte', du: 'kanntest', er: 'kannte', wir: 'kannten', ihr: 'kanntet', sie: 'kannten' },
+  'gekannt',
+  'haben',
+)
+fix(
+  'bringen',
+  'to bring',
+  'A1',
+  { ich: 'bringe', du: 'bringst', er: 'bringt', wir: 'bringen', ihr: 'bringt', sie: 'bringen' },
+  {
+    ich: 'brachte',
+    du: 'brachtest',
+    er: 'brachte',
+    wir: 'brachten',
+    ihr: 'brachtet',
+    sie: 'brachten',
+  },
+  'gebracht',
+  'haben',
+)
+fix(
+  'denken',
+  'to think',
+  'A1',
+  { ich: 'denke', du: 'denkst', er: 'denkt', wir: 'denken', ihr: 'denkt', sie: 'denken' },
+  { ich: 'dachte', du: 'dachtest', er: 'dachte', wir: 'dachten', ihr: 'dachtet', sie: 'dachten' },
+  'gedacht',
+  'haben',
+)
+fix(
+  'essen',
+  'to eat',
+  'A1',
+  { ich: 'esse', du: 'isst', er: 'isst', wir: 'essen', ihr: 'esst', sie: 'essen' },
+  { ich: 'aß', du: 'aßest', er: 'aß', wir: 'aßen', ihr: 'aßt', sie: 'aßen' },
+  'gegessen',
+  'haben',
+)
+fix(
+  'lesen',
+  'to read',
+  'A1',
+  { ich: 'lese', du: 'liest', er: 'liest', wir: 'lesen', ihr: 'lest', sie: 'lesen' },
+  { ich: 'las', du: 'last', er: 'las', wir: 'lasen', ihr: 'last', sie: 'lasen' },
+  'gelesen',
+  'haben',
+)
+fix(
+  'sehen',
+  'to see',
+  'A1',
+  { ich: 'sehe', du: 'siehst', er: 'sieht', wir: 'sehen', ihr: 'seht', sie: 'sehen' },
+  { ich: 'sah', du: 'sahst', er: 'sah', wir: 'sahen', ihr: 'saht', sie: 'sahen' },
+  'gesehen',
+  'haben',
+)
+fix(
+  'sprechen',
+  'to speak',
+  'A1',
+  {
+    ich: 'spreche',
+    du: 'sprichst',
+    er: 'spricht',
+    wir: 'sprechen',
+    ihr: 'sprecht',
+    sie: 'sprechen',
+  },
+  { ich: 'sprach', du: 'sprachst', er: 'sprach', wir: 'sprachen', ihr: 'spracht', sie: 'sprachen' },
+  'gesprochen',
+  'haben',
+)
+fix(
+  'nehmen',
+  'to take',
+  'A1',
+  { ich: 'nehme', du: 'nimmst', er: 'nimmt', wir: 'nehmen', ihr: 'nehmt', sie: 'nehmen' },
+  { ich: 'nahm', du: 'nahmst', er: 'nahm', wir: 'nahmen', ihr: 'nahmt', sie: 'nahmen' },
+  'genommen',
+  'haben',
+)
+fix(
+  'fahren',
+  'to drive',
+  'A1',
+  { ich: 'fahre', du: 'fährst', er: 'fährt', wir: 'fahren', ihr: 'fahrt', sie: 'fahren' },
+  { ich: 'fuhr', du: 'fuhrst', er: 'fuhr', wir: 'fuhren', ihr: 'fuhrt', sie: 'fuhren' },
+  'gefahren',
+  'sein',
+)
+fix(
+  'tragen',
+  'to carry',
+  'A1',
+  { ich: 'trage', du: 'trägst', er: 'trägt', wir: 'tragen', ihr: 'tragt', sie: 'tragen' },
+  { ich: 'trug', du: 'trugst', er: 'trug', wir: 'trugen', ihr: 'trugt', sie: 'trugen' },
+  'getragen',
+  'haben',
+)
+fix(
+  'schlafen',
+  'to sleep',
+  'A1',
+  {
+    ich: 'schlafe',
+    du: 'schläfst',
+    er: 'schläft',
+    wir: 'schlafen',
+    ihr: 'schlaft',
+    sie: 'schlafen',
+  },
+  {
+    ich: 'schlief',
+    du: 'schliefst',
+    er: 'schlief',
+    wir: 'schliefen',
+    ihr: 'schlieft',
+    sie: 'schliefen',
+  },
+  'geschlafen',
+  'haben',
+)
+fix(
+  'helfen',
+  'to help',
+  'A1',
+  { ich: 'helfe', du: 'hilfst', er: 'hilft', wir: 'helfen', ihr: 'helft', sie: 'helfen' },
+  { ich: 'half', du: 'halfst', er: 'half', wir: 'halfen', ihr: 'halft', sie: 'halfen' },
+  'geholfen',
+  'haben',
+)
+fix(
+  'treffen',
+  'to meet',
+  'A1',
+  { ich: 'treffe', du: 'triffst', er: 'trifft', wir: 'treffen', ihr: 'trefft', sie: 'treffen' },
+  { ich: 'traf', du: 'trafst', er: 'traf', wir: 'trafen', ihr: 'traft', sie: 'trafen' },
+  'getroffen',
+  'haben',
+)
+fix(
+  'geben',
+  'to give',
+  'A1',
+  { ich: 'gebe', du: 'gibst', er: 'gibt', wir: 'geben', ihr: 'gebt', sie: 'geben' },
+  { ich: 'gab', du: 'gabst', er: 'gab', wir: 'gaben', ihr: 'gabt', sie: 'gaben' },
+  'gegeben',
+  'haben',
+)
+fix(
+  'halten',
+  'to hold',
+  'A1',
+  { ich: 'halte', du: 'hältst', er: 'hält', wir: 'halten', ihr: 'haltet', sie: 'halten' },
+  { ich: 'hielt', du: 'hieltst', er: 'hielt', wir: 'hielten', ihr: 'hieltet', sie: 'hielten' },
+  'gehalten',
+  'haben',
+)
+fix(
+  'fallen',
+  'to fall',
+  'A1',
+  { ich: 'falle', du: 'fällst', er: 'fällt', wir: 'fallen', ihr: 'fallt', sie: 'fallen' },
+  { ich: 'fiel', du: 'fielst', er: 'fiel', wir: 'fielen', ihr: 'fielt', sie: 'fielen' },
+  'gefallen',
+  'sein',
+)
+fix(
+  'laufen',
+  'to run',
+  'A1',
+  { ich: 'laufe', du: 'läufst', er: 'läuft', wir: 'laufen', ihr: 'lauft', sie: 'laufen' },
+  { ich: 'lief', du: 'liefst', er: 'lief', wir: 'liefen', ihr: 'lieft', sie: 'liefen' },
+  'gelaufen',
+  'sein',
+)
+fix(
+  'waschen',
+  'to wash',
+  'A2',
+  { ich: 'wasche', du: 'wäschst', er: 'wäscht', wir: 'waschen', ihr: 'wascht', sie: 'waschen' },
+  { ich: 'wusch', du: 'wuschst', er: 'wusch', wir: 'wuschen', ihr: 'wuscht', sie: 'wuschen' },
+  'gewaschen',
+  'haben',
+)
+fix(
+  'lassen',
+  'to let',
+  'A2',
+  { ich: 'lasse', du: 'lässt', er: 'lässt', wir: 'lassen', ihr: 'lasst', sie: 'lassen' },
+  { ich: 'ließ', du: 'ließest', er: 'ließ', wir: 'ließen', ihr: 'ließt', sie: 'ließen' },
+  'gelassen',
+  'haben',
+)
+fix(
+  'vergessen',
+  'to forget',
+  'A1',
+  {
+    ich: 'vergesse',
+    du: 'vergisst',
+    er: 'vergisst',
+    wir: 'vergessen',
+    ihr: 'vergesst',
+    sie: 'vergessen',
+  },
+  {
+    ich: 'vergaß',
+    du: 'vergaßest',
+    er: 'vergaß',
+    wir: 'vergaßen',
+    ihr: 'vergaßt',
+    sie: 'vergaßen',
+  },
+  'vergessen',
+  'haben',
+)
+fix(
+  'nennen',
+  'to name',
+  'A2',
+  { ich: 'nenne', du: 'nennst', er: 'nennt', wir: 'nennen', ihr: 'nennt', sie: 'nennen' },
+  { ich: 'nannte', du: 'nanntest', er: 'nannte', wir: 'nannten', ihr: 'nanntet', sie: 'nannten' },
+  'genannt',
+  'haben',
+)
+fix(
+  'brennen',
+  'to burn',
+  'A2',
+  { ich: 'brenne', du: 'brennst', er: 'brennt', wir: 'brennen', ihr: 'brennt', sie: 'brennen' },
+  {
+    ich: 'brannte',
+    du: 'branntest',
+    er: 'brannte',
+    wir: 'brannten',
+    ihr: 'branntet',
+    sie: 'brannten',
+  },
+  'gebrannt',
+  'haben',
+)
+fix(
+  'rennen',
+  'to run',
+  'A2',
+  { ich: 'renne', du: 'rennst', er: 'rennt', wir: 'rennen', ihr: 'rennt', sie: 'rennen' },
+  { ich: 'rannte', du: 'ranntest', er: 'rannte', wir: 'rannten', ihr: 'ranntet', sie: 'rannten' },
+  'gerannt',
+  'sein',
+)
+fix(
+  'sitzen',
+  'to sit',
+  'A2',
+  { ich: 'sitze', du: 'sitzt', er: 'sitzt', wir: 'sitzen', ihr: 'sitzt', sie: 'sitzen' },
+  { ich: 'saß', du: 'saßest', er: 'saß', wir: 'saßen', ihr: 'saßt', sie: 'saßen' },
+  'gesessen',
+  'haben',
+)
+fix(
+  'schneiden',
+  'to cut',
+  'B1',
+  {
+    ich: 'schneide',
+    du: 'schneidest',
+    er: 'schneidet',
+    wir: 'schneiden',
+    ihr: 'schneidet',
+    sie: 'schneiden',
+  },
+  {
+    ich: 'schnitt',
+    du: 'schnittst',
+    er: 'schnitt',
+    wir: 'schnitten',
+    ihr: 'schnittet',
+    sie: 'schnitten',
+  },
+  'geschnitten',
+  'haben',
+)
+fix(
+  'entscheiden',
+  'to decide',
+  'B1',
+  {
+    ich: 'entscheide',
+    du: 'entscheidest',
+    er: 'entscheidet',
+    wir: 'entscheiden',
+    ihr: 'entscheidet',
+    sie: 'entscheiden',
+  },
+  {
+    ich: 'entschied',
+    du: 'entschiedest',
+    er: 'entschied',
+    wir: 'entschieden',
+    ihr: 'entschiedet',
+    sie: 'entschieden',
+  },
+  'entschieden',
+  'haben',
+)
+fix(
+  'leiden',
+  'to suffer',
+  'B1',
+  { ich: 'leide', du: 'leidest', er: 'leidet', wir: 'leiden', ihr: 'leidet', sie: 'leiden' },
+  { ich: 'litt', du: 'littst', er: 'litt', wir: 'litten', ihr: 'littet', sie: 'litten' },
+  'gelitten',
+  'haben',
+)
+fix(
+  'reiten',
+  'to ride',
+  'A2',
+  { ich: 'reite', du: 'reitest', er: 'reitet', wir: 'reiten', ihr: 'reitet', sie: 'reiten' },
+  { ich: 'ritt', du: 'rittst', er: 'ritt', wir: 'ritten', ihr: 'rittet', sie: 'ritten' },
+  'geritten',
+  'haben',
+)
+fix(
+  'scheiden',
+  'to separate',
+  'B2',
+  {
+    ich: 'scheide',
+    du: 'scheidest',
+    er: 'scheidet',
+    wir: 'scheiden',
+    ihr: 'scheidet',
+    sie: 'scheiden',
+  },
+  {
+    ich: 'schied',
+    du: 'schiedest',
+    er: 'schied',
+    wir: 'schieden',
+    ihr: 'schiedet',
+    sie: 'schieden',
+  },
+  'geschieden',
+  'haben',
+)
+fix(
+  'stoßen',
+  'to push',
+  'B1',
+  { ich: 'stoße', du: 'stößt', er: 'stößt', wir: 'stoßen', ihr: 'stoßt', sie: 'stoßen' },
+  { ich: 'stieß', du: 'stießest', er: 'stieß', wir: 'stießen', ihr: 'stießt', sie: 'stießen' },
+  'gestoßen',
+  'haben',
+)
+fix(
+  'raten',
+  'to advise',
+  'B1',
+  { ich: 'rate', du: 'rätst', er: 'rät', wir: 'raten', ihr: 'ratet', sie: 'raten' },
+  { ich: 'riet', du: 'rietest', er: 'riet', wir: 'rieten', ihr: 'rietet', sie: 'rieten' },
+  'geraten',
+  'haben',
+)
+fix(
+  'braten',
+  'to roast',
+  'B2',
+  { ich: 'brate', du: 'brätst', er: 'brät', wir: 'braten', ihr: 'bratet', sie: 'braten' },
+  { ich: 'briet', du: 'brietest', er: 'briet', wir: 'brieten', ihr: 'brietet', sie: 'brieten' },
+  'gebraten',
+  'haben',
+)
+fix(
+  'laden',
+  'to load',
+  'B2',
+  { ich: 'lade', du: 'lädst', er: 'lädt', wir: 'laden', ihr: 'ladt', sie: 'laden' },
+  { ich: 'lud', du: 'ludst', er: 'lud', wir: 'luden', ihr: 'ludt', sie: 'luden' },
+  'geladen',
+  'haben',
+)
+fix(
+  'empfehlen',
+  'to recommend',
+  'B1',
+  {
+    ich: 'empfehle',
+    du: 'empfiehlst',
+    er: 'empfiehlt',
+    wir: 'empfehlen',
+    ihr: 'empfehlt',
+    sie: 'empfehlen',
+  },
+  {
+    ich: 'empfahl',
+    du: 'empfahlst',
+    er: 'empfahl',
+    wir: 'empfahlen',
+    ihr: 'empfahlt',
+    sie: 'empfahlen',
+  },
+  'empfohlen',
+  'haben',
+)
+fix(
+  'weisen',
+  'to show',
+  'B2',
+  { ich: 'weise', du: 'weist', er: 'weist', wir: 'weisen', ihr: 'weist', sie: 'weisen' },
+  { ich: 'wies', du: 'wiesest', er: 'wies', wir: 'wiesen', ihr: 'wiest', sie: 'wiesen' },
+  'gewiesen',
+  'haben',
+)
+fix(
+  'preisen',
+  'to praise',
+  'C1',
+  { ich: 'preise', du: 'preist', er: 'preist', wir: 'preisen', ihr: 'preist', sie: 'preisen' },
+  { ich: 'pries', du: 'priesest', er: 'pries', wir: 'priesen', ihr: 'priest', sie: 'priesen' },
+  'gepriesen',
+  'haben',
+)
+fix(
+  'auf stehen',
+  'to get up',
+  'A1',
+  {
+    ich: 'stehe auf',
+    du: 'stehst auf',
+    er: 'steht auf',
+    wir: 'stehen auf',
+    ihr: 'steht auf',
+    sie: 'stehen auf',
+  },
+  {
+    ich: 'stand auf',
+    du: 'standst auf',
+    er: 'stand auf',
+    wir: 'standen auf',
+    ihr: 'standt auf',
+    sie: 'standen auf',
+  },
+  'aufgestanden',
+  'sein',
+)
+fix(
+  'an fangen',
+  'to begin',
+  'A1',
+  {
+    ich: 'fange an',
+    du: 'fängst an',
+    er: 'fängt an',
+    wir: 'fangen an',
+    ihr: 'fangt an',
+    sie: 'fangen an',
+  },
+  {
+    ich: 'fing an',
+    du: 'fingst an',
+    er: 'fing an',
+    wir: 'fingen an',
+    ihr: 'fingt an',
+    sie: 'fingen an',
+  },
+  'angefangen',
+  'haben',
+)
+fix(
+  'ein laden',
+  'to invite',
+  'A1',
+  {
+    ich: 'lade ein',
+    du: 'lädst ein',
+    er: 'lädt ein',
+    wir: 'laden ein',
+    ihr: 'ladet ein',
+    sie: 'laden ein',
+  },
+  {
+    ich: 'lud ein',
+    du: 'ludst ein',
+    er: 'lud ein',
+    wir: 'luden ein',
+    ihr: 'ludt ein',
+    sie: 'luden ein',
+  },
+  'eingeladen',
+  'haben',
+)
+fix(
+  'mit bringen',
+  'to bring along',
+  'A1',
+  {
+    ich: 'bringe mit',
+    du: 'bringst mit',
+    er: 'bringt mit',
+    wir: 'bringen mit',
+    ihr: 'bringt mit',
+    sie: 'bringen mit',
+  },
+  {
+    ich: 'brachte mit',
+    du: 'brachtest mit',
+    er: 'brachte mit',
+    wir: 'brachten mit',
+    ihr: 'brachtet mit',
+    sie: 'brachten mit',
+  },
+  'mitgebracht',
+  'haben',
+)
+fix(
+  'auf geben',
+  'to give up',
+  'B1',
+  {
+    ich: 'gebe auf',
+    du: 'gibst auf',
+    er: 'gibt auf',
+    wir: 'geben auf',
+    ihr: 'gebt auf',
+    sie: 'geben auf',
+  },
+  {
+    ich: 'gab auf',
+    du: 'gabst auf',
+    er: 'gab auf',
+    wir: 'gaben auf',
+    ihr: 'gabt auf',
+    sie: 'gaben auf',
+  },
+  'aufgegeben',
+  'haben',
+)
+fix(
+  'vor schlagen',
+  'to suggest',
+  'B1',
+  {
+    ich: 'schlage vor',
+    du: 'schlägst vor',
+    er: 'schlägt vor',
+    wir: 'schlagen vor',
+    ihr: 'schlagt vor',
+    sie: 'schlagen vor',
+  },
+  {
+    ich: 'schlug vor',
+    du: 'schlugst vor',
+    er: 'schlug vor',
+    wir: 'schlugen vor',
+    ihr: 'schlugt vor',
+    sie: 'schlugen vor',
+  },
+  'vorgeschlagen',
+  'haben',
+)
+fix(
+  'teil nehmen',
+  'to participate',
+  'A1',
+  {
+    ich: 'nehme teil',
+    du: 'nimmst teil',
+    er: 'nimmt teil',
+    wir: 'nehmen teil',
+    ihr: 'nehmt teil',
+    sie: 'nehmen teil',
+  },
+  {
+    ich: 'nahm teil',
+    du: 'nahmst teil',
+    er: 'nahm teil',
+    wir: 'nahmen teil',
+    ihr: 'nahmt teil',
+    sie: 'nahmen teil',
+  },
+  'teilgenommen',
+  'haben',
+)
+fix(
+  'zurück kommen',
+  'to return',
+  'A1',
+  {
+    ich: 'komme zurück',
+    du: 'kommst zurück',
+    er: 'kommt zurück',
+    wir: 'kommen zurück',
+    ihr: 'kommt zurück',
+    sie: 'kommen zurück',
+  },
+  {
+    ich: 'kam zurück',
+    du: 'kamst zurück',
+    er: 'kam zurück',
+    wir: 'kamen zurück',
+    ihr: 'kamt zurück',
+    sie: 'kamen zurück',
+  },
+  'zurückgekommen',
+  'sein',
+)
+fix(
+  'an bieten',
+  'to offer',
+  'A2',
+  {
+    ich: 'biete an',
+    du: 'bietest an',
+    er: 'bietet an',
+    wir: 'bieten an',
+    ihr: 'bietet an',
+    sie: 'bieten an',
+  },
+  {
+    ich: 'bot an',
+    du: 'botest an',
+    er: 'bot an',
+    wir: 'boten an',
+    ihr: 'botet an',
+    sie: 'boten an',
+  },
+  'angeboten',
+  'haben',
+)
+fix(
+  'ein schlafen',
+  'to fall asleep',
+  'A2',
+  {
+    ich: 'schlafe ein',
+    du: 'schläfst ein',
+    er: 'schläft ein',
+    wir: 'schlafen ein',
+    ihr: 'schlaft ein',
+    sie: 'schlafen ein',
+  },
+  {
+    ich: 'schlief ein',
+    du: 'schliefst ein',
+    er: 'schlief ein',
+    wir: 'schliefen ein',
+    ihr: 'schlieft ein',
+    sie: 'schliefen ein',
+  },
+  'eingeschlafen',
+  'sein',
+)
+fix(
+  'mit nehmen',
+  'to take along',
+  'A1',
+  {
+    ich: 'nehme mit',
+    du: 'nimmst mit',
+    er: 'nimmt mit',
+    wir: 'nehmen mit',
+    ihr: 'nehmt mit',
+    sie: 'nehmen mit',
+  },
+  {
+    ich: 'nahm mit',
+    du: 'nahmst mit',
+    er: 'nahm mit',
+    wir: 'nahmen mit',
+    ihr: 'nahmt mit',
+    sie: 'nahmen mit',
+  },
+  'mitgenommen',
+  'haben',
+)
+fix(
+  'an rufen',
+  'to call',
+  'A1',
+  {
+    ich: 'rufe an',
+    du: 'rufst an',
+    er: 'ruft an',
+    wir: 'rufen an',
+    ihr: 'ruft an',
+    sie: 'rufen an',
+  },
+  {
+    ich: 'rief an',
+    du: 'riefst an',
+    er: 'rief an',
+    wir: 'riefen an',
+    ihr: 'rieft an',
+    sie: 'riefen an',
+  },
+  'angerufen',
+  'haben',
+)
+fix(
+  'fern sehen',
+  'to watch TV',
+  'A1',
+  {
+    ich: 'sehe fern',
+    du: 'siehst fern',
+    er: 'sieht fern',
+    wir: 'sehen fern',
+    ihr: 'seht fern',
+    sie: 'sehen fern',
+  },
+  {
+    ich: 'sah fern',
+    du: 'sahst fern',
+    er: 'sah fern',
+    wir: 'sahen fern',
+    ihr: 'saht fern',
+    sie: 'sahen fern',
+  },
+  'ferngesehen',
+  'haben',
+)
+fix(
+  'ein steigen',
+  'to board',
+  'A2',
+  {
+    ich: 'steige ein',
+    du: 'steigst ein',
+    er: 'steigt ein',
+    wir: 'steigen ein',
+    ihr: 'steigt ein',
+    sie: 'steigen ein',
+  },
+  {
+    ich: 'stieg ein',
+    du: 'stiegst ein',
+    er: 'stieg ein',
+    wir: 'stiegen ein',
+    ihr: 'stiegt ein',
+    sie: 'stiegen ein',
+  },
+  'eingestiegen',
+  'sein',
+)
+fix(
+  'aus steigen',
+  'to get off',
+  'A2',
+  {
+    ich: 'steige aus',
+    du: 'steigst aus',
+    er: 'steigt aus',
+    wir: 'steigen aus',
+    ihr: 'steigt aus',
+    sie: 'steigen aus',
+  },
+  {
+    ich: 'stieg aus',
+    du: 'stiegst aus',
+    er: 'stieg aus',
+    wir: 'stiegen aus',
+    ihr: 'stiegt aus',
+    sie: 'stiegen aus',
+  },
+  'ausgestiegen',
+  'sein',
+)
+fix(
+  'um ziehen',
+  'to move house',
+  'A2',
+  {
+    ich: 'ziehe um',
+    du: 'ziehst um',
+    er: 'zieht um',
+    wir: 'ziehen um',
+    ihr: 'zieht um',
+    sie: 'ziehen um',
+  },
+  { ich: 'zog um', du: 'zogst um', er: 'zog um', wir: 'zogen um', ihr: 'zogt um', sie: 'zogen um' },
+  'umgezogen',
+  'sein',
+)
+fix(
+  'bei tragen',
+  'to contribute',
+  'B1',
+  {
+    ich: 'trage bei',
+    du: 'trägst bei',
+    er: 'trägt bei',
+    wir: 'tragen bei',
+    ihr: 'tragt bei',
+    sie: 'tragen bei',
+  },
+  {
+    ich: 'trug bei',
+    du: 'trugst bei',
+    er: 'trug bei',
+    wir: 'trugen bei',
+    ihr: 'trugt bei',
+    sie: 'trugen bei',
+  },
+  'beigetragen',
+  'haben',
+)
+fix(
+  'statt finden',
+  'to take place',
+  'B1',
+  {
+    ich: 'finde statt',
+    du: 'findest statt',
+    er: 'findet statt',
+    wir: 'finden statt',
+    ihr: 'findet statt',
+    sie: 'finden statt',
+  },
+  {
+    ich: 'fand statt',
+    du: 'fandst statt',
+    er: 'fand statt',
+    wir: 'fanden statt',
+    ihr: 'fandt statt',
+    sie: 'fanden statt',
+  },
+  'stattgefunden',
+  'haben',
+)
+fix(
+  'vor kommen',
+  'to happen',
+  'B1',
+  {
+    ich: 'komme vor',
+    du: 'kommst vor',
+    er: 'kommt vor',
+    wir: 'kommen vor',
+    ihr: 'kommt vor',
+    sie: 'kommen vor',
+  },
+  {
+    ich: 'kam vor',
+    du: 'kamst vor',
+    er: 'kam vor',
+    wir: 'kamen vor',
+    ihr: 'kamt vor',
+    sie: 'kamen vor',
+  },
+  'vorgekommen',
+  'sein',
+)
+fix(
+  'ab geben',
+  'to hand in',
+  'B1',
+  {
+    ich: 'gebe ab',
+    du: 'gibst ab',
+    er: 'gibt ab',
+    wir: 'geben ab',
+    ihr: 'gebt ab',
+    sie: 'geben ab',
+  },
+  { ich: 'gab ab', du: 'gabst ab', er: 'gab ab', wir: 'gaben ab', ihr: 'gabt ab', sie: 'gaben ab' },
+  'abgegeben',
+  'haben',
+)
+fix(
+  'aus gehen',
+  'to go out',
+  'A2',
+  {
+    ich: 'gehe aus',
+    du: 'gehst aus',
+    er: 'geht aus',
+    wir: 'gehen aus',
+    ihr: 'geht aus',
+    sie: 'gehen aus',
+  },
+  {
+    ich: 'ging aus',
+    du: 'gingst aus',
+    er: 'ging aus',
+    wir: 'gingen aus',
+    ihr: 'gingt aus',
+    sie: 'gingen aus',
+  },
+  'ausgegangen',
+  'sein',
+)
+fix(
+  'aus ziehen',
+  'to move out',
+  'A2',
+  {
+    ich: 'ziehe aus',
+    du: 'ziehst aus',
+    er: 'zieht aus',
+    wir: 'ziehen aus',
+    ihr: 'zieht aus',
+    sie: 'ziehen aus',
+  },
+  {
+    ich: 'zog aus',
+    du: 'zogst aus',
+    er: 'zog aus',
+    wir: 'zogen aus',
+    ihr: 'zogt aus',
+    sie: 'zogen aus',
+  },
+  'ausgezogen',
+  'sein',
+)
+fix(
+  'nach denken',
+  'to reflect',
+  'B1',
+  {
+    ich: 'denke nach',
+    du: 'denkst nach',
+    er: 'denkt nach',
+    wir: 'denken nach',
+    ihr: 'denkt nach',
+    sie: 'denken nach',
+  },
+  {
+    ich: 'dachte nach',
+    du: 'dachtest nach',
+    er: 'dachte nach',
+    wir: 'dachten nach',
+    ihr: 'dachtet nach',
+    sie: 'dachten nach',
+  },
+  'nachgedacht',
+  'haben',
+)
+ALL.push(
+  strong('erlöschen', 'to go out', 'C1', 'erlisch', 'erlischt', 'erlosch', 'erloschen', 'sein'),
+)
+ALL.push(
+  strong(
+    'erschrecken',
+    'to be frightened',
+    'B2',
+    'erschrick',
+    'erschrickt',
+    'erschrak',
+    'erschrocken',
+    'sein',
+  ),
+)
+ALL.push(strong('flechten', 'to braid', 'C2', 'flicht', 'flicht', 'flocht', 'geflochten', 'haben'))
+ALL.push(strong('schlingen', 'to wind', 'C2', null, null, 'schlang', 'geschlungen', 'haben'))
+ALL.push(strong('winden', 'to twist', 'C2', null, null, 'wand', 'gewunden', 'haben'))
+ALL.push(reg('bearbeiten', 'to process/edit', 'B1'))
+ALL.push(reg('beaufsichtigen', 'to supervise', 'B2'))
+ALL.push(reg('beeilen', 'to hurry (impersonal)', 'B1'))
+ALL.push(reg('befassen', 'to deal with', 'B2'))
+ALL.push(reg('befestigen', 'to fasten', 'B2'))
+ALL.push(reg('befinden', 'to find oneself', 'B2'))
+ALL.push(reg('befrieden', 'to pacify', 'C2'))
+ALL.push(reg('begleiten', 'to accompany', 'A2'))
+ALL.push(reg('behandeln', 'to treat', 'B1'))
+ALL.push(reg('beherbergen', 'to house', 'C1'))
+ALL.push(reg('beherrschen', 'to master', 'B1'))
+ALL.push(reg('behindern', 'to obstruct', 'B2'))
+ALL.push(reg('beinhalten', 'to include', 'B2'))
+ALL.push(reg('beitragen', 'to contribute', 'B1'))
+ALL.push(reg('bemessen', 'to measure out', 'C2'))
+ALL.push(reg('beraten', 'to advise', 'B1'))
+ALL.push(reg('bereichern', 'to enrich', 'B2'))
+ALL.push(reg('bergen', 'to rescue', 'C1'))
+ALL.push(reg('berühren', 'to touch', 'A2'))
+ALL.push(reg('besagen', 'to state', 'B2'))
+ALL.push(reg('beschriften', 'to label', 'B1'))
+ALL.push(reg('besetzen', 'to occupy', 'B1'))
+ALL.push(reg('besitzen', 'to own', 'B1'))
+ALL.push(reg('besonder', 'to particularize', 'C2'))
+ALL.push(reg('bestrafen', 'to punish', 'B1'))
+ALL.push(reg('bestreiten', 'to deny', 'B2'))
+ALL.push(reg('betrügen', 'to deceive', 'C1'))
+ALL.push(reg('bevorstehend', 'to be imminent', 'C2'))
+ALL.push(reg('bewachen', 'to guard', 'B2'))
+ALL.push(reg('bewaffnen', 'to arm', 'C1'))
+ALL.push(reg('bewahren', 'to preserve', 'B1'))
+ALL.push(reg('bewegen', 'to move', 'A2'))
+ALL.push(reg('bewerben', 'to apply', 'B1'))
+ALL.push(reg('bezeugen', 'to testify', 'C1'))
+ALL.push(reg('bezichtigen', 'to accuse of', 'C2'))
+ALL.push(reg('entlang', 'to follow along', 'C2'))
+ALL.push(reg('entarten', 'to degenerate', 'C2'))
+ALL.push(reg('enteignen', 'to expropriate', 'C2'))
+ALL.push(reg('entfremden', 'to alienate', 'C2'))
+ALL.push(reg('entgegenwirken', 'to counteract', 'C2'))
+ALL.push(reg('entkrampfen', 'to relax', 'C2'))
+ALL.push(reg('entmannen', 'to emasculate', 'C2'))
+ALL.push(reg('entmutigen', 'to discourage', 'B1'))
+ALL.push(reg('entratschen', 'to dethrone', 'C2'))
+ALL.push(reg('entrechten', 'to disenfranchise', 'C2'))
+ALL.push(reg('entschlüsseln', 'to decrypt', 'B2'))
+ALL.push(reg('entsiegeln', 'to unseal', 'C2'))
+ALL.push(reg('entvölkern', 'to depopulate', 'C2'))
+ALL.push(reg('entwaffnen', 'to disarm', 'C1'))
+ALL.push(reg('entwässern', 'to drain', 'C1'))
+ALL.push(reg('entzaubern', 'to disenchant', 'C2'))
+ALL.push(reg('zerbröckeln', 'to crumble', 'C1'))
+ALL.push(reg('zerdrücken', 'to crush', 'C2'))
+ALL.push(reg('zerfasern', 'to fray', 'C2'))
+ALL.push(reg('zerfließen', 'to melt away', 'C2'))
+ALL.push(reg('zerhacken', 'to chop up', 'C2'))
+ALL.push(reg('zerkleinern', 'to crush', 'B2'))
+ALL.push(reg('zerquetschen', 'to squash', 'C1'))
+ALL.push(reg('zerrinnen', 'to trickle away', 'C2'))
+ALL.push(reg('zerschmettern', 'to shatter', 'C2'))
+ALL.push(reg('zerstreuen', 'to scatter', 'B2'))
+ALL.push(reg('zerteilen', 'to divide up', 'B1'))
+ALL.push(reg('zertrümmern', 'to smash', 'C2'))
+ALL.push(reg('missdeuten', 'to misinterpret', 'C2'))
+ALL.push(reg('missfallen', 'to displease', 'C2'))
+ALL.push(reg('missglücken', 'to fail', 'C2'))
+ALL.push(reg('misshandeln', 'to mistreat', 'C2'))
+ALL.push(reg('misskreditieren', 'to discredit', 'C2'))
+ALL.push(reg('gehorchen', 'to obey', 'B1'))
+ALL.push(reg('gehören', 'to belong', 'A1'))
+ALL.push(reg('gedenken', 'to commemorate', 'C2'))
+ALL.push(reg('gelten', 'to be valid', 'B1'))
+ALL.push(reg('genießen', 'to enjoy', 'B1'))
+ALL.push(reg('geraten', 'to get into', 'B1'))
+ALL.push(reg('gestatten', 'to permit', 'B1'))
+ALL.push(reg('gestehen', 'to confess', 'B1'))
+ALL.push(reg('erahnen', 'to sense', 'C2'))
+ALL.push(reg('erbarmen', 'to take pity', 'C2'))
+ALL.push(reg('erblinden', 'to go blind', 'C2'))
+ALL.push(reg('erdichten', 'to fabricate', 'C2'))
+ALL.push(reg('erdenken', 'to devise', 'C1'))
+ALL.push(reg('erdulden', 'to endure', 'C2'))
+ALL.push(reg('erfahren', 'to experience', 'B1'))
+ALL.push(reg('erfrechen', 'to presume', 'C2'))
+ALL.push(reg('erfüllen', 'to fulfill', 'A2'))
+ALL.push(reg('ergänzen', 'to complement', 'B1'))
+ALL.push(reg('ergreifen', 'to seize', 'B1'))
+ALL.push(reg('erhalten', 'to receive', 'B1'))
+ALL.push(reg('erhitzen', 'to heat up', 'B1'))
+ALL.push(reg('erkälten', 'to catch a cold', 'A2'))
+ALL.push(reg('erkennen', 'to recognize', 'B1'))
+ALL.push(reg('erkundigen', 'to inquire', 'B1'))
+ALL.push(reg('erleben', 'to experience', 'A2'))
+ALL.push(reg('erleichtern', 'to ease', 'B1'))
+ALL.push(reg('ermöglichen', 'to enable', 'B1'))
+ALL.push(reg('ermüden', 'to tire', 'B2'))
+ALL.push(reg('ernähren', 'to nourish', 'B2'))
+ALL.push(reg('erreichen', 'to reach', 'A2'))
+ALL.push(reg('errichten', 'to erect', 'B1'))
+ALL.push(reg('erschießen', 'to shoot dead', 'C1'))
+ALL.push(reg('erschöpfen', 'to exhaust', 'B2'))
+ALL.push(reg('erschweren', 'to complicate', 'B2'))
+ALL.push(reg('ersetzen', 'to replace', 'B1'))
+ALL.push(reg('erstrecken', 'to extend', 'B2'))
+ALL.push(reg('erteilen', 'to grant', 'B2'))
+ALL.push(reg('erwähnen', 'to mention', 'B1'))
+ALL.push(reg('erwarten', 'to expect', 'A2'))
+ALL.push(reg('erweichen', 'to soften', 'C1'))
+ALL.push(reg('erzeugen', 'to generate', 'B1'))
+ALL.push(reg('erziehen', 'to raise/educate', 'B1'))
+ALL.push(sep('auf wachen', 'to wake up', 'A1', null))
+ALL.push(sep('auf legen', 'to put on', 'A2', null))
+ALL.push(sep('auf schreiben', 'to write down', 'A2', 'aufgeschrieben'))
+ALL.push(sep('auf teilen', 'to divide', 'B1', null))
+ALL.push(sep('aus drucken', 'to print out', 'A2', null))
+ALL.push(sep('aus ruhen', 'to rest (non-reflexive)', 'A2', null))
+ALL.push(sep('aus probieren', 'to try on', 'A2', null))
+ALL.push(sep('aus tauschen', 'to exchange', 'B1', null))
+ALL.push(sep('bei spielen', 'to play along', 'C1', null))
+ALL.push(sep('bei tragen', 'to contribute (weak form)', 'B1', 'beigetragen'))
+ALL.push(sep('da liegen', 'to be situated', 'C1', null))
+ALL.push(sep('da stehen', 'to stand there', 'B1', null))
+ALL.push(sep('ein Atmen', 'to breathe in', 'B1', 'eingeatmet'))
+ALL.push(sep('ein setzen', 'to insert', 'B1', null))
 
-ALL.push(sep("fort bewegen","to move away","C1",null));
-ALL.push(sep("fort setzen","to continue","B1",null));
-ALL.push(sep("heraus lesen","to read out","B1",null));
-ALL.push(sep("herbei führen","to bring about","C2",null));
-ALL.push(sep("hoch schätzen","to estimate highly","B1","hochgeschätzt"));
-ALL.push(sep("hoch steigen","to rise","B1","hochgestiegen"));
-ALL.push(sep("los fahren","to set off (vehicle)","A2","losg gefahren"));
-ALL.push(sep("los lassen","to let go","B1","losgelassen"));
-ALL.push(sep("mit erleben","to experience together","B1",null));
-ALL.push(sep("mit essen","to eat along","A2",null));
-ALL.push(sep("nach fragen","to inquire","A2",null));
-ALL.push(sep("nach geben","to yield","B1","nachgegeben"));
-ALL.push(sep("nach laufen","to chase","A2","nachgelaufen"));
-ALL.push(sep("nach reisen","to travel after","B1","nachgereist"));
-ALL.push(sep("tief kühlen","to deep-freeze","C1",null));
-ALL.push(reg("umarmen","to embrace","A2"));
-ALL.push(sep("vor fahren","to drive ahead","B1","vorgefahren"));
-ALL.push(sep("vor geben","to pretend","B1","vorgegeben"));
-ALL.push(sep("vor haben","to plan/intend","A2","vorgehabt"));
-ALL.push(sep("vor lesen","to read aloud","A2","vorgelesen"));
-ALL.push(sep("weg fahren","to drive away","A2","weggefahren"));
-ALL.push(sep("weg gehen","to walk away","A1","weggegangen"));
-ALL.push(sep("weg nehmen","to take away","A2","weggenommen"));
-ALL.push(sep("weg räumen","to clear away","A2","weggeräumt"));
-ALL.push(sep("weiter entwickeln","to develop further","B1",null));
-ALL.push(sep("weiter führen","to continue leading","B1","weitergeführt"));
-ALL.push(sep("wieder aufbauen","to rebuild","B1","wiederaufgebaut"));
-ALL.push(sep("wieder gut machen","to make good","B1","wiedergutgemacht"));
-ALL.push(sep("zu schlagen","to close (weak form)","B1","abgeschlossen"));
-ALL.push(sep("zu stimmen","to agree","B1","zugestimmt"));
-ALL.push(sep("zusammen fassen","to summarize","B1","zusammengefasst"));
-ALL.push(sep("zusammen falten","to fold together","B1",null));
-ALL.push(sep("zusammen setzen","to assemble","B1","zusammengesetzt"));
-ALL.push(sep("ab brennen","to burn down","B1","abgebrannt"));
-ALL.push(sep("ab geben","to hand over (weak form)","B1","abgegeben"));
-ALL.push(sep("ab holen","to pick up","A1",null));
-ALL.push(sep("ab schließen","to lock","A1","abgeschlossen"));
-ALL.push(sep("ab senken","to lower","B1",null));
-ALL.push(sep("ab sprechen","to agree on","B1","abgesprochen"));
-ALL.push(sep("ab waschen","to wash off","A2","abgewaschen"));
-ALL.push(sep("an melden","to register","A2","angemeldet"));
-ALL.push(sep("an zeigen","to display","A1","angezeigt"));
-ALL.push(sep("an ziehen","to put on","A2","angezogen"));
-ALL.push(sep("auf hören","to stop","A1","aufgehört"));
-ALL.push(sep("auf machen","to open","A1","aufgemacht"));
-ALL.push(sep("auf passen","to pay attention","A1","aufgepasst"));
-ALL.push(sep("auf räumen","to tidy up","A1","aufgeräumt"));
-ALL.push(sep("aus atmen","to breathe out","B1","ausgeatmet"));
-ALL.push(sep("aus füllen","to fill out","A1","ausgefüllt"));
-ALL.push(sep("aus geben","to spend","A1","ausgegeben"));
-ALL.push(sep("aus machen","to turn off","A1","ausgemacht"));
-ALL.push(sep("aus schalten","to switch off","A1","ausgeschaltet"));
-ALL.push(sep("aus schließen","to exclude","B1","ausgeschlossen"));
-ALL.push(sep("aus suchen","to select","B1","ausgesucht"));
-ALL.push(sep("aus wählen","to choose","B1","ausgewählt"));
-ALL.push(sep("ein geben","to input","B1","eingegeben"));
-ALL.push(sep("ein schalten","to switch on","A1","eingeschaltet"));
-ALL.push(sep("ein schließen","to include","B1","eingeschlossen"));
-ALL.push(sep("ein treffen","to arrive","B1","eingetroffen"));
-ALL.push(sep("fern schalten","to switch to TV","B1",null));
-ALL.push(sep("herunter laden","to download","A2","heruntergeladen"));
-ALL.push(sep("hoch laden","to upload","A2","hochgeladen"));
-ALL.push(sep("mit teilen","to share","B1","mitgeteilt"));
-ALL.push(sep("nach schauen","to check","A2","nachgeschaut"));
-ALL.push(sep("vor kommen","to occur","B1","vorgekommen"));
-ALL.push(sep("vor stellen","to introduce","A1","vorgestellt"));
-ALL.push(sep("weg stecken","to pocket","B1","weggesteckt"));
-ALL.push(sep("zu führen","to adduce","B2","zugeführt"));
-ALL.push(sep("zu legen","to add","B1","zugelegt"));
-ALL.push(sep("zu machen","to close","A1","zugemacht"));
-ALL.push(sep("zu nehmen","to increase","A2","zugenommen"));
-ALL.push(refl("sich fühlen","to feel","A1",{ich:"fühle mich",du:"fühlst dich",er:"fühlt sich",wir:"fühlen uns",ihr:"fühlt euch",sie:"fühlen sich"},{ich:"fühlte mich",du:"fühltest dich",er:"fühlte sich",wir:"fühlten uns",ihr:"fühltet euch",sie:"fühlten sich"},"gefühlt"));
-ALL.push(refl("sich ausruhen","to rest","A2",{ich:"ruhe mich aus",du:"ruhst dich aus",er:"ruht sich aus",wir:"ruhen uns aus",ihr:"ruht euch aus",sie:"ruhen sich aus"},{ich:"ruhte mich aus",du:"ruhtest dich aus",er:"ruhte sich aus",wir:"ruhten uns aus",ihr:"ruhtet euch aus",sie:"ruhten sich aus"},"ausgeruht"));
-ALL.push(refl("sich bemühen","to make an effort","B1",{ich:"bemühe mich",du:"bemühst dich",er:"bemüht sich",wir:"bemühen uns",ihr:"bemüht euch",sie:"bemühen sich"},{ich:"bemühte mich",du:"bemühtest dich",er:"bemühte sich",wir:"bemühten uns",ihr:"bemühtet euch",sie:"bemühten sich"},"bemüht"));
-ALL.push(refl("sich beschweren","to complain","B1",{ich:"beschwere mich",du:"beschwerst dich",er:"beschwert sich",wir:"beschweren uns",ihr:"beschwert euch",sie:"beschweren sich"},{ich:"beschwerte mich",du:"beschwertest dich",er:"beschwerte sich",wir:"beschwerten uns",ihr:"beschwertet euch",sie:"beschwerten sich"},"beschwert"));
-ALL.push(refl("sich entschuldigen","to apologize","A1",{ich:"entschuldige mich",du:"entschuldigst dich",er:"entschuldigt sich",wir:"entschuldigen uns",ihr:"entschuldigt euch",sie:"entschuldigen sich"},{ich:"entschuldigte mich",du:"entschuldigtest dich",er:"entschuldigte sich",wir:"entschuldigten uns",ihr:"entschuldigtet euch",sie:"entschuldigten sich"},"entschuldigt"));
-ALL.push(refl("sich fürchten","to be afraid","A2",{ich:"fürchte mich",du:"fürchtest dich",er:"fürchtet sich",wir:"fürchten uns",ihr:"fürchtet euch",sie:"fürchten sich"},{ich:"fürchtete mich",du:"fürchtetest dich",er:"fürchtete sich",wir:"fürchteten uns",ihr:"fürchtet euch",sie:"fürchteten sich"},"gefürchtet"));
-ALL.push(refl("sich verlieben","to fall in love","A2",{ich:"verliebe mich",du:"verliebst dich",er:"verliebt sich",wir:"verlieben uns",ihr:"verliebt euch",sie:"verlieben sich"},{ich:"verliebte mich",du:"verliebtest dich",er:"verliebte sich",wir:"verliebten uns",ihr:"verliebtet euch",sie:"verliebten sich"},"verliebt"));
-ALL.push(refl("sich trennen","to separate","B1",{ich:"trenne mich",du:"trennst dich",er:"trennt sich",wir:"trennen uns",ihr:"trennt euch",sie:"trennen sich"},{ich:"trennte mich",du:"trenntest dich",er:"trennte sich",wir:"trennten uns",ihr:"trenntet euch",sie:"trennten sich"},"getrennt"));
-ALL.push(refl("sich verstehen","to get along","B1",{ich:"verstehe mich",du:"verstehst dich",er:"versteht sich",wir:"verstehen uns",ihr:"versteht euch",sie:"verstehen sich"},{ich:"verstand mich",du:"verstandst dich",er:"verstand sich",wir:"verstanden uns",ihr:"verstandet euch",sie:"verstanden sich"},"verstanden"));
-ALL.push(refl("sich einloggen","to log in","A2",{ich:"logge mich ein",du:"loggst dich ein",er:"loggt sich ein",wir:"loggen uns ein",ihr:"loggt euch ein",sie:"loggen sich ein"},{ich:"loggte mich ein",du:"loggtest dich ein",er:"loggte sich ein",wir:"loggten uns ein",ihr:"loggtet euch ein",sie:"loggten sich ein"},"eingeloggt"));
-ALL.push(refl("sich anmelden","to register","A2",{ich:"melde mich an",du:"meldest dich an",er:"meldet sich an",wir:"melden uns an",ihr:"meldet euch an",sie:"melden sich an"},{ich:"meldete mich an",du:"meldetest dich an",er:"meldete sich an",wir:"meldeten uns an",ihr:"meldetet euch an",sie:"meldeten sich an"},"angemeldet"));
-ALL.push(refl("sich abmelden","to log out","A2",{ich:"melde mich ab",du:"meldest dich ab",er:"meldet sich ab",wir:"melden uns ab",ihr:"meldet euch ab",sie:"melden sich ab"},{ich:"meldete mich ab",du:"meldetest dich ab",er:"meldete sich ab",wir:"meldeten uns ab",ihr:"meldetet euch ab",sie:"meldeten sich ab"},"abgemeldet"));
-ALL.push(reg("kommunizieren","to communicate","B1"));
-ALL.push(reg("präsentieren","to present","B1"));
-ALL.push(reg("analysieren","to analyze","B1"));
-ALL.push(reg("archivieren","to archive","B2"));
-ALL.push(reg("verschlüsseln","to encrypt","B2"));
-ALL.push(reg("kalibrieren","to calibrate","C1"));
-ALL.push(reg("kritiseren","to criticize","B1"));
-ALL.push(reg("demonstrieren","to demonstrate","B1"));
-ALL.push(reg("illustrieren","to illustrate","B2"));
-ALL.push(reg("publizieren","to publish","B2"));
-ALL.push(reg("redigieren","to edit","C2"));
-ALL.push(reg("lokalisieren","to localize","C1"));
-ALL.push(reg("komplieren","to compile","B2"));
-ALL.push(reg("gewährleisten","to guarantee","B2"));
-ALL.push(reg("erschließen","to develop (strong form)","C1"));
-ALL.push(reg("erwägen","to consider (strong form)","C1"));
-ALL.push(reg("schmälern","to diminish","C2"));
-ALL.push(reg("verschwiegern","to conceal (typo-fix)","C2"));
-ALL.push(reg("layouten","to lay out","C1"));
-ALL.push(reg("tupfen","to dab","C2"));
-ALL.push(reg("toben","to rage","B2"));
-ALL.push(reg("muffeln","to smell musty","C2"));
-ALL.push(reg("rascheln","to rustle","C1"));
-ALL.push(reg("knallen","to bang","B2"));
-ALL.push(reg("kratzen","to scratch","B2"));
-ALL.push(reg("kitzeln","to tickle","B2"));
-ALL.push(reg("jucken","to itch","B2"));
-ALL.push(reg("bluten","to bleed","B1"));
-ALL.push(reg("heilen","to heal","B1"));
-ALL.push(reg("impfen","to vaccinate","B1"));
-ALL.push(reg("desinfizieren","to disinfect","B2"));
-ALL.push(reg("operieren","to operate (medical)","B1"));
-ALL.push(reg("rehabilitieren","to rehabilitate","C2"));
-ALL.push(reg("pflegen","to care for","A2"));
-ALL.push(reg("betreuen","to look after","B1"));
-ALL.push(reg("unterstützen","to support","B1"));
-ALL.push(reg("fördern","to promote","B1"));
-ALL.push(reg("einteilen","to allocate","B1"));
-ALL.push(reg("verteilen","to distribute","B1"));
-ALL.push(reg("klassifizieren","to classify","B2"));
-ALL.push(reg("gruppieren","to group","B2"));
-ALL.push(reg("gestalten","to design","B1"));
-ALL.push(reg("formen","to shape","B1"));
-ALL.push(reg("modellieren","to model","B2"));
-ALL.push(reg("skizzieren","to sketch","B2"));
-ALL.push(reg("entwerfen","to draft (weak form)","B1"));
-ALL.push(reg("konzipieren","to conceive","C1"));
-ALL.push(reg("projizieren","to project","B2"));
-ALL.push(reg("konstruieren","to construct","B1"));
-ALL.push(reg("beweisen","to prove (weak form)","B1"));
-ALL.push(reg("erläutern","to elucidate","B2"));
-ALL.push(reg("verdeutlichen","to clarify","B2"));
-ALL.push(reg("tadeln","to reprimand","C1"));
-ALL.push(reg("verdächtigen","to suspect","B2"));
-ALL.push(reg("beschuldigen","to accuse","B2"));
-ALL.push(reg("verteidigen","to defend","B1"));
-ALL.push(reg("rechtfertigen","to justify","B2"));
-ALL.push(reg("widerlegen","to refute (weak form)","B1"));
-ALL.push(reg("verneinen","to deny","B1"));
-ALL.push(reg("bestätigen","to confirm (weak form)","B1"));
-ALL.push(reg("zusichern","to assure","B2"));
-ALL.push(reg("hervorheben","to highlight (weak form)","B1"));
-ALL.push(reg("unterstreichen","to underline (weak form)","B1"));
-ALL.push(reg("bezweifeln","to doubt","B1"));
-ALL.push(reg("schlichten","to arbitrate","C1"));
-ALL.push(reg("versöhnen","to reconcile","C1"));
-ALL.push(reg("dolmetschen","to interpret","C1"));
-ALL.push(reg("übermitteln","to transmit","B2"));
-ALL.push(reg("verbreiten","to spread","B1"));
-ALL.push(reg("eingeben","to input (weak form)","B1"));
-ALL.push(reg("formatieren","to format","B1"));
-ALL.push(reg("sichern","to back up","B1"));
-ALL.push(reg("wiederherstellen","to restore","B1"));
-ALL.push(reg("filtern","to filter","B1"));
-ALL.push(reg("berechnen","to calculate","B1"));
-ALL.push(reg("erfassen","to capture","B1"));
-ALL.push(reg("registrieren","to register (weak form)","B1"));
-ALL.push(reg("erheben","to collect (weak form)","B1"));
-ALL.push(reg("protokollieren","to log","B2"));
-ALL.push(reg("notieren","to note down","B1"));
-ALL.push(reg("vermerken","to record","B2"));
-ALL.push(reg("markieren","to mark","B1"));
-ALL.push(reg("kennzeichnen","to identify (weak form)","B1"));
-ALL.push(reg("etikettieren","to label","B2"));
+ALL.push(sep('fort bewegen', 'to move away', 'C1', null))
+ALL.push(sep('fort setzen', 'to continue', 'B1', null))
+ALL.push(sep('heraus lesen', 'to read out', 'B1', null))
+ALL.push(sep('herbei führen', 'to bring about', 'C2', null))
+ALL.push(sep('hoch schätzen', 'to estimate highly', 'B1', 'hochgeschätzt'))
+ALL.push(sep('hoch steigen', 'to rise', 'B1', 'hochgestiegen'))
+ALL.push(sep('los fahren', 'to set off (vehicle)', 'A2', 'losg gefahren'))
+ALL.push(sep('los lassen', 'to let go', 'B1', 'losgelassen'))
+ALL.push(sep('mit erleben', 'to experience together', 'B1', null))
+ALL.push(sep('mit essen', 'to eat along', 'A2', null))
+ALL.push(sep('nach fragen', 'to inquire', 'A2', null))
+ALL.push(sep('nach geben', 'to yield', 'B1', 'nachgegeben'))
+ALL.push(sep('nach laufen', 'to chase', 'A2', 'nachgelaufen'))
+ALL.push(sep('nach reisen', 'to travel after', 'B1', 'nachgereist'))
+ALL.push(sep('tief kühlen', 'to deep-freeze', 'C1', null))
+ALL.push(reg('umarmen', 'to embrace', 'A2'))
+ALL.push(sep('vor fahren', 'to drive ahead', 'B1', 'vorgefahren'))
+ALL.push(sep('vor geben', 'to pretend', 'B1', 'vorgegeben'))
+ALL.push(sep('vor haben', 'to plan/intend', 'A2', 'vorgehabt'))
+ALL.push(sep('vor lesen', 'to read aloud', 'A2', 'vorgelesen'))
+ALL.push(sep('weg fahren', 'to drive away', 'A2', 'weggefahren'))
+ALL.push(sep('weg gehen', 'to walk away', 'A1', 'weggegangen'))
+ALL.push(sep('weg nehmen', 'to take away', 'A2', 'weggenommen'))
+ALL.push(sep('weg räumen', 'to clear away', 'A2', 'weggeräumt'))
+ALL.push(sep('weiter entwickeln', 'to develop further', 'B1', null))
+ALL.push(sep('weiter führen', 'to continue leading', 'B1', 'weitergeführt'))
+ALL.push(sep('wieder aufbauen', 'to rebuild', 'B1', 'wiederaufgebaut'))
+ALL.push(sep('wieder gut machen', 'to make good', 'B1', 'wiedergutgemacht'))
+ALL.push(sep('zu schlagen', 'to close (weak form)', 'B1', 'abgeschlossen'))
+ALL.push(sep('zu stimmen', 'to agree', 'B1', 'zugestimmt'))
+ALL.push(sep('zusammen fassen', 'to summarize', 'B1', 'zusammengefasst'))
+ALL.push(sep('zusammen falten', 'to fold together', 'B1', null))
+ALL.push(sep('zusammen setzen', 'to assemble', 'B1', 'zusammengesetzt'))
+ALL.push(sep('ab brennen', 'to burn down', 'B1', 'abgebrannt'))
+ALL.push(sep('ab geben', 'to hand over (weak form)', 'B1', 'abgegeben'))
+ALL.push(sep('ab holen', 'to pick up', 'A1', null))
+ALL.push(sep('ab schließen', 'to lock', 'A1', 'abgeschlossen'))
+ALL.push(sep('ab senken', 'to lower', 'B1', null))
+ALL.push(sep('ab sprechen', 'to agree on', 'B1', 'abgesprochen'))
+ALL.push(sep('ab waschen', 'to wash off', 'A2', 'abgewaschen'))
+ALL.push(sep('an melden', 'to register', 'A2', 'angemeldet'))
+ALL.push(sep('an zeigen', 'to display', 'A1', 'angezeigt'))
+ALL.push(sep('an ziehen', 'to put on', 'A2', 'angezogen'))
+ALL.push(sep('auf hören', 'to stop', 'A1', 'aufgehört'))
+ALL.push(sep('auf machen', 'to open', 'A1', 'aufgemacht'))
+ALL.push(sep('auf passen', 'to pay attention', 'A1', 'aufgepasst'))
+ALL.push(sep('auf räumen', 'to tidy up', 'A1', 'aufgeräumt'))
+ALL.push(sep('aus atmen', 'to breathe out', 'B1', 'ausgeatmet'))
+ALL.push(sep('aus füllen', 'to fill out', 'A1', 'ausgefüllt'))
+ALL.push(sep('aus geben', 'to spend', 'A1', 'ausgegeben'))
+ALL.push(sep('aus machen', 'to turn off', 'A1', 'ausgemacht'))
+ALL.push(sep('aus schalten', 'to switch off', 'A1', 'ausgeschaltet'))
+ALL.push(sep('aus schließen', 'to exclude', 'B1', 'ausgeschlossen'))
+ALL.push(sep('aus suchen', 'to select', 'B1', 'ausgesucht'))
+ALL.push(sep('aus wählen', 'to choose', 'B1', 'ausgewählt'))
+ALL.push(sep('ein geben', 'to input', 'B1', 'eingegeben'))
+ALL.push(sep('ein schalten', 'to switch on', 'A1', 'eingeschaltet'))
+ALL.push(sep('ein schließen', 'to include', 'B1', 'eingeschlossen'))
+ALL.push(sep('ein treffen', 'to arrive', 'B1', 'eingetroffen'))
+ALL.push(sep('fern schalten', 'to switch to TV', 'B1', null))
+ALL.push(sep('herunter laden', 'to download', 'A2', 'heruntergeladen'))
+ALL.push(sep('hoch laden', 'to upload', 'A2', 'hochgeladen'))
+ALL.push(sep('mit teilen', 'to share', 'B1', 'mitgeteilt'))
+ALL.push(sep('nach schauen', 'to check', 'A2', 'nachgeschaut'))
+ALL.push(sep('vor kommen', 'to occur', 'B1', 'vorgekommen'))
+ALL.push(sep('vor stellen', 'to introduce', 'A1', 'vorgestellt'))
+ALL.push(sep('weg stecken', 'to pocket', 'B1', 'weggesteckt'))
+ALL.push(sep('zu führen', 'to adduce', 'B2', 'zugeführt'))
+ALL.push(sep('zu legen', 'to add', 'B1', 'zugelegt'))
+ALL.push(sep('zu machen', 'to close', 'A1', 'zugemacht'))
+ALL.push(sep('zu nehmen', 'to increase', 'A2', 'zugenommen'))
+ALL.push(
+  refl(
+    'sich fühlen',
+    'to feel',
+    'A1',
+    {
+      ich: 'fühle mich',
+      du: 'fühlst dich',
+      er: 'fühlt sich',
+      wir: 'fühlen uns',
+      ihr: 'fühlt euch',
+      sie: 'fühlen sich',
+    },
+    {
+      ich: 'fühlte mich',
+      du: 'fühltest dich',
+      er: 'fühlte sich',
+      wir: 'fühlten uns',
+      ihr: 'fühltet euch',
+      sie: 'fühlten sich',
+    },
+    'gefühlt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich ausruhen',
+    'to rest',
+    'A2',
+    {
+      ich: 'ruhe mich aus',
+      du: 'ruhst dich aus',
+      er: 'ruht sich aus',
+      wir: 'ruhen uns aus',
+      ihr: 'ruht euch aus',
+      sie: 'ruhen sich aus',
+    },
+    {
+      ich: 'ruhte mich aus',
+      du: 'ruhtest dich aus',
+      er: 'ruhte sich aus',
+      wir: 'ruhten uns aus',
+      ihr: 'ruhtet euch aus',
+      sie: 'ruhten sich aus',
+    },
+    'ausgeruht',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bemühen',
+    'to make an effort',
+    'B1',
+    {
+      ich: 'bemühe mich',
+      du: 'bemühst dich',
+      er: 'bemüht sich',
+      wir: 'bemühen uns',
+      ihr: 'bemüht euch',
+      sie: 'bemühen sich',
+    },
+    {
+      ich: 'bemühte mich',
+      du: 'bemühtest dich',
+      er: 'bemühte sich',
+      wir: 'bemühten uns',
+      ihr: 'bemühtet euch',
+      sie: 'bemühten sich',
+    },
+    'bemüht',
+  ),
+)
+ALL.push(
+  refl(
+    'sich beschweren',
+    'to complain',
+    'B1',
+    {
+      ich: 'beschwere mich',
+      du: 'beschwerst dich',
+      er: 'beschwert sich',
+      wir: 'beschweren uns',
+      ihr: 'beschwert euch',
+      sie: 'beschweren sich',
+    },
+    {
+      ich: 'beschwerte mich',
+      du: 'beschwertest dich',
+      er: 'beschwerte sich',
+      wir: 'beschwerten uns',
+      ihr: 'beschwertet euch',
+      sie: 'beschwerten sich',
+    },
+    'beschwert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich entschuldigen',
+    'to apologize',
+    'A1',
+    {
+      ich: 'entschuldige mich',
+      du: 'entschuldigst dich',
+      er: 'entschuldigt sich',
+      wir: 'entschuldigen uns',
+      ihr: 'entschuldigt euch',
+      sie: 'entschuldigen sich',
+    },
+    {
+      ich: 'entschuldigte mich',
+      du: 'entschuldigtest dich',
+      er: 'entschuldigte sich',
+      wir: 'entschuldigten uns',
+      ihr: 'entschuldigtet euch',
+      sie: 'entschuldigten sich',
+    },
+    'entschuldigt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich fürchten',
+    'to be afraid',
+    'A2',
+    {
+      ich: 'fürchte mich',
+      du: 'fürchtest dich',
+      er: 'fürchtet sich',
+      wir: 'fürchten uns',
+      ihr: 'fürchtet euch',
+      sie: 'fürchten sich',
+    },
+    {
+      ich: 'fürchtete mich',
+      du: 'fürchtetest dich',
+      er: 'fürchtete sich',
+      wir: 'fürchteten uns',
+      ihr: 'fürchtet euch',
+      sie: 'fürchteten sich',
+    },
+    'gefürchtet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verlieben',
+    'to fall in love',
+    'A2',
+    {
+      ich: 'verliebe mich',
+      du: 'verliebst dich',
+      er: 'verliebt sich',
+      wir: 'verlieben uns',
+      ihr: 'verliebt euch',
+      sie: 'verlieben sich',
+    },
+    {
+      ich: 'verliebte mich',
+      du: 'verliebtest dich',
+      er: 'verliebte sich',
+      wir: 'verliebten uns',
+      ihr: 'verliebtet euch',
+      sie: 'verliebten sich',
+    },
+    'verliebt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich trennen',
+    'to separate',
+    'B1',
+    {
+      ich: 'trenne mich',
+      du: 'trennst dich',
+      er: 'trennt sich',
+      wir: 'trennen uns',
+      ihr: 'trennt euch',
+      sie: 'trennen sich',
+    },
+    {
+      ich: 'trennte mich',
+      du: 'trenntest dich',
+      er: 'trennte sich',
+      wir: 'trennten uns',
+      ihr: 'trenntet euch',
+      sie: 'trennten sich',
+    },
+    'getrennt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verstehen',
+    'to get along',
+    'B1',
+    {
+      ich: 'verstehe mich',
+      du: 'verstehst dich',
+      er: 'versteht sich',
+      wir: 'verstehen uns',
+      ihr: 'versteht euch',
+      sie: 'verstehen sich',
+    },
+    {
+      ich: 'verstand mich',
+      du: 'verstandst dich',
+      er: 'verstand sich',
+      wir: 'verstanden uns',
+      ihr: 'verstandet euch',
+      sie: 'verstanden sich',
+    },
+    'verstanden',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einloggen',
+    'to log in',
+    'A2',
+    {
+      ich: 'logge mich ein',
+      du: 'loggst dich ein',
+      er: 'loggt sich ein',
+      wir: 'loggen uns ein',
+      ihr: 'loggt euch ein',
+      sie: 'loggen sich ein',
+    },
+    {
+      ich: 'loggte mich ein',
+      du: 'loggtest dich ein',
+      er: 'loggte sich ein',
+      wir: 'loggten uns ein',
+      ihr: 'loggtet euch ein',
+      sie: 'loggten sich ein',
+    },
+    'eingeloggt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich anmelden',
+    'to register',
+    'A2',
+    {
+      ich: 'melde mich an',
+      du: 'meldest dich an',
+      er: 'meldet sich an',
+      wir: 'melden uns an',
+      ihr: 'meldet euch an',
+      sie: 'melden sich an',
+    },
+    {
+      ich: 'meldete mich an',
+      du: 'meldetest dich an',
+      er: 'meldete sich an',
+      wir: 'meldeten uns an',
+      ihr: 'meldetet euch an',
+      sie: 'meldeten sich an',
+    },
+    'angemeldet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich abmelden',
+    'to log out',
+    'A2',
+    {
+      ich: 'melde mich ab',
+      du: 'meldest dich ab',
+      er: 'meldet sich ab',
+      wir: 'melden uns ab',
+      ihr: 'meldet euch ab',
+      sie: 'melden sich ab',
+    },
+    {
+      ich: 'meldete mich ab',
+      du: 'meldetest dich ab',
+      er: 'meldete sich ab',
+      wir: 'meldeten uns ab',
+      ihr: 'meldetet euch ab',
+      sie: 'meldeten sich ab',
+    },
+    'abgemeldet',
+  ),
+)
+ALL.push(reg('kommunizieren', 'to communicate', 'B1'))
+ALL.push(reg('präsentieren', 'to present', 'B1'))
+ALL.push(reg('analysieren', 'to analyze', 'B1'))
+ALL.push(reg('archivieren', 'to archive', 'B2'))
+ALL.push(reg('verschlüsseln', 'to encrypt', 'B2'))
+ALL.push(reg('kalibrieren', 'to calibrate', 'C1'))
+ALL.push(reg('kritiseren', 'to criticize', 'B1'))
+ALL.push(reg('demonstrieren', 'to demonstrate', 'B1'))
+ALL.push(reg('illustrieren', 'to illustrate', 'B2'))
+ALL.push(reg('publizieren', 'to publish', 'B2'))
+ALL.push(reg('redigieren', 'to edit', 'C2'))
+ALL.push(reg('lokalisieren', 'to localize', 'C1'))
+ALL.push(reg('komplieren', 'to compile', 'B2'))
+ALL.push(reg('gewährleisten', 'to guarantee', 'B2'))
+ALL.push(reg('erschließen', 'to develop (strong form)', 'C1'))
+ALL.push(reg('erwägen', 'to consider (strong form)', 'C1'))
+ALL.push(reg('schmälern', 'to diminish', 'C2'))
+ALL.push(reg('verschwiegern', 'to conceal (typo-fix)', 'C2'))
+ALL.push(reg('layouten', 'to lay out', 'C1'))
+ALL.push(reg('tupfen', 'to dab', 'C2'))
+ALL.push(reg('toben', 'to rage', 'B2'))
+ALL.push(reg('muffeln', 'to smell musty', 'C2'))
+ALL.push(reg('rascheln', 'to rustle', 'C1'))
+ALL.push(reg('knallen', 'to bang', 'B2'))
+ALL.push(reg('kratzen', 'to scratch', 'B2'))
+ALL.push(reg('kitzeln', 'to tickle', 'B2'))
+ALL.push(reg('jucken', 'to itch', 'B2'))
+ALL.push(reg('bluten', 'to bleed', 'B1'))
+ALL.push(reg('heilen', 'to heal', 'B1'))
+ALL.push(reg('impfen', 'to vaccinate', 'B1'))
+ALL.push(reg('desinfizieren', 'to disinfect', 'B2'))
+ALL.push(reg('operieren', 'to operate (medical)', 'B1'))
+ALL.push(reg('rehabilitieren', 'to rehabilitate', 'C2'))
+ALL.push(reg('pflegen', 'to care for', 'A2'))
+ALL.push(reg('betreuen', 'to look after', 'B1'))
+ALL.push(reg('unterstützen', 'to support', 'B1'))
+ALL.push(reg('fördern', 'to promote', 'B1'))
+ALL.push(reg('einteilen', 'to allocate', 'B1'))
+ALL.push(reg('verteilen', 'to distribute', 'B1'))
+ALL.push(reg('klassifizieren', 'to classify', 'B2'))
+ALL.push(reg('gruppieren', 'to group', 'B2'))
+ALL.push(reg('gestalten', 'to design', 'B1'))
+ALL.push(reg('formen', 'to shape', 'B1'))
+ALL.push(reg('modellieren', 'to model', 'B2'))
+ALL.push(reg('skizzieren', 'to sketch', 'B2'))
+ALL.push(reg('entwerfen', 'to draft (weak form)', 'B1'))
+ALL.push(reg('konzipieren', 'to conceive', 'C1'))
+ALL.push(reg('projizieren', 'to project', 'B2'))
+ALL.push(reg('konstruieren', 'to construct', 'B1'))
+ALL.push(reg('beweisen', 'to prove (weak form)', 'B1'))
+ALL.push(reg('erläutern', 'to elucidate', 'B2'))
+ALL.push(reg('verdeutlichen', 'to clarify', 'B2'))
+ALL.push(reg('tadeln', 'to reprimand', 'C1'))
+ALL.push(reg('verdächtigen', 'to suspect', 'B2'))
+ALL.push(reg('beschuldigen', 'to accuse', 'B2'))
+ALL.push(reg('verteidigen', 'to defend', 'B1'))
+ALL.push(reg('rechtfertigen', 'to justify', 'B2'))
+ALL.push(reg('widerlegen', 'to refute (weak form)', 'B1'))
+ALL.push(reg('verneinen', 'to deny', 'B1'))
+ALL.push(reg('bestätigen', 'to confirm (weak form)', 'B1'))
+ALL.push(reg('zusichern', 'to assure', 'B2'))
+ALL.push(reg('hervorheben', 'to highlight (weak form)', 'B1'))
+ALL.push(reg('unterstreichen', 'to underline (weak form)', 'B1'))
+ALL.push(reg('bezweifeln', 'to doubt', 'B1'))
+ALL.push(reg('schlichten', 'to arbitrate', 'C1'))
+ALL.push(reg('versöhnen', 'to reconcile', 'C1'))
+ALL.push(reg('dolmetschen', 'to interpret', 'C1'))
+ALL.push(reg('übermitteln', 'to transmit', 'B2'))
+ALL.push(reg('verbreiten', 'to spread', 'B1'))
+ALL.push(reg('eingeben', 'to input (weak form)', 'B1'))
+ALL.push(reg('formatieren', 'to format', 'B1'))
+ALL.push(reg('sichern', 'to back up', 'B1'))
+ALL.push(reg('wiederherstellen', 'to restore', 'B1'))
+ALL.push(reg('filtern', 'to filter', 'B1'))
+ALL.push(reg('berechnen', 'to calculate', 'B1'))
+ALL.push(reg('erfassen', 'to capture', 'B1'))
+ALL.push(reg('registrieren', 'to register (weak form)', 'B1'))
+ALL.push(reg('erheben', 'to collect (weak form)', 'B1'))
+ALL.push(reg('protokollieren', 'to log', 'B2'))
+ALL.push(reg('notieren', 'to note down', 'B1'))
+ALL.push(reg('vermerken', 'to record', 'B2'))
+ALL.push(reg('markieren', 'to mark', 'B1'))
+ALL.push(reg('kennzeichnen', 'to identify (weak form)', 'B1'))
+ALL.push(reg('etikettieren', 'to label', 'B2'))
 
 // ===== FINAL BATCH: +200 everyday, craft & advanced verbs =====
-;
-ALL.push(reg("surfen","to surf","A1"));
-ALL.push(reg("klettern","to climb","A2"));
-ALL.push(reg("wandern","to hike","A2"));
-ALL.push(reg("angeln","to fish","A2"));
-ALL.push(reg("rudern","to row","B1"));
-ALL.push(reg("paddeln","to paddle","B1"));
-ALL.push(reg("campen","to camp","A2"));
-ALL.push(reg("shoppen","to shop","A2"));
-ALL.push(reg("kicken","to play soccer","A2"));
-ALL.push(reg("schlendern","to stroll","B1"));
-ALL.push(reg("bummeln","to amble","B1"));
-ALL.push(reg("hüpfen","to hop","A2"));
-ALL.push(reg("springen","to jump","A1"));
-ALL.push(reg("stolpern","to stumble","B1"));
-ALL.push(reg("rutschen","to slide","A2"));
-ALL.push(reg("pendeln","to commute","B1"));
-ALL.push(reg("rotieren","to rotate","B2"));
-ALL.push(reg("kreisen","to circle","B2"));
-ALL.push(reg("leuchten","to glow","A2"));
-ALL.push(reg("blinken","to flash","A2"));
-ALL.push(reg("strahlen","to shine","A2"));
-ALL.push(reg("glänzen","to sparkle","B1"));
-ALL.push(reg("funkeln","to twinkle","B2"));
-ALL.push(reg("dämmern","to dawn","B2"));
-ALL.push(reg("erhellen","to brighten","B2"));
-ALL.push(reg("beleuchten","to light up","B1"));
-ALL.push(reg("reflektieren","to reflect","B1"));
-ALL.push(reg("schlucken","to swallow","B1"));
-ALL.push(reg("kauen","to chew","A2"));
-ALL.push(reg("niesen","to sneeze","A2"));
-ALL.push(reg("husten","to cough","A2"));
-ALL.push(reg("schwitzen","to sweat","A2"));
-ALL.push(reg("bibbern","to shiver","B2"));
-ALL.push(reg("zittern","to tremble","B1"));
-ALL.push(reg("gruseln","to get spooked","B1"));
-ALL.push(reg("wagen","to dare","B1"));
-ALL.push(reg("riskieren","to risk","B1"));
-ALL.push(reg("spekulieren","to speculate","B2"));
-ALL.push(reg("wetten","to bet","A2"));
-ALL.push(reg("kühlen","to chill","A2"));
-ALL.push(reg("schmelzen","to melt","B1"));
-ALL.push(reg("brauen","to brew","C1"));
-ALL.push(reg("mahlen","to grind","C1"));
-ALL.push(reg("schälen","to peel","A2"));
-ALL.push(reg("würzen","to season","A2"));
-ALL.push(reg("salzen","to salt","B1"));
-ALL.push(reg("abschmecken","to taste-test","B1"));
-ALL.push(reg("spucken","to spit","B2"));
-ALL.push(reg("trommeln","to drum","A2"));
-ALL.push(reg("schnippen","to flick","C1"));
-ALL.push(reg("klatschen","to clap","A1"));
-ALL.push(reg("winken","to wave","A1"));
-ALL.push(reg("nicken","to nod","A2"));
-ALL.push(reg("zuschauen","to watch","A2"));
-ALL.push(reg("spicken","to peek (cheat)","C1"));
-ALL.push(reg("schummeln","to cheat (game)","C1"));
-ALL.push(reg("staffeln","to stagger","C2"));
-ALL.push(reg("reimen","to rhyme","B2"));
-ALL.push(reg("singen auf","to sing along","B1"));
-ALL.push(reg("summen","to hum","B1"));
-ALL.push(reg("brummen","to buzz","B2"));
-ALL.push(reg("krächzen","to croak","C2"));
-ALL.push(reg("flüstern","to whisper","A2"));
-ALL.push(reg("rufen laut","to call loudly","B1"));
-ALL.push(reg("brüllen","to roar","B2"));
-ALL.push(reg("grölen","to bawl","C2"));
-ALL.push(reg("jauchzen","to cheer","C2"));
-ALL.push(reg("weinen laut","to wail","B1"));
-ALL.push(reg("schluchzen","to sob","C2"));
-ALL.push(reg("seufzen","to sigh","B2"));
-ALL.push(reg("ächzen","to groan","C2"));
-ALL.push(reg("stöhnen","to moan","B2"));
-ALL.push(reg("schnarchen","to snore","B1"));
-ALL.push(reg("gähnen","to yawn","A2"));
-ALL.push(reg("schnuppern","to sniff","B2"));
-ALL.push(reg("riechen an","to smell at","B1"));
-ALL.push(reg("schmecken lassen","to let taste","C1"));
-ALL.push(reg("spüren","to sense","B1"));
-ALL.push(reg("fühlen","to feel (tr.)","A1"));
-ALL.push(reg("streicheln","to pet","A2"));
-ALL.push(reg("knuddeln","to cuddle","B1"));
-ALL.push(reg("drücken fest","to hug tight","B1"));
-ALL.push(reg("küssen","to kiss","A1"));
-ALL.push(reg("knutschen","to smooch","C1"));
-ALL.push(reg("liebkosen","to caress","C2"));
-ALL.push(reg("vermissen","to miss","A2"));
-ALL.push(reg("verehren","to adore","C1"));
-ALL.push(reg("vergöttern","to idolize","C2"));
-ALL.push(reg("hassen","to hate","A2"));
-ALL.push(reg("verabscheuen","to abhor","C2"));
-ALL.push(reg("missgönnen","to begrudge","C2"));
-ALL.push(reg("gönnen","to grant willingly","B2"));
-ALL.push(reg("neiden","to envy","C2"));
-ALL.push(reg("beneiden","to envy","B2"));
-ALL.push(reg("missen","to do without","C1"));
-ALL.push(reg("entbehren","to lack","C2"));
-ALL.push(reg("befürworten","to endorse","B2"));
-ALL.push(reg("begehren","to desire","C1"));
-ALL.push(reg("beharren","to insist","C2"));
-ALL.push(reg("beklagen","to lament","B2"));
-ALL.push(reg("belächeln","to smile at","C2"));
-ALL.push(reg("bemitleiden","to pity","C2"));
-ALL.push(reg("benehmen","to behave","B1"));
-ALL.push(reg("berappen","to cough up (slang)","C2"));
-ALL.push(reg("bereuen","to regret","B1"));
-ALL.push(reg("beschämen","to shame","C2"));
-ALL.push(reg("beschichten","to coat","C2"));
-ALL.push(reg("beschwingen","to buoy","C2"));
-ALL.push(reg("besingen","to sing of","C2"));
-ALL.push(reg("bespielen","to play on","C2"));
-ALL.push(reg("bestarren","to stare at","C2"));
-ALL.push(reg("bestreben","to strive","C2"));
-ALL.push(reg("betören","to bewitch","C2"));
-ALL.push(reg("bevorzugen","to prefer","B2"));
-ALL.push(reg("bewillkommen","to welcome","C2"));
-ALL.push(reg("erbosten","to enrage","C2"));
-ALL.push(reg("erfreuen","to delight","B2"));
-ALL.push(reg("erglühen","to glow red","C2"));
-ALL.push(reg("erklingen","to ring out","C2"));
-ALL.push(reg("erleuchten","to illuminate","C1"));
-ALL.push(reg("ermangeln","to lack","C2"));
-ALL.push(reg("ermutigen","to encourage","B1"));
-ALL.push(reg("erschaudern","to shudder","C2"));
-ALL.push(reg("erstarken","to grow strong","C2"));
-ALL.push(reg("erwachen","to awaken","C1"));
-ALL.push(reg("entblößen","to bare","C2"));
-ALL.push(reg("entehren","to dishonor","C2"));
-ALL.push(reg("entfachen","to ignite","C2"));
-ALL.push(reg("entfesseln","to unleash","C2"));
-ALL.push(reg("entflammen","to kindle","C2"));
-ALL.push(reg("entheben","to relieve of duty","C2"));
-ALL.push(reg("entlehnen","to borrow (word)","C2"));
-ALL.push(reg("entlocken","to elicit","C2"));
-ALL.push(reg("enträtseln","to unravel","C2"));
-ALL.push(reg("entsagen","to renounce","C2"));
-ALL.push(reg("entsühnen","to atone","C2"));
-ALL.push(reg("entwenden","to steal","C2"));
-ALL.push(reg("entwischen","to slip away","C2"));
-ALL.push(reg("zerschellen","to shatter","C2"));
-ALL.push(reg("zerstreichen","to disperse","C2"));
-ALL.push(reg("gedulden","to be patient","B1"));
-ALL.push(reg("gelüsten","to crave","C2"));
-ALL.push(reg("genügen","to suffice","B1"));
-ALL.push(reg("geruhen","to deign","C2"));
-ALL.push(sep("an baden","to bathe","C1",null));
-ALL.push(sep("an zünden","to ignite","B1",null));
-ALL.push(sep("auf blühen","to blossom","B1","aufgeblüht"));
-ALL.push(sep("auf blitzen","to flash lightning","C1",null));
-ALL.push(sep("auf flicken","to patch up","C1",null));
-ALL.push(sep("auf gabeln","to pick up","C2",null));
-ALL.push(sep("auf hetzen","to whip up","C2",null));
-ALL.push(sep("auf jäten","to weed","C1",null));
-ALL.push(sep("auf keilen","to wedge open","C2",null));
-ALL.push(sep("auf löten","to solder on","C2",null));
-ALL.push(sep("auf möbeln","to furnish","C2",null));
-ALL.push(sep("auf paddeln","to paddle up","C2",null));
-ALL.push(sep("auf puzzeln","to puzzle","C1",null));
-ALL.push(sep("auf retten","to rescue","C1",null));
-ALL.push(sep("auf satteln","to saddle up","B2",null));
-ALL.push(sep("auf schrauben","to unscrew","B1",null));
-ALL.push(sep("auf sperren","to open wide","C1",null));
-ALL.push(sep("auf türmen","to pile up","C2",null));
-ALL.push(sep("auf wogen","to billow","C2",null));
-ALL.push(sep("aus baden","to bathe out","C1",null));
-ALL.push(sep("aus fachen","to fan out","C2",null));
-ALL.push(sep("aus fegen","to sweep out","B2",null));
-ALL.push(sep("aus fischen","to fish out","C1",null));
-ALL.push(sep("aus fluchen","to curse out","C2",null));
-ALL.push(sep("aus kundschaften","to scout out","C2",null));
-ALL.push(sep("aus kugeln","to roll out","C1",null));
-ALL.push(sep("aus löschen","to extinguish","B1","ausgelöscht"));
-ALL.push(sep("aus malen","to paint","A2",null));
-ALL.push(sep("aus mustern","to muster out","C2",null));
-ALL.push(sep("aus plaudern","to blurt out","C1",null));
-ALL.push(sep("aus räuchern","to smoke out","C2",null));
-ALL.push(sep("aus rechnen","to calculate","A2",null));
-ALL.push(sep("aus ringen","to wrestle out","C2",null));
-ALL.push(sep("aus rutschen","to slip out","B2",null));
-ALL.push(sep("aus spucken","to spit out","C1",null));
-ALL.push(sep("aus staffeln","to stagger","C2",null));
-ALL.push(sep("aus trampeln","to trample out","C2",null));
-ALL.push(sep("ein bleuen","to drum in","C2",null));
-ALL.push(sep("ein dicken","to thicken","C2",null));
-ALL.push(sep("ein dosen","to can","C2",null));
-ALL.push(sep("ein fetten","to grease","C2",null));
-ALL.push(sep("ein figgen","to stuff in","C2",null));
-ALL.push(sep("ein klemmen","to clamp","B1",null));
-ALL.push(sep("ein ölen","to oil in","C2",null));
-ALL.push(sep("ein pfropfen","to plug in","C2",null));
-ALL.push(sep("ein schrauben","to screw in","B1",null));
-ALL.push(sep("ein dämpfen","to mute","C1",null));
-ALL.push(reg("zocken","to game","A2"));
-ALL.push(reg("bouldern","to boulder","B1"));
-ALL.push(reg("acken","to toil","B2"));
-ALL.push(reg("hacken","to chop","A2"));
-ALL.push(reg("schrauben","to screw","B1"));
-ALL.push(reg("hämmern","to hammer","B1"));
-ALL.push(reg("feilen","to file","B1"));
-ALL.push(reg("sägen","to saw","B1"));
-ALL.push(reg("hobeln","to plane","B2"));
-ALL.push(reg("meißeln","to chisel","C1"));
-ALL.push(reg("schmieden","to forge","C1"));
-ALL.push(reg("löten","to solder","B2"));
-ALL.push(reg("schweißen","to weld","B1"));
-ALL.push(reg("nieten","to rivet","C1"));
-ALL.push(reg("punzieren","to punch","C2"));
-ALL.push(reg("gravieren","to engrave","C1"));
-ALL.push(reg("vergolden","to gild","C2"));
-ALL.push(reg("versilbern","to silver-plate","C2"));
-ALL.push(reg("tischlern","to do carpentry","B2"));
-ALL.push(reg("mauern","to build walls","B2"));
-ALL.push(reg("dekupieren","to pierce","C2"));
-ALL.push(reg("ziselieren","to chase (metalwork)","C2"));
+ALL.push(reg('surfen', 'to surf', 'A1'))
+ALL.push(reg('klettern', 'to climb', 'A2'))
+ALL.push(reg('wandern', 'to hike', 'A2'))
+ALL.push(reg('angeln', 'to fish', 'A2'))
+ALL.push(reg('rudern', 'to row', 'B1'))
+ALL.push(reg('paddeln', 'to paddle', 'B1'))
+ALL.push(reg('campen', 'to camp', 'A2'))
+ALL.push(reg('shoppen', 'to shop', 'A2'))
+ALL.push(reg('kicken', 'to play soccer', 'A2'))
+ALL.push(reg('schlendern', 'to stroll', 'B1'))
+ALL.push(reg('bummeln', 'to amble', 'B1'))
+ALL.push(reg('hüpfen', 'to hop', 'A2'))
+ALL.push(reg('springen', 'to jump', 'A1'))
+ALL.push(reg('stolpern', 'to stumble', 'B1'))
+ALL.push(reg('rutschen', 'to slide', 'A2'))
+ALL.push(reg('pendeln', 'to commute', 'B1'))
+ALL.push(reg('rotieren', 'to rotate', 'B2'))
+ALL.push(reg('kreisen', 'to circle', 'B2'))
+ALL.push(reg('leuchten', 'to glow', 'A2'))
+ALL.push(reg('blinken', 'to flash', 'A2'))
+ALL.push(reg('strahlen', 'to shine', 'A2'))
+ALL.push(reg('glänzen', 'to sparkle', 'B1'))
+ALL.push(reg('funkeln', 'to twinkle', 'B2'))
+ALL.push(reg('dämmern', 'to dawn', 'B2'))
+ALL.push(reg('erhellen', 'to brighten', 'B2'))
+ALL.push(reg('beleuchten', 'to light up', 'B1'))
+ALL.push(reg('reflektieren', 'to reflect', 'B1'))
+ALL.push(reg('schlucken', 'to swallow', 'B1'))
+ALL.push(reg('kauen', 'to chew', 'A2'))
+ALL.push(reg('niesen', 'to sneeze', 'A2'))
+ALL.push(reg('husten', 'to cough', 'A2'))
+ALL.push(reg('schwitzen', 'to sweat', 'A2'))
+ALL.push(reg('bibbern', 'to shiver', 'B2'))
+ALL.push(reg('zittern', 'to tremble', 'B1'))
+ALL.push(reg('gruseln', 'to get spooked', 'B1'))
+ALL.push(reg('wagen', 'to dare', 'B1'))
+ALL.push(reg('riskieren', 'to risk', 'B1'))
+ALL.push(reg('spekulieren', 'to speculate', 'B2'))
+ALL.push(reg('wetten', 'to bet', 'A2'))
+ALL.push(reg('kühlen', 'to chill', 'A2'))
+ALL.push(reg('schmelzen', 'to melt', 'B1'))
+ALL.push(reg('brauen', 'to brew', 'C1'))
+ALL.push(reg('mahlen', 'to grind', 'C1'))
+ALL.push(reg('schälen', 'to peel', 'A2'))
+ALL.push(reg('würzen', 'to season', 'A2'))
+ALL.push(reg('salzen', 'to salt', 'B1'))
+ALL.push(reg('abschmecken', 'to taste-test', 'B1'))
+ALL.push(reg('spucken', 'to spit', 'B2'))
+ALL.push(reg('trommeln', 'to drum', 'A2'))
+ALL.push(reg('schnippen', 'to flick', 'C1'))
+ALL.push(reg('klatschen', 'to clap', 'A1'))
+ALL.push(reg('winken', 'to wave', 'A1'))
+ALL.push(reg('nicken', 'to nod', 'A2'))
+ALL.push(reg('zuschauen', 'to watch', 'A2'))
+ALL.push(reg('spicken', 'to peek (cheat)', 'C1'))
+ALL.push(reg('schummeln', 'to cheat (game)', 'C1'))
+ALL.push(reg('staffeln', 'to stagger', 'C2'))
+ALL.push(reg('reimen', 'to rhyme', 'B2'))
+ALL.push(reg('singen auf', 'to sing along', 'B1'))
+ALL.push(reg('summen', 'to hum', 'B1'))
+ALL.push(reg('brummen', 'to buzz', 'B2'))
+ALL.push(reg('krächzen', 'to croak', 'C2'))
+ALL.push(reg('flüstern', 'to whisper', 'A2'))
+ALL.push(reg('rufen laut', 'to call loudly', 'B1'))
+ALL.push(reg('brüllen', 'to roar', 'B2'))
+ALL.push(reg('grölen', 'to bawl', 'C2'))
+ALL.push(reg('jauchzen', 'to cheer', 'C2'))
+ALL.push(reg('weinen laut', 'to wail', 'B1'))
+ALL.push(reg('schluchzen', 'to sob', 'C2'))
+ALL.push(reg('seufzen', 'to sigh', 'B2'))
+ALL.push(reg('ächzen', 'to groan', 'C2'))
+ALL.push(reg('stöhnen', 'to moan', 'B2'))
+ALL.push(reg('schnarchen', 'to snore', 'B1'))
+ALL.push(reg('gähnen', 'to yawn', 'A2'))
+ALL.push(reg('schnuppern', 'to sniff', 'B2'))
+ALL.push(reg('riechen an', 'to smell at', 'B1'))
+ALL.push(reg('schmecken lassen', 'to let taste', 'C1'))
+ALL.push(reg('spüren', 'to sense', 'B1'))
+ALL.push(reg('fühlen', 'to feel (tr.)', 'A1'))
+ALL.push(reg('streicheln', 'to pet', 'A2'))
+ALL.push(reg('knuddeln', 'to cuddle', 'B1'))
+ALL.push(reg('drücken fest', 'to hug tight', 'B1'))
+ALL.push(reg('küssen', 'to kiss', 'A1'))
+ALL.push(reg('knutschen', 'to smooch', 'C1'))
+ALL.push(reg('liebkosen', 'to caress', 'C2'))
+ALL.push(reg('vermissen', 'to miss', 'A2'))
+ALL.push(reg('verehren', 'to adore', 'C1'))
+ALL.push(reg('vergöttern', 'to idolize', 'C2'))
+ALL.push(reg('hassen', 'to hate', 'A2'))
+ALL.push(reg('verabscheuen', 'to abhor', 'C2'))
+ALL.push(reg('missgönnen', 'to begrudge', 'C2'))
+ALL.push(reg('gönnen', 'to grant willingly', 'B2'))
+ALL.push(reg('neiden', 'to envy', 'C2'))
+ALL.push(reg('beneiden', 'to envy', 'B2'))
+ALL.push(reg('missen', 'to do without', 'C1'))
+ALL.push(reg('entbehren', 'to lack', 'C2'))
+ALL.push(reg('befürworten', 'to endorse', 'B2'))
+ALL.push(reg('begehren', 'to desire', 'C1'))
+ALL.push(reg('beharren', 'to insist', 'C2'))
+ALL.push(reg('beklagen', 'to lament', 'B2'))
+ALL.push(reg('belächeln', 'to smile at', 'C2'))
+ALL.push(reg('bemitleiden', 'to pity', 'C2'))
+ALL.push(reg('benehmen', 'to behave', 'B1'))
+ALL.push(reg('berappen', 'to cough up (slang)', 'C2'))
+ALL.push(reg('bereuen', 'to regret', 'B1'))
+ALL.push(reg('beschämen', 'to shame', 'C2'))
+ALL.push(reg('beschichten', 'to coat', 'C2'))
+ALL.push(reg('beschwingen', 'to buoy', 'C2'))
+ALL.push(reg('besingen', 'to sing of', 'C2'))
+ALL.push(reg('bespielen', 'to play on', 'C2'))
+ALL.push(reg('bestarren', 'to stare at', 'C2'))
+ALL.push(reg('bestreben', 'to strive', 'C2'))
+ALL.push(reg('betören', 'to bewitch', 'C2'))
+ALL.push(reg('bevorzugen', 'to prefer', 'B2'))
+ALL.push(reg('bewillkommen', 'to welcome', 'C2'))
+ALL.push(reg('erbosten', 'to enrage', 'C2'))
+ALL.push(reg('erfreuen', 'to delight', 'B2'))
+ALL.push(reg('erglühen', 'to glow red', 'C2'))
+ALL.push(reg('erklingen', 'to ring out', 'C2'))
+ALL.push(reg('erleuchten', 'to illuminate', 'C1'))
+ALL.push(reg('ermangeln', 'to lack', 'C2'))
+ALL.push(reg('ermutigen', 'to encourage', 'B1'))
+ALL.push(reg('erschaudern', 'to shudder', 'C2'))
+ALL.push(reg('erstarken', 'to grow strong', 'C2'))
+ALL.push(reg('erwachen', 'to awaken', 'C1'))
+ALL.push(reg('entblößen', 'to bare', 'C2'))
+ALL.push(reg('entehren', 'to dishonor', 'C2'))
+ALL.push(reg('entfachen', 'to ignite', 'C2'))
+ALL.push(reg('entfesseln', 'to unleash', 'C2'))
+ALL.push(reg('entflammen', 'to kindle', 'C2'))
+ALL.push(reg('entheben', 'to relieve of duty', 'C2'))
+ALL.push(reg('entlehnen', 'to borrow (word)', 'C2'))
+ALL.push(reg('entlocken', 'to elicit', 'C2'))
+ALL.push(reg('enträtseln', 'to unravel', 'C2'))
+ALL.push(reg('entsagen', 'to renounce', 'C2'))
+ALL.push(reg('entsühnen', 'to atone', 'C2'))
+ALL.push(reg('entwenden', 'to steal', 'C2'))
+ALL.push(reg('entwischen', 'to slip away', 'C2'))
+ALL.push(reg('zerschellen', 'to shatter', 'C2'))
+ALL.push(reg('zerstreichen', 'to disperse', 'C2'))
+ALL.push(reg('gedulden', 'to be patient', 'B1'))
+ALL.push(reg('gelüsten', 'to crave', 'C2'))
+ALL.push(reg('genügen', 'to suffice', 'B1'))
+ALL.push(reg('geruhen', 'to deign', 'C2'))
+ALL.push(sep('an baden', 'to bathe', 'C1', null))
+ALL.push(sep('an zünden', 'to ignite', 'B1', null))
+ALL.push(sep('auf blühen', 'to blossom', 'B1', 'aufgeblüht'))
+ALL.push(sep('auf blitzen', 'to flash lightning', 'C1', null))
+ALL.push(sep('auf flicken', 'to patch up', 'C1', null))
+ALL.push(sep('auf gabeln', 'to pick up', 'C2', null))
+ALL.push(sep('auf hetzen', 'to whip up', 'C2', null))
+ALL.push(sep('auf jäten', 'to weed', 'C1', null))
+ALL.push(sep('auf keilen', 'to wedge open', 'C2', null))
+ALL.push(sep('auf löten', 'to solder on', 'C2', null))
+ALL.push(sep('auf möbeln', 'to furnish', 'C2', null))
+ALL.push(sep('auf paddeln', 'to paddle up', 'C2', null))
+ALL.push(sep('auf puzzeln', 'to puzzle', 'C1', null))
+ALL.push(sep('auf retten', 'to rescue', 'C1', null))
+ALL.push(sep('auf satteln', 'to saddle up', 'B2', null))
+ALL.push(sep('auf schrauben', 'to unscrew', 'B1', null))
+ALL.push(sep('auf sperren', 'to open wide', 'C1', null))
+ALL.push(sep('auf türmen', 'to pile up', 'C2', null))
+ALL.push(sep('auf wogen', 'to billow', 'C2', null))
+ALL.push(sep('aus baden', 'to bathe out', 'C1', null))
+ALL.push(sep('aus fachen', 'to fan out', 'C2', null))
+ALL.push(sep('aus fegen', 'to sweep out', 'B2', null))
+ALL.push(sep('aus fischen', 'to fish out', 'C1', null))
+ALL.push(sep('aus fluchen', 'to curse out', 'C2', null))
+ALL.push(sep('aus kundschaften', 'to scout out', 'C2', null))
+ALL.push(sep('aus kugeln', 'to roll out', 'C1', null))
+ALL.push(sep('aus löschen', 'to extinguish', 'B1', 'ausgelöscht'))
+ALL.push(sep('aus malen', 'to paint', 'A2', null))
+ALL.push(sep('aus mustern', 'to muster out', 'C2', null))
+ALL.push(sep('aus plaudern', 'to blurt out', 'C1', null))
+ALL.push(sep('aus räuchern', 'to smoke out', 'C2', null))
+ALL.push(sep('aus rechnen', 'to calculate', 'A2', null))
+ALL.push(sep('aus ringen', 'to wrestle out', 'C2', null))
+ALL.push(sep('aus rutschen', 'to slip out', 'B2', null))
+ALL.push(sep('aus spucken', 'to spit out', 'C1', null))
+ALL.push(sep('aus staffeln', 'to stagger', 'C2', null))
+ALL.push(sep('aus trampeln', 'to trample out', 'C2', null))
+ALL.push(sep('ein bleuen', 'to drum in', 'C2', null))
+ALL.push(sep('ein dicken', 'to thicken', 'C2', null))
+ALL.push(sep('ein dosen', 'to can', 'C2', null))
+ALL.push(sep('ein fetten', 'to grease', 'C2', null))
+ALL.push(sep('ein figgen', 'to stuff in', 'C2', null))
+ALL.push(sep('ein klemmen', 'to clamp', 'B1', null))
+ALL.push(sep('ein ölen', 'to oil in', 'C2', null))
+ALL.push(sep('ein pfropfen', 'to plug in', 'C2', null))
+ALL.push(sep('ein schrauben', 'to screw in', 'B1', null))
+ALL.push(sep('ein dämpfen', 'to mute', 'C1', null))
+ALL.push(reg('zocken', 'to game', 'A2'))
+ALL.push(reg('bouldern', 'to boulder', 'B1'))
+ALL.push(reg('acken', 'to toil', 'B2'))
+ALL.push(reg('hacken', 'to chop', 'A2'))
+ALL.push(reg('schrauben', 'to screw', 'B1'))
+ALL.push(reg('hämmern', 'to hammer', 'B1'))
+ALL.push(reg('feilen', 'to file', 'B1'))
+ALL.push(reg('sägen', 'to saw', 'B1'))
+ALL.push(reg('hobeln', 'to plane', 'B2'))
+ALL.push(reg('meißeln', 'to chisel', 'C1'))
+ALL.push(reg('schmieden', 'to forge', 'C1'))
+ALL.push(reg('löten', 'to solder', 'B2'))
+ALL.push(reg('schweißen', 'to weld', 'B1'))
+ALL.push(reg('nieten', 'to rivet', 'C1'))
+ALL.push(reg('punzieren', 'to punch', 'C2'))
+ALL.push(reg('gravieren', 'to engrave', 'C1'))
+ALL.push(reg('vergolden', 'to gild', 'C2'))
+ALL.push(reg('versilbern', 'to silver-plate', 'C2'))
+ALL.push(reg('tischlern', 'to do carpentry', 'B2'))
+ALL.push(reg('mauern', 'to build walls', 'B2'))
+ALL.push(reg('dekupieren', 'to pierce', 'C2'))
+ALL.push(reg('ziselieren', 'to chase (metalwork)', 'C2'))
 
 // ===== +400 VERBS: strong separables, inseparables, reflexives, everyday =====
-sepfix("auf schreiben","to write down","A2",null,null,"schrieb","geschrieben","haben");
-sepfix("heraus lesen","to read out","B1","lies","liest","las","gelesen","haben");
-sepfix("nach geben","to yield","B1","gib","gibt","gab","gegeben","haben");
-sepfix("vor fahren","to drive ahead","B2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("vor lesen","to read aloud","A2","lies","liest","las","gelesen","haben");
-sepfix("weg fahren","to drive away","A2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("weg gehen","to walk away","A1",null,null,"ging","gegangen","sein");
-sepfix("weg nehmen","to take away","A2","nimm","nimmt","nahm","genommen","haben");
-sepfix("zu schlagen","to slam","B1","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("ab brennen","to burn down","B1",null,null,"brannte","gebrannt","haben");
-sepfix("ab sprechen","to agree on","B1","sprich","spricht","sprach","gesprochen","haben");
-sepfix("ab waschen","to wash off","A2","wäsch","wäscht","wusch","gewaschen","haben");
-sepfix("an ziehen","to put on","A2",null,null,"zog","gezogen","haben");
-sepfix("aus schließen","to exclude","B1",null,null,"schloss","geschlossen","haben");
-sepfix("ein geben","to input","B1","gib","gibt","gab","gegeben","haben");
-sepfix("ein schließen","to include","B1",null,null,"schloss","geschlossen","haben");
-sepfix("ein treffen","to arrive","B1","triff","trifft","traf","getroffen","sein");
-sepfix("herunter laden","to download","A2","läd","lädt","lud","geladen","haben");
-sepfix("hoch laden","to upload","A2","läd","lädt","lud","geladen","haben");
-sepfix("los fahren","to set off","A2","fähr","fährt","fuhr","gefahren","sein");
-sepfix("los lassen","to let go","B1","läss","lässt","ließ","gelassen","haben");
-sepfix("mit essen","to eat along","A2","iss","isst","aß","gegessen","haben");
-sepfix("da liegen","to be situated","B1",null,null,"lag","gelegen","haben");
-sepfix("da stehen","to stand there","B1",null,null,"stand","gestanden","haben");
-sepfix("hoch steigen","to rise","B2",null,null,"stieg","gestiegen","haben");
-sepfix("heraus finden","to find out","A2",null,null,"fand","gefunden","haben");
-sepfix("zu schließen","to lock","B1",null,null,"schloss","geschlossen","haben");
-sepfix("ab schließen","to lock up","A1",null,null,"schloss","geschlossen","haben");
-sepfix("fern bleiben","to stay away","B2",null,null,"blieb","geblieben","sein");
-sepfix("vor geben","to pretend","B1","gib","gibt","gab","gegeben","haben");
-fix("übersetzen","to translate","A2",{ich:"übersetze",du:"übersetzt",er:"übersetzt",wir:"übersetzen",ihr:"übersetzt",sie:"übersetzen"},{ich:"übersetzte",du:"übersetztest",er:"übersetzte",wir:"übersetzten",ihr:"übersetztet",sie:"übersetzten"},"übersetzt","haben");
-fix("überprüfen","to verify","B1",{ich:"überprüfe",du:"überprüfst",er:"überprüft",wir:"überprüfen",ihr:"überprüft",sie:"überprüfen"},{ich:"überprüfte",du:"überprüftest",er:"überprüfte",wir:"überprüften",ihr:"überprüftet",sie:"überprüften"},"überprüft","haben");
-fix("unterschreiben","to sign","A1",{ich:"unterschreibe",du:"unterschreibst",er:"unterschreibt",wir:"unterschreiben",ihr:"unterschreibt",sie:"unterschreiben"},{ich:"unterschrieb",du:"unterschriebst",er:"unterschrieb",wir:"unterschrieben",ihr:"unterschriebt",sie:"unterschrieben"},"unterschrieben","haben");
-fix("verlassen","to leave","A1",{ich:"verlasse",du:"verlässt",er:"verlässt",wir:"verlassen",ihr:"verlasst",sie:"verlassen"},{ich:"verließ",du:"verließest",er:"verließ",wir:"verließen",ihr:"verließt",sie:"verließen"},"verlassen","haben");
-fix("vernehmen","to perceive","C1",{ich:"vernehme",du:"vernimmst",er:"vernimmt",wir:"vernehmen",ihr:"vernehmt",sie:"vernehmen"},{ich:"vernahm",du:"vernahmst",er:"vernahm",wir:"vernahmen",ihr:"vernahmt",sie:"vernahmen"},"vernommen","haben");
-fix("entnehmen","to infer","B2",{ich:"entnehme",du:"entnimmst",er:"entnimmt",wir:"entnehmen",ihr:"entnehmt",sie:"entnehmen"},{ich:"entnahm",du:"entnahmst",er:"entnahm",wir:"entnahmen",ihr:"entnahmt",sie:"entnahmen"},"entnommen","haben");
-fix("unterhalten","to entertain","B1",{ich:"unterhalte",du:"unterhältst",er:"unterhält",wir:"unterhalten",ihr:"unterhaltet",sie:"unterhalten"},{ich:"unterhielt",du:"unterhieltst",er:"unterhielt",wir:"unterhielten",ihr:"unterhieltet",sie:"unterhielten"},"unterhalten","haben");
-fix("entkommen","to escape","B1",{ich:"entkomme",du:"entkommst",er:"entkommt",wir:"entkommen",ihr:"entkommt",sie:"entkommen"},{ich:"entkam",du:"entkamst",er:"entkam",wir:"entkamen",ihr:"entkamt",sie:"entkamen"},"entkommen","sein");
-fix("übernehmen","to take over","B1",{ich:"übernehme",du:"übernimmst",er:"übernimmt",wir:"übernehmen",ihr:"übernehmt",sie:"übernehmen"},{ich:"übernahm",du:"übernahmst",er:"übernahm",wir:"übernahmen",ihr:"übernahmt",sie:"übernahmen"},"übernommen","haben");
-fix("überschneiden","to overlap","B2",{ich:"überschneide",du:"überschneidest",er:"überschneidet",wir:"überschneiden",ihr:"überschneidet",sie:"überschneiden"},{ich:"überschnitt",du:"überschnittst",er:"überschnitt",wir:"überschnitten",ihr:"überschnittet",sie:"überschnitten"},"überschnitten","haben");
-fix("überweisen","to transfer","B1",{ich:"überweise",du:"überweist",er:"überweist",wir:"überweisen",ihr:"überweist",sie:"überweisen"},{ich:"überwies",du:"überwiesest",er:"überwies",wir:"überwiesen",ihr:"überwiest",sie:"überwiesen"},"überwiesen","haben");
-fix("überziehen","to overdraw","B2",{ich:"überziehe",du:"überziehst",er:"überzieht",wir:"überziehen",ihr:"überzieht",sie:"überziehen"},{ich:"überzog",du:"überzogst",er:"überzog",wir:"überzogen",ihr:"überzogt",sie:"überzogen"},"überzogen","haben");
-fix("übersehen","to overlook","B1",{ich:"übersehe",du:"übersiehst",er:"übersieht",wir:"übersehen",ihr:"überseht",sie:"übersehen"},{ich:"übersah",du:"übersahst",er:"übersah",wir:"übersahen",ihr:"übersaht",sie:"übersahen"},"übersehen","haben");
-fix("überlesen","to skip reading","C1",{ich:"überlese",du:"überliest",er:"überliest",wir:"überlesen",ihr:"überlest",sie:"überlesen"},{ich:"überlas",du:"überlast",er:"überlas",wir:"überlasen",ihr:"überlast",sie:"überlasen"},"überlesen","haben");
-fix("überlassen","to leave to","B2",{ich:"überlasse",du:"überlässt",er:"überlässt",wir:"überlassen",ihr:"überlasst",sie:"überlassen"},{ich:"überließ",du:"überließest",er:"überließ",wir:"überließen",ihr:"überließt",sie:"überließen"},"überlassen","haben");
-fix("zerfallen","to decay","C1",{ich:"zerfalle",du:"zerfällt",er:"zerfällt",wir:"zerfallen",ihr:"zerfallt",sie:"zerfallen"},{ich:"zerfiel",du:"zerfielst",er:"zerfiel",wir:"zerfielen",ihr:"zerfielt",sie:"zerfielen"},"zerfallen","sein");
-fix("entfallen","to be waived","B2",{ich:"entfalle",du:"entfällst",er:"entfällt",wir:"entfallen",ihr:"entfallt",sie:"entfallen"},{ich:"entfiel",du:"entfielst",er:"entfiel",wir:"entfielen",ihr:"entfielt",sie:"entfielen"},"entfallen","haben");
-fix("verschreiben","to prescribe","B1",{ich:"verschreibe",du:"verschreibst",er:"verschreibt",wir:"verschreiben",ihr:"verschreibt",sie:"verschreiben"},{ich:"verschrieb",du:"verschriebst",er:"verschrieb",wir:"verschrieben",ihr:"verschriebt",sie:"verschrieben"},"verschrieben","haben");
-fix("beschließen","to resolve","B1",{ich:"beschließe",du:"beschließt",er:"beschließt",wir:"beschließen",ihr:"beschließt",sie:"beschließen"},{ich:"beschloss",du:"beschlossest",er:"beschloss",wir:"beschlossen",ihr:"beschlosst",sie:"beschlossen"},"beschlossen","haben");
-fix("verschließen","to lock up","B2",{ich:"verschließe",du:"verschließt",er:"verschließt",wir:"verschließen",ihr:"verschließt",sie:"verschließen"},{ich:"verschloss",du:"verschlossest",er:"verschloss",wir:"verschlossen",ihr:"verschlosst",sie:"verschlossen"},"verschlossen","haben");
-fix("versehen","to provide","B2",{ich:"versehe",du:"versiehst",er:"versieht",wir:"versehen",ihr:"verseht",sie:"versehen"},{ich:"versah",du:"versahst",er:"versah",wir:"versahen",ihr:"versaht",sie:"versahen"},"versehen","haben");
-fix("versprechen","to promise","A2",{ich:"verspreche",du:"versprichst",er:"verspricht",wir:"versprechen",ihr:"versprecht",sie:"versprechen"},{ich:"versprach",du:"versprachst",er:"versprach",wir:"versprachen",ihr:"verspracht",sie:"versprachen"},"versprochen","haben");
-fix("verschlafen","to oversleep","A2",{ich:"verschlafe",du:"verschläfst",er:"verschläft",wir:"verschlafen",ihr:"verschlaft",sie:"verschlafen"},{ich:"verschlief",du:"verschliefst",er:"verschlief",wir:"verschlafen",ihr:"verschlieft",sie:"verschlafen"},"verschlafen","haben");
-fix("verschieben","to postpone","B1",{ich:"verschiebe",du:"verschiebst",er:"verschiebt",wir:"verschieben",ihr:"verschiebt",sie:"verschieben"},{ich:"verschob",du:"verschobst",er:"verschob",wir:"verschoben",ihr:"verschobt",sie:"verschoben"},"verschoben","haben");
-fix("vergraben","to bury","B2",{ich:"vergrabe",du:"vergräbst",er:"vergräbt",wir:"vergraben",ihr:"vergrabt",sie:"vergraben"},{ich:"vergrub",du:"vergrubst",er:"vergrub",wir:"vergruben",ihr:"vergrubt",sie:"vergruben"},"vergraben","haben");
-fix("vergießen","to spill","B2",{ich:"vergieße",du:"vergießt",er:"vergießt",wir:"vergießen",ihr:"vergießt",sie:"vergießen"},{ich:"vergoss",du:"vergossest",er:"vergoss",wir:"vergossen",ihr:"vergosst",sie:"vergossen"},"vergossen","haben");
-fix("verderben","to spoil","B2",{ich:"verderbe",du:"verdirbst",er:"verdirbt",wir:"verderben",ihr:"verderbt",sie:"verderben"},{ich:"verdarb",du:"verdarbst",er:"verdarb",wir:"verdarben",ihr:"verdarbt",sie:"verdarben"},"verdorben","haben");
-fix("empfinden","to feel","B1",{ich:"empfinde",du:"empfindest",er:"empfindet",wir:"empfinden",ihr:"empfindet",sie:"empfinden"},{ich:"empfand",du:"empfandst",er:"empfand",wir:"empfanden",ihr:"empfandt",sie:"empfanden"},"empfunden","haben");
-fix("befinden","to be located","B2",{ich:"befinde",du:"befindest",er:"befindet",wir:"befinden",ihr:"befindet",sie:"befinden"},{ich:"befand",du:"befandst",er:"befand",wir:"befanden",ihr:"befandt",sie:"befanden"},"befunden","haben");
-fix("erfinden","to invent","B1",{ich:"erfinde",du:"erfindest",er:"erfindet",wir:"erfinden",ihr:"erfindet",sie:"erfinden"},{ich:"erfand",du:"erfandst",er:"erfand",wir:"erfanden",ihr:"erfandt",sie:"erfanden"},"erfunden","haben");
-fix("verschweigen","to conceal","C1",{ich:"verschweige",du:"verschweigst",er:"verschweigt",wir:"verschweigen",ihr:"verschweigt",sie:"verschweigen"},{ich:"verschwieg",du:"verschwiegst",er:"verschwieg",wir:"verschwiegen",ihr:"verschwiegt",sie:"verschwiegen"},"verschwiegen","haben");
-fix("verladen","to load","C1",{ich:"verlade",du:"verlädst",er:"verlädt",wir:"verladen",ihr:"verladt",sie:"verladen"},{ich:"verlud",du:"verludst",er:"verlud",wir:"verluden",ihr:"verludt",sie:"verluden"},"verladen","haben");
-fix("entladen","to unload","B2",{ich:"entlade",du:"entlädst",er:"entlädt",wir:"entladen",ihr:"entladt",sie:"entladen"},{ich:"entlud",du:"entludst",er:"entlud",wir:"entluden",ihr:"entludt",sie:"entluden"},"entladen","haben");
-fix("erringen","to achieve","C2",{ich:"erringe",du:"erringst",er:"erringt",wir:"erringen",ihr:"erringt",sie:"erringen"},{ich:"errang",du:"errangst",er:"errang",wir:"errangen",ihr:"errangt",sie:"errangen"},"errungen","haben");
-fix("tun","to do","A1",{ich:"tue",du:"tust",er:"tut",wir:"tun",ihr:"tut",sie:"tun"},{ich:"tat",du:"tatest",er:"tat",wir:"taten",ihr:"tatet",sie:"taten"},"getan","haben");
-fix("geschehen","to happen","B1",{ich:"geschehe",du:"geschiehst",er:"geschieht",wir:"geschehen",ihr:"gescheht",sie:"geschehen"},{ich:"geschah",du:"geschahst",er:"geschah",wir:"geschahen",ihr:"geschaht",sie:"geschahen"},"geschehen","sein");
-fix("wenden","to turn","B1",{ich:"wende",du:"wendest",er:"wendet",wir:"wenden",ihr:"wendet",sie:"wenden"},{ich:"wandte",du:"wandtest",er:"wandte",wir:"wandten",ihr:"wandtet",sie:"wandten"},"gewandt","haben");
-fix("erbitten","to request","C1",{ich:"erbitte",du:"erbittest",er:"erbittet",wir:"erbitten",ihr:"erbittet",sie:"erbitten"},{ich:"erbat",du:"erbatest",er:"erbat",wir:"erbaten",ihr:"erbatet",sie:"erbaten"},"erbeten","haben");
-ALL.push(strong("bersten","to burst","C2","birst","birst","barst","geborsten","haben"));
-ALL.push(strong("beißen","to bite","A2","beiß","beißt","biss","gebissen","haben"));
-ALL.push(strong("betragen","to amount to","B2","beträg","beträgt","betrug","betragen","haben"));
-ALL.push(strong("blasen","to blow","B1","bläs","bläst","blies","geblasen","haben"));
-ALL.push(strong("dreschen","to thresh","C2","drisch","drischt","drosch","gedroschen","haben"));
-ALL.push(strong("fechten","to fence","C1","ficht","ficht","focht","gefochten","haben"));
-ALL.push(strong("gären","to ferment","C2","gär","gärt","gor","gegoren","haben"));
-ALL.push(strong("glimmen","to glimmer","C2",null,null,"glomm","geglommen","haben"));
-ALL.push(strong("melken","to milk","C1","melk","melkt","melkte","gemolken","haben"));
-ALL.push(strong("scheren","to shear","C2","scher",null,"schor","geschoren","haben"));
-ALL.push(strong("schelten","to scold","C2","schilt","schilt","schalt","gescholten","haben"));
-ALL.push(strong("schinden","to mistreat","C2",null,"schindet","schund","geschunden","haben"));
-ALL.push(strong("sieden","to boil","C2","sied","siedet","sott","gesotten","haben"));
-ALL.push(strong("spinnen","to spin","C1","spinn","spinnt","spann","gesponnen","haben"));
-ALL.push(strong("stechen","to sting","B2","stich","sticht","stach","gestochen","haben"));
-ALL.push(strong("verlöschen","to go out","C2","verlisch","verlischt","verlosch","verloschen","sein"));
-ALL.push(strong("wägen","to weigh (fig.)","C1","wäg","wägt","wog","gewogen","haben"));
-ALL.push(strong("weben","to weave","C2",null,"webt","wob","gewoben","haben"));
-ALL.push(strong("werben","to recruit","B2","wirb","wirbt","warb","geworben","haben"));
-sepfix("an gehen","to concern","B1","geh",null,"ging","gegangen","sein");
-sepfix("auf gehen","to rise","B1",null,null,"ging","gegangen","sein");
-sepfix("zu gehen","to close","B2",null,null,"ging","gegangen","sein");
-sepfix("unter gehen","to perish","B1",null,null,"ging","gegangen","sein");
-sepfix("ab gehen","to depart","B2",null,null,"ging","gegangen","sein");
-sepfix("an fahren","to pick up (car)","B2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("auf fahren","to drive up","B2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("aus fahren","to go for a drive","A2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("ein fahren","to drive in","B1","fähr","fährt","fuhr","gefahren","haben");
-sepfix("über fahren","to run over","B2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("um fahren","to drive around","B1","fähr","fährt","fuhr","gefahren","haben");
-sepfix("heim fahren","to drive home","A2","fähr","fährt","fuhr","gefahren","haben");
-sepfix("an geben","to show off","B1","gib","gibt","gab","gegeben","haben");
-sepfix("um geben","to surround","B2","gib","gibt","gab","gegeben","haben");
-sepfix("zu geben","to admit","B1","gib","gibt","gab","gegeben","haben");
-sepfix("auf nehmen","to pick up (audio)","B1","nimm","nimmt","nahm","genommen","haben");
-sepfix("aus nehmen","to gut","B2","nimm","nimmt","nahm","genommen","haben");
-sepfix("ein nehmen","to take in","B1","nimm","nimmt","nahm","genommen","haben");
-sepfix("an sprechen","to address","B1","sprich","spricht","sprach","gesprochen","haben");
-sepfix("vor sprechen","to speak up for","B2","sprich","spricht","sprach","gesprochen","haben");
-sepfix("ab schreiben","to copy","A2",null,null,"schrieb","geschrieben","haben");
-sepfix("an schreiben","to write to","B2",null,null,"schrieb","geschrieben","haben");
-sepfix("aus schreiben","to put out to tender","C1",null,null,"schrieb","geschrieben","haben");
-sepfix("mit schreiben","to write along","B1",null,null,"schrieb","geschrieben","haben");
-sepfix("vor schreiben","to prescribe","B1",null,null,"schrieb","geschrieben","haben");
-sepfix("nieder schreiben","to write down","B2",null,null,"schrieb","geschrieben","haben");
-sepfix("an schließen","to connect","B1",null,null,"schloss","geschlossen","haben");
-sepfix("auf schließen","to unlock","B2",null,null,"schloss","geschlossen","haben");
-sepfix("ein ziehen","to move in","B1",null,null,"zog","gezogen","sein");
-sepfix("auf ziehen","to wind up","B2",null,null,"zog","gezogen","haben");
-sepfix("über ziehen","to cover","C1",null,null,"zog","gezogen","haben");
-sepfix("vor ziehen","to prefer","B1",null,null,"zog","gezogen","haben");
-sepfix("mit ziehen","to pull along","B2",null,null,"zog","gezogen","haben");
-sepfix("zurück ziehen","to withdraw","B1",null,null,"zog","gezogen","haben");
-sepfix("ab tragen","to carry away","B2","träg","trägt","trug","getragen","haben");
-sepfix("auf tragen","to serve up","B1","träg","trägt","trug","getragen","haben");
-sepfix("ein tragen","to enter","A2","träg","trägt","trug","getragen","haben");
-sepfix("vor tragen","to present","B1","träg","trägt","trug","getragen","haben");
-sepfix("ab halten","to keep away","B1","hält","hält","hielt","gehalten","haben");
-sepfix("an halten","to stop","A2","hält","hält","hielt","gehalten","haben");
-sepfix("aus halten","to endure","B1","hält","hält","hielt","gehalten","haben");
-sepfix("ein halten","to observe","B1","hält","hält","hielt","gehalten","haben");
-sepfix("auf halten","to delay","B1","hält","hält","hielt","gehalten","haben");
-sepfix("zurück halten","to hold back","B1","hält","hält","hielt","gehalten","haben");
-sepfix("ab werfen","to jettison","C1","wirf","wirft","warf","geworfen","haben");
-sepfix("ein werfen","to toss in","B2","wirf","wirft","warf","geworfen","haben");
-sepfix("um werfen","to knock over","B2","wirf","wirft","warf","geworfen","haben");
-sepfix("zu werfen","to throw to","B2","wirf","wirft","warf","geworfen","haben");
-sepfix("fort werfen","to discard","B2","wirf","wirft","warf","geworfen","haben");
-sepfix("ab fallen","to drop off","B2","fäll","fällt","fiel","gefallen","sein");
-sepfix("an fallen","to ring (phone)","A2","fäll","fällt","fiel","gefallen","haben");
-sepfix("aus fallen","to be canceled","A2","fäll","fällt","fiel","gefallen","sein");
-sepfix("zu fallen","to fall shut","B2","fäll","fällt","fiel","gefallen","sein");
-sepfix("auf rufen","to call up","A2",null,null,"rief","gerufen","haben");
-sepfix("aus rufen","to proclaim","B1",null,null,"rief","gerufen","haben");
-sepfix("ein rufen","to call in","A2",null,null,"rief","gerufen","haben");
-sepfix("mit rufen","to shout along","B2",null,null,"rief","gerufen","haben");
-sepfix("zusammen rufen","to convene","B1",null,null,"rief","gerufen","haben");
-sepfix("nach rufen","to call after","B2",null,null,"rief","gerufen","haben");
-sepfix("auf finden","to discover","B2",null,null,"fand","gefunden","haben");
-sepfix("wieder finden","to rediscover","B2",null,null,"fand","gefunden","haben");
-sepfix("zusammen finden","to come together","B2",null,null,"fand","gefunden","haben");
-sepfix("an binden","to tie on","B2",null,null,"band","gebunden","haben");
-sepfix("auf binden","to tie up","C1",null,null,"band","gebunden","haben");
-sepfix("ein binden","to bind in","B2",null,null,"band","gebunden","haben");
-sepfix("um binden","to retie","B2",null,null,"band","gebunden","haben");
-sepfix("zu binden","to tie shut","B2",null,null,"band","gebunden","haben");
-sepfix("zusammen binden","to tie together","B1",null,null,"band","gebunden","haben");
-sepfix("an greifen","to seize","B1",null,null,"griff","gegriffen","haben");
-sepfix("zu greifen","to grab","B1",null,null,"griff","gegriffen","haben");
-sepfix("ab brechen","to break off","A2","brich","bricht","brach","gebrochen","haben");
-sepfix("an brechen","to break into","B2","brich","bricht","brach","gebrochen","haben");
-sepfix("auf brechen","to set out","B1","brich","bricht","brach","gebrochen","haben");
-sepfix("aus brechen","to break out","B1","brich","bricht","brach","gebrochen","haben");
-sepfix("ein brechen","to burgle","B1","brich","bricht","brach","gebrochen","haben");
-sepfix("ab schneiden","to cut off","A2",null,null,"schnitt","geschnitten","haben");
-sepfix("an schneiden","to cut into","B1",null,null,"schnitt","geschnitten","haben");
-sepfix("auf schneiden","to cut open","B1",null,null,"schnitt","geschnitten","haben");
-sepfix("aus schneiden","to cut out","A2",null,null,"schnitt","geschnitten","haben");
-sepfix("ein schneiden","to notch","B1",null,null,"schnitt","geschnitten","haben");
-sepfix("mit schneiden","to record","B1",null,null,"schnitt","geschnitten","haben");
-sepfix("zu schneiden","to tailor","B1",null,null,"schnitt","geschnitten","haben");
-sepfix("vor schneiden","to pre-cut","C1",null,null,"schnitt","geschnitten","haben");
-sepfix("an treffen","to encounter","B1","triff","trifft","traf","getroffen","haben");
-sepfix("zu treffen","to be accurate","B2","triff","trifft","traf","getroffen","haben");
-sepfix("auf steigen","to ascend","C1",null,null,"stieg","gestiegen","sein");
-sepfix("er steigen","to scale","C2",null,null,"stieg","gestiegen","sein");
-sepfix("be steigen","to climb","C2",null,null,"stieg","gestiegen","sein");
-sepfix("davon laufen","to run away","A2","läuf","läuft","lief","gelaufen","sein");
-sepfix("hin laufen","to run over","A2","läuf","läuft","lief","gelaufen","sein");
-sepfix("weg laufen","to run away","A2","läuf","läuft","lief","gelaufen","sein");
-sepfix("zu laufen","to converge","C1","läuf","läuft","lief","gelaufen","sein");
-sepfix("aus laufen","to expire","B1","läuf","läuft","lief","gelaufen","sein");
-sepfix("ein laufen","to arrive","B1","läuf","läuft","lief","gelaufen","sein");
-sepfix("ab fliegen","to fly away","B1",null,null,"flog","geflogen","sein");
-sepfix("an fliegen","to fly in","B1",null,null,"flog","geflogen","sein");
-sepfix("auf fliegen","to take to the air","B2",null,null,"flog","geflogen","sein");
-sepfix("aus fliegen","to fly out","A2",null,null,"flog","geflogen","sein");
-sepfix("ein fliegen","to fly in","B1",null,null,"flog","geflogen","sein");
-sepfix("über fliegen","to fly over","B1",null,null,"flog","geflogen","haben");
-sepfix("weg fliegen","to fly away","A2",null,null,"flog","geflogen","sein");
-sepfix("ab springen","to jump off","B2","spring",null,"sprang","gesprungen","sein");
-sepfix("auf springen","to burst open","B1","spring",null,"sprang","gesprungen","sein");
-sepfix("aus springen","to jump out","B2","spring",null,"sprang","gesprungen","sein");
-sepfix("ein springen","to step in","B2","spring",null,"sprang","gesprungen","sein");
-sepfix("an kommen","to arrive","A1",null,null,"kam","gekommen","sein");
-sepfix("ab kommen","to stray","B2",null,null,"kam","gekommen","sein");
-sepfix("zu kommen","to accrue","B2",null,null,"kam","gekommen","sein");
-sepfix("dazu kommen","to be added","B1",null,null,"kam","gekommen","sein");
-sepfix("weiter kommen","to make progress","A2",null,null,"kam","gekommen","sein");
-sepfix("unter kommen","to find shelter","B1",null,null,"kam","gekommen","sein");
-sepfix("auf wachsen","to grow up","A2","wächst","wächst","wuchs","gewachsen","sein");
-sepfix("ab schlagen","to beat off","B2","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("an schlagen","to strike","B1","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("auf schlagen","to open with a bang","B1","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("aus schlagen","to reject","B1","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("ein schlagen","to break in","B1","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("um schlagen","to flip","B2","schläg","schlägt","schlug","geschlagen","haben");
-sepfix("an stoßen","to clink glasses","B1","stöß","stößt","stieß","gestoßen","haben");
-sepfix("auf stoßen","to push open","C1","stöß","stößt","stieß","gestoßen","haben");
-sepfix("aus stoßen","to expel","B2","stöß","stößt","stieß","gestoßen","haben");
-sepfix("um stoßen","to knock over","C1","stöß","stößt","stieß","gestoßen","haben");
-sepfix("zu stoßen","to happen to","C2","stöß","stößt","stieß","gestoßen","sein");
-sepfix("auf heben","to pick up (fig.)","B1",null,null,"hob","gehoben","haben");
-sepfix("ab heben","to lift off","A2",null,null,"hob","gehoben","haben");
-sepfix("hoch heben","to raise","B1",null,null,"hob","gehoben","haben");
-sepfix("ab sehen","to foresee","B2","sieh","sieht","sah","gesehen","haben");
-sepfix("an sehen","to look at","A2","sieh","sieht","sah","gesehen","haben");
-sepfix("ein sehen","to realize","B1","sieh","sieht","sah","gesehen","haben");
-sepfix("weg sehen","to look away","B2","sieh","sieht","sah","gesehen","haben");
-sepfix("zu sehen","to watch","B1","sieh","sieht","sah","gesehen","haben");
-sepfix("nach sehen","to check on","B1","sieh","sieht","sah","gesehen","haben");
-sepfix("wieder sehen","to see again","A2","sieh","sieht","sah","gesehen","haben");
-sepfix("ab lassen","to drain","B2","läss","lässt","ließ","gelassen","haben");
-sepfix("an lassen","to leave running","B2","läss","lässt","ließ","gelassen","haben");
-sepfix("aus lassen","to leave out","B1","läss","lässt","ließ","gelassen","haben");
-sepfix("ein lassen","to let in","B1","läss","lässt","ließ","gelassen","haben");
-sepfix("aus helfen","to help out","C1","hilf","hilft","half","geholfen","haben");
-sepfix("mit helfen","to help along","B1","hilf","hilft","half","geholfen","haben");
-sepfix("ab lesen","to read off","B2","lies","liest","las","gelesen","haben");
-sepfix("durch lesen","to read through","B1","lies","liest","las","gelesen","haben");
-sepfix("nach lesen","to read up on","B1","lies","liest","las","gelesen","haben");
-sepfix("mit lesen","to read along","B1","lies","liest","las","gelesen","haben");
-sepfix("aus lesen","to select","C1","lies","liest","las","gelesen","haben");
-sepfix("ab raten","to advise against","B1","rät","rät","riet","geraten","haben");
-sepfix("ab biegen","to turn off","A2",null,null,"bog","gebogen","sein");
-sepfix("ein biegen","to turn in","A2",null,null,"bog","gebogen","sein");
-sepfix("um biegen","to bend around","B2",null,null,"bog","gebogen","sein");
-sepfix("heraus schießen","to shoot out","B1",null,"schießt","schoss","geschossen","sein");
-sepfix("ab schießen","to shoot down","B2",null,"schießt","schoss","geschossen","haben");
-sepfix("auf schießen","to shoot up","C1",null,"schießt","schoss","geschossen","haben");
-sepfix("auf essen","to eat up","A2","iss","isst","aß","gegessen","haben");
-sepfix("aus trinken","to drink up","A2",null,null,"trank","getrunken","haben");
-sepfix("mit trinken","to drink along","A2",null,null,"trank","getrunken","haben");
-sepfix("mit singen","to sing along","A1",null,null,"sang","gesungen","haben");
-sepfix("vor singen","to lead singing","B1",null,null,"sang","gesungen","haben");
-sepfix("zusammen singen","to sing together","B1",null,null,"sang","gesungen","haben");
-ALL.push(sep("zu hören","to listen","A1",null));
-ALL.push(sep("zu muten","to expect of","B2",null));
-ALL.push(sep("zu reden","to egg on","C1",null));
-ALL.push(sep("mit machen","to join in","A1",null));
-ALL.push(sep("mit arbeiten","to collaborate","B1",null));
-ALL.push(sep("mit hören","to listen in","A2",null));
-ALL.push(sep("mit lachen","to laugh along","A1",null));
-ALL.push(sep("mit fühlen","to sympathize","B1",null));
-ALL.push(sep("nach prüfen","to verify","B1",null));
-ALL.push(sep("nach rechnen","to recalculate","B1",null));
-ALL.push(sep("nach bestellen","to reorder","B1",null));
-ALL.push(sep("nach arbeiten","to work off","B1",null));
-ALL.push(sep("vor merken","to note","B1",null));
-ALL.push(sep("vor planen","to pre-plan","B1",null));
-ALL.push(sep("vor prüfen","to pre-check","B2",null));
-ALL.push(sep("vor rechnen","to calculate in advance","B1",null));
-ALL.push(sep("vor warnen","to warn in advance","B1",null));
-ALL.push(sep("vor zeigen","to show","A1",null));
-ALL.push(sep("weg stellen","to put away","A2",null));
-ALL.push(sep("weg sperren","to lock away","B2",null));
-ALL.push(sep("aus bessern","to mend","B1",null));
-ALL.push(sep("aus misten","to clear out","C1",null));
-ALL.push(sep("aus schimpfen","to scold","C1",null));
-ALL.push(sep("aus richten","to pass on (msg)","B1",null));
-ALL.push(sep("aus testen","to test out","A2",null));
-ALL.push(sep("an fassen","to grab","A2",null));
-ALL.push(sep("an fertigen","to manufacture","B1",null));
-ALL.push(sep("an fragen","to inquire","B2",null));
-ALL.push(sep("an kündigen","to announce","B1",null));
-ALL.push(sep("an spannen","to clamp","C1",null));
-ALL.push(sep("an spielen","to kick off","B1",null));
-ALL.push(sep("an spornen","to spur on","C1",null));
-ALL.push(sep("an tasten","to approach","C1",null));
-ALL.push(sep("an strengen","to exert","B1",null));
-ALL.push(sep("auf atmen","to breathe a sigh","B2",null));
-ALL.push(sep("auf bewahren","to keep safe","B1",null));
-ALL.push(sep("auf drehen","to turn up","A2",null));
-ALL.push(sep("auf falten","to unfold","B1",null));
-ALL.push(sep("auf frischen","to freshen up","B2",null));
-ALL.push(sep("auf füllen","to fill up","A2",null));
-ALL.push(sep("auf lösen","to dissolve","B1",null));
-ALL.push(sep("auf lockern","to loosen","B1",null));
-ALL.push(sep("auf munteren","to cheer up","B2",null));
-ALL.push(sep("auf raffen","to gather up","C1",null));
-ALL.push(sep("auf richten","to erect","B1",null));
-ALL.push(sep("auf sammeln","to collect","B1",null));
-ALL.push(sep("auf tanken","to fill up (gas)","A2",null));
-ALL.push(sep("auf tauen","to thaw","A2",null));
-ALL.push(sep("auf tischen","to serve up","C1",null));
-ALL.push(sep("auf wärmen","to reheat","B1",null));
-ALL.push(sep("auf wecken","to wake (tr.)","A2",null));
-ALL.push(sep("auf wickeln","to wrap up","B1",null));
-ALL.push(sep("auf wischen","to wipe up","B1",null));
-ALL.push(sep("auf zeichnen","to sketch","B1",null));
-ALL.push(sep("ab bestellen","to cancel","B1",null));
-ALL.push(sep("ab federn","to cushion","C2",null));
-ALL.push(sep("ab fragen","to quiz","B1",null));
-ALL.push(sep("ab hören","to listen off","B1",null));
-ALL.push(sep("ab kapseln","to isolate","C2",null));
-ALL.push(sep("ab kaufen","to buy up","B2",null));
-ALL.push(sep("ab klingen","to subside","C1",null));
-ALL.push(sep("ab knicken","to fold down","C1",null));
-ALL.push(sep("ab koppeln","to uncouple","C1",null));
-ALL.push(sep("ab kratzen","to scrape off","C1",null));
-ALL.push(sep("ab kürzen","to shorten","B1",null));
-ALL.push(sep("ab lehnen","to refuse","B1",null));
-ALL.push(sep("ab leiten","to divert","B2",null));
-ALL.push(sep("ab liefern","to deliver","B1",null));
-ALL.push(sep("ab montieren","to dismantle","B1",null));
-ALL.push(sep("ab nutzen","to use up","B1",null));
-ALL.push(sep("ab passen","to time right","C1",null));
-ALL.push(sep("ab prallen","to bounce off","C1",null));
-ALL.push(sep("ab quälen","to torment","C1",null));
-ALL.push(sep("ab rechnen","to settle accounts","B1",null));
-ALL.push(sep("ab sagen","to cancel","B1",null));
-ALL.push(sep("ab schalten","to switch off","A1",null));
-ALL.push(sep("ab schätzen","to estimate","B1",null));
-ALL.push(sep("ab schminken","to remove makeup","B1",null));
-ALL.push(sep("ab schrauben","to unscrew","B1",null));
-ALL.push(sep("ab sichern","to secure","B1",null));
-ALL.push(sep("ab specken","to slim down","C1",null));
-ALL.push(sep("ab sperren","to lock","B1",null));
-ALL.push(sep("ab spielen","to play off","B1",null));
-ALL.push(sep("ab stauben","to dust","B1",null));
-ALL.push(sep("ab stecken","to mark out","B1",null));
-ALL.push(sep("ab stellen","to turn off","B1",null));
-ALL.push(sep("ab stempeln","to stamp","B1",null));
-ALL.push(sep("ab stützen","to brace","C1",null));
-ALL.push(sep("ab tasten","to palpate","C2",null));
-ALL.push(sep("ab tauchen","to submerge","B2",null));
-ALL.push(sep("ab teilen","to divide","B1",null));
-ALL.push(sep("ab tippen","to type up","B2",null));
-ALL.push(sep("ab trennen","to separate","B1",null));
-ALL.push(sep("ab wälzen","to roll off","C1",null));
-ALL.push(sep("ab wandern","to migrate off","C1",null));
-ALL.push(sep("ab wechseln","to alternate","C1",null));
-ALL.push(sep("ab wehren","to fend off","B2",null));
-ALL.push(sep("ab wickeln","to unwind","B1",null));
-ALL.push(sep("ab wischen","to wipe off","B1",null));
-ALL.push(sep("ab zahlen","to pay off","B1",null));
-ALL.push(sep("ab zeichnen","to initial","C1",null));
-ALL.push(sep("ab zählen","to count","A1",null));
-ALL.push(sep("ab zweigen","to branch off","C1",null));
-ALL.push(sep("ein weichen","to soak","B2",null));
-ALL.push(sep("ein planen","to schedule","B1",null));
-ALL.push(sep("ein räumen","to clear into","B1",null));
-ALL.push(sep("aus räumen","to clear out","B1",null));
-ALL.push(sep("um räumen","to rearrange","B1",null));
-ALL.push(sep("ein pflanzen","to plant","B1",null));
-ALL.push(sep("aus pflanzen","to plant out","C1",null));
-ALL.push(sep("ein weihen","to initiate into","C2",null));
-ALL.push(sep("ein willigen","to consent","B2",null));
+sepfix('auf schreiben', 'to write down', 'A2', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('heraus lesen', 'to read out', 'B1', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('nach geben', 'to yield', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('vor fahren', 'to drive ahead', 'B2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('vor lesen', 'to read aloud', 'A2', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('weg fahren', 'to drive away', 'A2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('weg gehen', 'to walk away', 'A1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('weg nehmen', 'to take away', 'A2', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben')
+sepfix('zu schlagen', 'to slam', 'B1', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix('ab brennen', 'to burn down', 'B1', null, null, 'brannte', 'gebrannt', 'haben')
+sepfix('ab sprechen', 'to agree on', 'B1', 'sprich', 'spricht', 'sprach', 'gesprochen', 'haben')
+sepfix('ab waschen', 'to wash off', 'A2', 'wäsch', 'wäscht', 'wusch', 'gewaschen', 'haben')
+sepfix('an ziehen', 'to put on', 'A2', null, null, 'zog', 'gezogen', 'haben')
+sepfix('aus schließen', 'to exclude', 'B1', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('ein geben', 'to input', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('ein schließen', 'to include', 'B1', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('ein treffen', 'to arrive', 'B1', 'triff', 'trifft', 'traf', 'getroffen', 'sein')
+sepfix('herunter laden', 'to download', 'A2', 'läd', 'lädt', 'lud', 'geladen', 'haben')
+sepfix('hoch laden', 'to upload', 'A2', 'läd', 'lädt', 'lud', 'geladen', 'haben')
+sepfix('los fahren', 'to set off', 'A2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'sein')
+sepfix('los lassen', 'to let go', 'B1', 'läss', 'lässt', 'ließ', 'gelassen', 'haben')
+sepfix('mit essen', 'to eat along', 'A2', 'iss', 'isst', 'aß', 'gegessen', 'haben')
+sepfix('da liegen', 'to be situated', 'B1', null, null, 'lag', 'gelegen', 'haben')
+sepfix('da stehen', 'to stand there', 'B1', null, null, 'stand', 'gestanden', 'haben')
+sepfix('hoch steigen', 'to rise', 'B2', null, null, 'stieg', 'gestiegen', 'haben')
+sepfix('heraus finden', 'to find out', 'A2', null, null, 'fand', 'gefunden', 'haben')
+sepfix('zu schließen', 'to lock', 'B1', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('ab schließen', 'to lock up', 'A1', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('fern bleiben', 'to stay away', 'B2', null, null, 'blieb', 'geblieben', 'sein')
+sepfix('vor geben', 'to pretend', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+fix(
+  'übersetzen',
+  'to translate',
+  'A2',
+  {
+    ich: 'übersetze',
+    du: 'übersetzt',
+    er: 'übersetzt',
+    wir: 'übersetzen',
+    ihr: 'übersetzt',
+    sie: 'übersetzen',
+  },
+  {
+    ich: 'übersetzte',
+    du: 'übersetztest',
+    er: 'übersetzte',
+    wir: 'übersetzten',
+    ihr: 'übersetztet',
+    sie: 'übersetzten',
+  },
+  'übersetzt',
+  'haben',
+)
+fix(
+  'überprüfen',
+  'to verify',
+  'B1',
+  {
+    ich: 'überprüfe',
+    du: 'überprüfst',
+    er: 'überprüft',
+    wir: 'überprüfen',
+    ihr: 'überprüft',
+    sie: 'überprüfen',
+  },
+  {
+    ich: 'überprüfte',
+    du: 'überprüftest',
+    er: 'überprüfte',
+    wir: 'überprüften',
+    ihr: 'überprüftet',
+    sie: 'überprüften',
+  },
+  'überprüft',
+  'haben',
+)
+fix(
+  'unterschreiben',
+  'to sign',
+  'A1',
+  {
+    ich: 'unterschreibe',
+    du: 'unterschreibst',
+    er: 'unterschreibt',
+    wir: 'unterschreiben',
+    ihr: 'unterschreibt',
+    sie: 'unterschreiben',
+  },
+  {
+    ich: 'unterschrieb',
+    du: 'unterschriebst',
+    er: 'unterschrieb',
+    wir: 'unterschrieben',
+    ihr: 'unterschriebt',
+    sie: 'unterschrieben',
+  },
+  'unterschrieben',
+  'haben',
+)
+fix(
+  'verlassen',
+  'to leave',
+  'A1',
+  {
+    ich: 'verlasse',
+    du: 'verlässt',
+    er: 'verlässt',
+    wir: 'verlassen',
+    ihr: 'verlasst',
+    sie: 'verlassen',
+  },
+  {
+    ich: 'verließ',
+    du: 'verließest',
+    er: 'verließ',
+    wir: 'verließen',
+    ihr: 'verließt',
+    sie: 'verließen',
+  },
+  'verlassen',
+  'haben',
+)
+fix(
+  'vernehmen',
+  'to perceive',
+  'C1',
+  {
+    ich: 'vernehme',
+    du: 'vernimmst',
+    er: 'vernimmt',
+    wir: 'vernehmen',
+    ihr: 'vernehmt',
+    sie: 'vernehmen',
+  },
+  {
+    ich: 'vernahm',
+    du: 'vernahmst',
+    er: 'vernahm',
+    wir: 'vernahmen',
+    ihr: 'vernahmt',
+    sie: 'vernahmen',
+  },
+  'vernommen',
+  'haben',
+)
+fix(
+  'entnehmen',
+  'to infer',
+  'B2',
+  {
+    ich: 'entnehme',
+    du: 'entnimmst',
+    er: 'entnimmt',
+    wir: 'entnehmen',
+    ihr: 'entnehmt',
+    sie: 'entnehmen',
+  },
+  {
+    ich: 'entnahm',
+    du: 'entnahmst',
+    er: 'entnahm',
+    wir: 'entnahmen',
+    ihr: 'entnahmt',
+    sie: 'entnahmen',
+  },
+  'entnommen',
+  'haben',
+)
+fix(
+  'unterhalten',
+  'to entertain',
+  'B1',
+  {
+    ich: 'unterhalte',
+    du: 'unterhältst',
+    er: 'unterhält',
+    wir: 'unterhalten',
+    ihr: 'unterhaltet',
+    sie: 'unterhalten',
+  },
+  {
+    ich: 'unterhielt',
+    du: 'unterhieltst',
+    er: 'unterhielt',
+    wir: 'unterhielten',
+    ihr: 'unterhieltet',
+    sie: 'unterhielten',
+  },
+  'unterhalten',
+  'haben',
+)
+fix(
+  'entkommen',
+  'to escape',
+  'B1',
+  {
+    ich: 'entkomme',
+    du: 'entkommst',
+    er: 'entkommt',
+    wir: 'entkommen',
+    ihr: 'entkommt',
+    sie: 'entkommen',
+  },
+  { ich: 'entkam', du: 'entkamst', er: 'entkam', wir: 'entkamen', ihr: 'entkamt', sie: 'entkamen' },
+  'entkommen',
+  'sein',
+)
+fix(
+  'übernehmen',
+  'to take over',
+  'B1',
+  {
+    ich: 'übernehme',
+    du: 'übernimmst',
+    er: 'übernimmt',
+    wir: 'übernehmen',
+    ihr: 'übernehmt',
+    sie: 'übernehmen',
+  },
+  {
+    ich: 'übernahm',
+    du: 'übernahmst',
+    er: 'übernahm',
+    wir: 'übernahmen',
+    ihr: 'übernahmt',
+    sie: 'übernahmen',
+  },
+  'übernommen',
+  'haben',
+)
+fix(
+  'überschneiden',
+  'to overlap',
+  'B2',
+  {
+    ich: 'überschneide',
+    du: 'überschneidest',
+    er: 'überschneidet',
+    wir: 'überschneiden',
+    ihr: 'überschneidet',
+    sie: 'überschneiden',
+  },
+  {
+    ich: 'überschnitt',
+    du: 'überschnittst',
+    er: 'überschnitt',
+    wir: 'überschnitten',
+    ihr: 'überschnittet',
+    sie: 'überschnitten',
+  },
+  'überschnitten',
+  'haben',
+)
+fix(
+  'überweisen',
+  'to transfer',
+  'B1',
+  {
+    ich: 'überweise',
+    du: 'überweist',
+    er: 'überweist',
+    wir: 'überweisen',
+    ihr: 'überweist',
+    sie: 'überweisen',
+  },
+  {
+    ich: 'überwies',
+    du: 'überwiesest',
+    er: 'überwies',
+    wir: 'überwiesen',
+    ihr: 'überwiest',
+    sie: 'überwiesen',
+  },
+  'überwiesen',
+  'haben',
+)
+fix(
+  'überziehen',
+  'to overdraw',
+  'B2',
+  {
+    ich: 'überziehe',
+    du: 'überziehst',
+    er: 'überzieht',
+    wir: 'überziehen',
+    ihr: 'überzieht',
+    sie: 'überziehen',
+  },
+  {
+    ich: 'überzog',
+    du: 'überzogst',
+    er: 'überzog',
+    wir: 'überzogen',
+    ihr: 'überzogt',
+    sie: 'überzogen',
+  },
+  'überzogen',
+  'haben',
+)
+fix(
+  'übersehen',
+  'to overlook',
+  'B1',
+  {
+    ich: 'übersehe',
+    du: 'übersiehst',
+    er: 'übersieht',
+    wir: 'übersehen',
+    ihr: 'überseht',
+    sie: 'übersehen',
+  },
+  {
+    ich: 'übersah',
+    du: 'übersahst',
+    er: 'übersah',
+    wir: 'übersahen',
+    ihr: 'übersaht',
+    sie: 'übersahen',
+  },
+  'übersehen',
+  'haben',
+)
+fix(
+  'überlesen',
+  'to skip reading',
+  'C1',
+  {
+    ich: 'überlese',
+    du: 'überliest',
+    er: 'überliest',
+    wir: 'überlesen',
+    ihr: 'überlest',
+    sie: 'überlesen',
+  },
+  {
+    ich: 'überlas',
+    du: 'überlast',
+    er: 'überlas',
+    wir: 'überlasen',
+    ihr: 'überlast',
+    sie: 'überlasen',
+  },
+  'überlesen',
+  'haben',
+)
+fix(
+  'überlassen',
+  'to leave to',
+  'B2',
+  {
+    ich: 'überlasse',
+    du: 'überlässt',
+    er: 'überlässt',
+    wir: 'überlassen',
+    ihr: 'überlasst',
+    sie: 'überlassen',
+  },
+  {
+    ich: 'überließ',
+    du: 'überließest',
+    er: 'überließ',
+    wir: 'überließen',
+    ihr: 'überließt',
+    sie: 'überließen',
+  },
+  'überlassen',
+  'haben',
+)
+fix(
+  'zerfallen',
+  'to decay',
+  'C1',
+  {
+    ich: 'zerfalle',
+    du: 'zerfällt',
+    er: 'zerfällt',
+    wir: 'zerfallen',
+    ihr: 'zerfallt',
+    sie: 'zerfallen',
+  },
+  {
+    ich: 'zerfiel',
+    du: 'zerfielst',
+    er: 'zerfiel',
+    wir: 'zerfielen',
+    ihr: 'zerfielt',
+    sie: 'zerfielen',
+  },
+  'zerfallen',
+  'sein',
+)
+fix(
+  'entfallen',
+  'to be waived',
+  'B2',
+  {
+    ich: 'entfalle',
+    du: 'entfällst',
+    er: 'entfällt',
+    wir: 'entfallen',
+    ihr: 'entfallt',
+    sie: 'entfallen',
+  },
+  {
+    ich: 'entfiel',
+    du: 'entfielst',
+    er: 'entfiel',
+    wir: 'entfielen',
+    ihr: 'entfielt',
+    sie: 'entfielen',
+  },
+  'entfallen',
+  'haben',
+)
+fix(
+  'verschreiben',
+  'to prescribe',
+  'B1',
+  {
+    ich: 'verschreibe',
+    du: 'verschreibst',
+    er: 'verschreibt',
+    wir: 'verschreiben',
+    ihr: 'verschreibt',
+    sie: 'verschreiben',
+  },
+  {
+    ich: 'verschrieb',
+    du: 'verschriebst',
+    er: 'verschrieb',
+    wir: 'verschrieben',
+    ihr: 'verschriebt',
+    sie: 'verschrieben',
+  },
+  'verschrieben',
+  'haben',
+)
+fix(
+  'beschließen',
+  'to resolve',
+  'B1',
+  {
+    ich: 'beschließe',
+    du: 'beschließt',
+    er: 'beschließt',
+    wir: 'beschließen',
+    ihr: 'beschließt',
+    sie: 'beschließen',
+  },
+  {
+    ich: 'beschloss',
+    du: 'beschlossest',
+    er: 'beschloss',
+    wir: 'beschlossen',
+    ihr: 'beschlosst',
+    sie: 'beschlossen',
+  },
+  'beschlossen',
+  'haben',
+)
+fix(
+  'verschließen',
+  'to lock up',
+  'B2',
+  {
+    ich: 'verschließe',
+    du: 'verschließt',
+    er: 'verschließt',
+    wir: 'verschließen',
+    ihr: 'verschließt',
+    sie: 'verschließen',
+  },
+  {
+    ich: 'verschloss',
+    du: 'verschlossest',
+    er: 'verschloss',
+    wir: 'verschlossen',
+    ihr: 'verschlosst',
+    sie: 'verschlossen',
+  },
+  'verschlossen',
+  'haben',
+)
+fix(
+  'versehen',
+  'to provide',
+  'B2',
+  {
+    ich: 'versehe',
+    du: 'versiehst',
+    er: 'versieht',
+    wir: 'versehen',
+    ihr: 'verseht',
+    sie: 'versehen',
+  },
+  { ich: 'versah', du: 'versahst', er: 'versah', wir: 'versahen', ihr: 'versaht', sie: 'versahen' },
+  'versehen',
+  'haben',
+)
+fix(
+  'versprechen',
+  'to promise',
+  'A2',
+  {
+    ich: 'verspreche',
+    du: 'versprichst',
+    er: 'verspricht',
+    wir: 'versprechen',
+    ihr: 'versprecht',
+    sie: 'versprechen',
+  },
+  {
+    ich: 'versprach',
+    du: 'versprachst',
+    er: 'versprach',
+    wir: 'versprachen',
+    ihr: 'verspracht',
+    sie: 'versprachen',
+  },
+  'versprochen',
+  'haben',
+)
+fix(
+  'verschlafen',
+  'to oversleep',
+  'A2',
+  {
+    ich: 'verschlafe',
+    du: 'verschläfst',
+    er: 'verschläft',
+    wir: 'verschlafen',
+    ihr: 'verschlaft',
+    sie: 'verschlafen',
+  },
+  {
+    ich: 'verschlief',
+    du: 'verschliefst',
+    er: 'verschlief',
+    wir: 'verschlafen',
+    ihr: 'verschlieft',
+    sie: 'verschlafen',
+  },
+  'verschlafen',
+  'haben',
+)
+fix(
+  'verschieben',
+  'to postpone',
+  'B1',
+  {
+    ich: 'verschiebe',
+    du: 'verschiebst',
+    er: 'verschiebt',
+    wir: 'verschieben',
+    ihr: 'verschiebt',
+    sie: 'verschieben',
+  },
+  {
+    ich: 'verschob',
+    du: 'verschobst',
+    er: 'verschob',
+    wir: 'verschoben',
+    ihr: 'verschobt',
+    sie: 'verschoben',
+  },
+  'verschoben',
+  'haben',
+)
+fix(
+  'vergraben',
+  'to bury',
+  'B2',
+  {
+    ich: 'vergrabe',
+    du: 'vergräbst',
+    er: 'vergräbt',
+    wir: 'vergraben',
+    ihr: 'vergrabt',
+    sie: 'vergraben',
+  },
+  {
+    ich: 'vergrub',
+    du: 'vergrubst',
+    er: 'vergrub',
+    wir: 'vergruben',
+    ihr: 'vergrubt',
+    sie: 'vergruben',
+  },
+  'vergraben',
+  'haben',
+)
+fix(
+  'vergießen',
+  'to spill',
+  'B2',
+  {
+    ich: 'vergieße',
+    du: 'vergießt',
+    er: 'vergießt',
+    wir: 'vergießen',
+    ihr: 'vergießt',
+    sie: 'vergießen',
+  },
+  {
+    ich: 'vergoss',
+    du: 'vergossest',
+    er: 'vergoss',
+    wir: 'vergossen',
+    ihr: 'vergosst',
+    sie: 'vergossen',
+  },
+  'vergossen',
+  'haben',
+)
+fix(
+  'verderben',
+  'to spoil',
+  'B2',
+  {
+    ich: 'verderbe',
+    du: 'verdirbst',
+    er: 'verdirbt',
+    wir: 'verderben',
+    ihr: 'verderbt',
+    sie: 'verderben',
+  },
+  {
+    ich: 'verdarb',
+    du: 'verdarbst',
+    er: 'verdarb',
+    wir: 'verdarben',
+    ihr: 'verdarbt',
+    sie: 'verdarben',
+  },
+  'verdorben',
+  'haben',
+)
+fix(
+  'empfinden',
+  'to feel',
+  'B1',
+  {
+    ich: 'empfinde',
+    du: 'empfindest',
+    er: 'empfindet',
+    wir: 'empfinden',
+    ihr: 'empfindet',
+    sie: 'empfinden',
+  },
+  {
+    ich: 'empfand',
+    du: 'empfandst',
+    er: 'empfand',
+    wir: 'empfanden',
+    ihr: 'empfandt',
+    sie: 'empfanden',
+  },
+  'empfunden',
+  'haben',
+)
+fix(
+  'befinden',
+  'to be located',
+  'B2',
+  {
+    ich: 'befinde',
+    du: 'befindest',
+    er: 'befindet',
+    wir: 'befinden',
+    ihr: 'befindet',
+    sie: 'befinden',
+  },
+  { ich: 'befand', du: 'befandst', er: 'befand', wir: 'befanden', ihr: 'befandt', sie: 'befanden' },
+  'befunden',
+  'haben',
+)
+fix(
+  'erfinden',
+  'to invent',
+  'B1',
+  {
+    ich: 'erfinde',
+    du: 'erfindest',
+    er: 'erfindet',
+    wir: 'erfinden',
+    ihr: 'erfindet',
+    sie: 'erfinden',
+  },
+  { ich: 'erfand', du: 'erfandst', er: 'erfand', wir: 'erfanden', ihr: 'erfandt', sie: 'erfanden' },
+  'erfunden',
+  'haben',
+)
+fix(
+  'verschweigen',
+  'to conceal',
+  'C1',
+  {
+    ich: 'verschweige',
+    du: 'verschweigst',
+    er: 'verschweigt',
+    wir: 'verschweigen',
+    ihr: 'verschweigt',
+    sie: 'verschweigen',
+  },
+  {
+    ich: 'verschwieg',
+    du: 'verschwiegst',
+    er: 'verschwieg',
+    wir: 'verschwiegen',
+    ihr: 'verschwiegt',
+    sie: 'verschwiegen',
+  },
+  'verschwiegen',
+  'haben',
+)
+fix(
+  'verladen',
+  'to load',
+  'C1',
+  {
+    ich: 'verlade',
+    du: 'verlädst',
+    er: 'verlädt',
+    wir: 'verladen',
+    ihr: 'verladt',
+    sie: 'verladen',
+  },
+  { ich: 'verlud', du: 'verludst', er: 'verlud', wir: 'verluden', ihr: 'verludt', sie: 'verluden' },
+  'verladen',
+  'haben',
+)
+fix(
+  'entladen',
+  'to unload',
+  'B2',
+  {
+    ich: 'entlade',
+    du: 'entlädst',
+    er: 'entlädt',
+    wir: 'entladen',
+    ihr: 'entladt',
+    sie: 'entladen',
+  },
+  { ich: 'entlud', du: 'entludst', er: 'entlud', wir: 'entluden', ihr: 'entludt', sie: 'entluden' },
+  'entladen',
+  'haben',
+)
+fix(
+  'erringen',
+  'to achieve',
+  'C2',
+  {
+    ich: 'erringe',
+    du: 'erringst',
+    er: 'erringt',
+    wir: 'erringen',
+    ihr: 'erringt',
+    sie: 'erringen',
+  },
+  { ich: 'errang', du: 'errangst', er: 'errang', wir: 'errangen', ihr: 'errangt', sie: 'errangen' },
+  'errungen',
+  'haben',
+)
+fix(
+  'tun',
+  'to do',
+  'A1',
+  { ich: 'tue', du: 'tust', er: 'tut', wir: 'tun', ihr: 'tut', sie: 'tun' },
+  { ich: 'tat', du: 'tatest', er: 'tat', wir: 'taten', ihr: 'tatet', sie: 'taten' },
+  'getan',
+  'haben',
+)
+fix(
+  'geschehen',
+  'to happen',
+  'B1',
+  {
+    ich: 'geschehe',
+    du: 'geschiehst',
+    er: 'geschieht',
+    wir: 'geschehen',
+    ihr: 'gescheht',
+    sie: 'geschehen',
+  },
+  {
+    ich: 'geschah',
+    du: 'geschahst',
+    er: 'geschah',
+    wir: 'geschahen',
+    ihr: 'geschaht',
+    sie: 'geschahen',
+  },
+  'geschehen',
+  'sein',
+)
+fix(
+  'wenden',
+  'to turn',
+  'B1',
+  { ich: 'wende', du: 'wendest', er: 'wendet', wir: 'wenden', ihr: 'wendet', sie: 'wenden' },
+  { ich: 'wandte', du: 'wandtest', er: 'wandte', wir: 'wandten', ihr: 'wandtet', sie: 'wandten' },
+  'gewandt',
+  'haben',
+)
+fix(
+  'erbitten',
+  'to request',
+  'C1',
+  {
+    ich: 'erbitte',
+    du: 'erbittest',
+    er: 'erbittet',
+    wir: 'erbitten',
+    ihr: 'erbittet',
+    sie: 'erbitten',
+  },
+  { ich: 'erbat', du: 'erbatest', er: 'erbat', wir: 'erbaten', ihr: 'erbatet', sie: 'erbaten' },
+  'erbeten',
+  'haben',
+)
+ALL.push(strong('bersten', 'to burst', 'C2', 'birst', 'birst', 'barst', 'geborsten', 'haben'))
+ALL.push(strong('beißen', 'to bite', 'A2', 'beiß', 'beißt', 'biss', 'gebissen', 'haben'))
+ALL.push(
+  strong('betragen', 'to amount to', 'B2', 'beträg', 'beträgt', 'betrug', 'betragen', 'haben'),
+)
+ALL.push(strong('blasen', 'to blow', 'B1', 'bläs', 'bläst', 'blies', 'geblasen', 'haben'))
+ALL.push(
+  strong('dreschen', 'to thresh', 'C2', 'drisch', 'drischt', 'drosch', 'gedroschen', 'haben'),
+)
+ALL.push(strong('fechten', 'to fence', 'C1', 'ficht', 'ficht', 'focht', 'gefochten', 'haben'))
+ALL.push(strong('gären', 'to ferment', 'C2', 'gär', 'gärt', 'gor', 'gegoren', 'haben'))
+ALL.push(strong('glimmen', 'to glimmer', 'C2', null, null, 'glomm', 'geglommen', 'haben'))
+ALL.push(strong('melken', 'to milk', 'C1', 'melk', 'melkt', 'melkte', 'gemolken', 'haben'))
+ALL.push(strong('scheren', 'to shear', 'C2', 'scher', null, 'schor', 'geschoren', 'haben'))
+ALL.push(strong('schelten', 'to scold', 'C2', 'schilt', 'schilt', 'schalt', 'gescholten', 'haben'))
+ALL.push(strong('schinden', 'to mistreat', 'C2', null, 'schindet', 'schund', 'geschunden', 'haben'))
+ALL.push(strong('sieden', 'to boil', 'C2', 'sied', 'siedet', 'sott', 'gesotten', 'haben'))
+ALL.push(strong('spinnen', 'to spin', 'C1', 'spinn', 'spinnt', 'spann', 'gesponnen', 'haben'))
+ALL.push(strong('stechen', 'to sting', 'B2', 'stich', 'sticht', 'stach', 'gestochen', 'haben'))
+ALL.push(
+  strong(
+    'verlöschen',
+    'to go out',
+    'C2',
+    'verlisch',
+    'verlischt',
+    'verlosch',
+    'verloschen',
+    'sein',
+  ),
+)
+ALL.push(strong('wägen', 'to weigh (fig.)', 'C1', 'wäg', 'wägt', 'wog', 'gewogen', 'haben'))
+ALL.push(strong('weben', 'to weave', 'C2', null, 'webt', 'wob', 'gewoben', 'haben'))
+ALL.push(strong('werben', 'to recruit', 'B2', 'wirb', 'wirbt', 'warb', 'geworben', 'haben'))
+sepfix('an gehen', 'to concern', 'B1', 'geh', null, 'ging', 'gegangen', 'sein')
+sepfix('auf gehen', 'to rise', 'B1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('zu gehen', 'to close', 'B2', null, null, 'ging', 'gegangen', 'sein')
+sepfix('unter gehen', 'to perish', 'B1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('ab gehen', 'to depart', 'B2', null, null, 'ging', 'gegangen', 'sein')
+sepfix('an fahren', 'to pick up (car)', 'B2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('auf fahren', 'to drive up', 'B2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('aus fahren', 'to go for a drive', 'A2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('ein fahren', 'to drive in', 'B1', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('über fahren', 'to run over', 'B2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('um fahren', 'to drive around', 'B1', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('heim fahren', 'to drive home', 'A2', 'fähr', 'fährt', 'fuhr', 'gefahren', 'haben')
+sepfix('an geben', 'to show off', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('um geben', 'to surround', 'B2', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('zu geben', 'to admit', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('auf nehmen', 'to pick up (audio)', 'B1', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben')
+sepfix('aus nehmen', 'to gut', 'B2', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben')
+sepfix('ein nehmen', 'to take in', 'B1', 'nimm', 'nimmt', 'nahm', 'genommen', 'haben')
+sepfix('an sprechen', 'to address', 'B1', 'sprich', 'spricht', 'sprach', 'gesprochen', 'haben')
+sepfix(
+  'vor sprechen',
+  'to speak up for',
+  'B2',
+  'sprich',
+  'spricht',
+  'sprach',
+  'gesprochen',
+  'haben',
+)
+sepfix('ab schreiben', 'to copy', 'A2', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('an schreiben', 'to write to', 'B2', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('aus schreiben', 'to put out to tender', 'C1', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('mit schreiben', 'to write along', 'B1', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('vor schreiben', 'to prescribe', 'B1', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('nieder schreiben', 'to write down', 'B2', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('an schließen', 'to connect', 'B1', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('auf schließen', 'to unlock', 'B2', null, null, 'schloss', 'geschlossen', 'haben')
+sepfix('ein ziehen', 'to move in', 'B1', null, null, 'zog', 'gezogen', 'sein')
+sepfix('auf ziehen', 'to wind up', 'B2', null, null, 'zog', 'gezogen', 'haben')
+sepfix('über ziehen', 'to cover', 'C1', null, null, 'zog', 'gezogen', 'haben')
+sepfix('vor ziehen', 'to prefer', 'B1', null, null, 'zog', 'gezogen', 'haben')
+sepfix('mit ziehen', 'to pull along', 'B2', null, null, 'zog', 'gezogen', 'haben')
+sepfix('zurück ziehen', 'to withdraw', 'B1', null, null, 'zog', 'gezogen', 'haben')
+sepfix('ab tragen', 'to carry away', 'B2', 'träg', 'trägt', 'trug', 'getragen', 'haben')
+sepfix('auf tragen', 'to serve up', 'B1', 'träg', 'trägt', 'trug', 'getragen', 'haben')
+sepfix('ein tragen', 'to enter', 'A2', 'träg', 'trägt', 'trug', 'getragen', 'haben')
+sepfix('vor tragen', 'to present', 'B1', 'träg', 'trägt', 'trug', 'getragen', 'haben')
+sepfix('ab halten', 'to keep away', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('an halten', 'to stop', 'A2', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('aus halten', 'to endure', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('ein halten', 'to observe', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('auf halten', 'to delay', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('zurück halten', 'to hold back', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('ab werfen', 'to jettison', 'C1', 'wirf', 'wirft', 'warf', 'geworfen', 'haben')
+sepfix('ein werfen', 'to toss in', 'B2', 'wirf', 'wirft', 'warf', 'geworfen', 'haben')
+sepfix('um werfen', 'to knock over', 'B2', 'wirf', 'wirft', 'warf', 'geworfen', 'haben')
+sepfix('zu werfen', 'to throw to', 'B2', 'wirf', 'wirft', 'warf', 'geworfen', 'haben')
+sepfix('fort werfen', 'to discard', 'B2', 'wirf', 'wirft', 'warf', 'geworfen', 'haben')
+sepfix('ab fallen', 'to drop off', 'B2', 'fäll', 'fällt', 'fiel', 'gefallen', 'sein')
+sepfix('an fallen', 'to ring (phone)', 'A2', 'fäll', 'fällt', 'fiel', 'gefallen', 'haben')
+sepfix('aus fallen', 'to be canceled', 'A2', 'fäll', 'fällt', 'fiel', 'gefallen', 'sein')
+sepfix('zu fallen', 'to fall shut', 'B2', 'fäll', 'fällt', 'fiel', 'gefallen', 'sein')
+sepfix('auf rufen', 'to call up', 'A2', null, null, 'rief', 'gerufen', 'haben')
+sepfix('aus rufen', 'to proclaim', 'B1', null, null, 'rief', 'gerufen', 'haben')
+sepfix('ein rufen', 'to call in', 'A2', null, null, 'rief', 'gerufen', 'haben')
+sepfix('mit rufen', 'to shout along', 'B2', null, null, 'rief', 'gerufen', 'haben')
+sepfix('zusammen rufen', 'to convene', 'B1', null, null, 'rief', 'gerufen', 'haben')
+sepfix('nach rufen', 'to call after', 'B2', null, null, 'rief', 'gerufen', 'haben')
+sepfix('auf finden', 'to discover', 'B2', null, null, 'fand', 'gefunden', 'haben')
+sepfix('wieder finden', 'to rediscover', 'B2', null, null, 'fand', 'gefunden', 'haben')
+sepfix('zusammen finden', 'to come together', 'B2', null, null, 'fand', 'gefunden', 'haben')
+sepfix('an binden', 'to tie on', 'B2', null, null, 'band', 'gebunden', 'haben')
+sepfix('auf binden', 'to tie up', 'C1', null, null, 'band', 'gebunden', 'haben')
+sepfix('ein binden', 'to bind in', 'B2', null, null, 'band', 'gebunden', 'haben')
+sepfix('um binden', 'to retie', 'B2', null, null, 'band', 'gebunden', 'haben')
+sepfix('zu binden', 'to tie shut', 'B2', null, null, 'band', 'gebunden', 'haben')
+sepfix('zusammen binden', 'to tie together', 'B1', null, null, 'band', 'gebunden', 'haben')
+sepfix('an greifen', 'to seize', 'B1', null, null, 'griff', 'gegriffen', 'haben')
+sepfix('zu greifen', 'to grab', 'B1', null, null, 'griff', 'gegriffen', 'haben')
+sepfix('ab brechen', 'to break off', 'A2', 'brich', 'bricht', 'brach', 'gebrochen', 'haben')
+sepfix('an brechen', 'to break into', 'B2', 'brich', 'bricht', 'brach', 'gebrochen', 'haben')
+sepfix('auf brechen', 'to set out', 'B1', 'brich', 'bricht', 'brach', 'gebrochen', 'haben')
+sepfix('aus brechen', 'to break out', 'B1', 'brich', 'bricht', 'brach', 'gebrochen', 'haben')
+sepfix('ein brechen', 'to burgle', 'B1', 'brich', 'bricht', 'brach', 'gebrochen', 'haben')
+sepfix('ab schneiden', 'to cut off', 'A2', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('an schneiden', 'to cut into', 'B1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('auf schneiden', 'to cut open', 'B1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('aus schneiden', 'to cut out', 'A2', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('ein schneiden', 'to notch', 'B1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('mit schneiden', 'to record', 'B1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('zu schneiden', 'to tailor', 'B1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('vor schneiden', 'to pre-cut', 'C1', null, null, 'schnitt', 'geschnitten', 'haben')
+sepfix('an treffen', 'to encounter', 'B1', 'triff', 'trifft', 'traf', 'getroffen', 'haben')
+sepfix('zu treffen', 'to be accurate', 'B2', 'triff', 'trifft', 'traf', 'getroffen', 'haben')
+sepfix('auf steigen', 'to ascend', 'C1', null, null, 'stieg', 'gestiegen', 'sein')
+sepfix('er steigen', 'to scale', 'C2', null, null, 'stieg', 'gestiegen', 'sein')
+sepfix('be steigen', 'to climb', 'C2', null, null, 'stieg', 'gestiegen', 'sein')
+sepfix('davon laufen', 'to run away', 'A2', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('hin laufen', 'to run over', 'A2', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('weg laufen', 'to run away', 'A2', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('zu laufen', 'to converge', 'C1', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('aus laufen', 'to expire', 'B1', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('ein laufen', 'to arrive', 'B1', 'läuf', 'läuft', 'lief', 'gelaufen', 'sein')
+sepfix('ab fliegen', 'to fly away', 'B1', null, null, 'flog', 'geflogen', 'sein')
+sepfix('an fliegen', 'to fly in', 'B1', null, null, 'flog', 'geflogen', 'sein')
+sepfix('auf fliegen', 'to take to the air', 'B2', null, null, 'flog', 'geflogen', 'sein')
+sepfix('aus fliegen', 'to fly out', 'A2', null, null, 'flog', 'geflogen', 'sein')
+sepfix('ein fliegen', 'to fly in', 'B1', null, null, 'flog', 'geflogen', 'sein')
+sepfix('über fliegen', 'to fly over', 'B1', null, null, 'flog', 'geflogen', 'haben')
+sepfix('weg fliegen', 'to fly away', 'A2', null, null, 'flog', 'geflogen', 'sein')
+sepfix('ab springen', 'to jump off', 'B2', 'spring', null, 'sprang', 'gesprungen', 'sein')
+sepfix('auf springen', 'to burst open', 'B1', 'spring', null, 'sprang', 'gesprungen', 'sein')
+sepfix('aus springen', 'to jump out', 'B2', 'spring', null, 'sprang', 'gesprungen', 'sein')
+sepfix('ein springen', 'to step in', 'B2', 'spring', null, 'sprang', 'gesprungen', 'sein')
+sepfix('an kommen', 'to arrive', 'A1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('ab kommen', 'to stray', 'B2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('zu kommen', 'to accrue', 'B2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('dazu kommen', 'to be added', 'B1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('weiter kommen', 'to make progress', 'A2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('unter kommen', 'to find shelter', 'B1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('auf wachsen', 'to grow up', 'A2', 'wächst', 'wächst', 'wuchs', 'gewachsen', 'sein')
+sepfix('ab schlagen', 'to beat off', 'B2', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix('an schlagen', 'to strike', 'B1', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix(
+  'auf schlagen',
+  'to open with a bang',
+  'B1',
+  'schläg',
+  'schlägt',
+  'schlug',
+  'geschlagen',
+  'haben',
+)
+sepfix('aus schlagen', 'to reject', 'B1', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix('ein schlagen', 'to break in', 'B1', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix('um schlagen', 'to flip', 'B2', 'schläg', 'schlägt', 'schlug', 'geschlagen', 'haben')
+sepfix('an stoßen', 'to clink glasses', 'B1', 'stöß', 'stößt', 'stieß', 'gestoßen', 'haben')
+sepfix('auf stoßen', 'to push open', 'C1', 'stöß', 'stößt', 'stieß', 'gestoßen', 'haben')
+sepfix('aus stoßen', 'to expel', 'B2', 'stöß', 'stößt', 'stieß', 'gestoßen', 'haben')
+sepfix('um stoßen', 'to knock over', 'C1', 'stöß', 'stößt', 'stieß', 'gestoßen', 'haben')
+sepfix('zu stoßen', 'to happen to', 'C2', 'stöß', 'stößt', 'stieß', 'gestoßen', 'sein')
+sepfix('auf heben', 'to pick up (fig.)', 'B1', null, null, 'hob', 'gehoben', 'haben')
+sepfix('ab heben', 'to lift off', 'A2', null, null, 'hob', 'gehoben', 'haben')
+sepfix('hoch heben', 'to raise', 'B1', null, null, 'hob', 'gehoben', 'haben')
+sepfix('ab sehen', 'to foresee', 'B2', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('an sehen', 'to look at', 'A2', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('ein sehen', 'to realize', 'B1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('weg sehen', 'to look away', 'B2', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('zu sehen', 'to watch', 'B1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('nach sehen', 'to check on', 'B1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('wieder sehen', 'to see again', 'A2', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('ab lassen', 'to drain', 'B2', 'läss', 'lässt', 'ließ', 'gelassen', 'haben')
+sepfix('an lassen', 'to leave running', 'B2', 'läss', 'lässt', 'ließ', 'gelassen', 'haben')
+sepfix('aus lassen', 'to leave out', 'B1', 'läss', 'lässt', 'ließ', 'gelassen', 'haben')
+sepfix('ein lassen', 'to let in', 'B1', 'läss', 'lässt', 'ließ', 'gelassen', 'haben')
+sepfix('aus helfen', 'to help out', 'C1', 'hilf', 'hilft', 'half', 'geholfen', 'haben')
+sepfix('mit helfen', 'to help along', 'B1', 'hilf', 'hilft', 'half', 'geholfen', 'haben')
+sepfix('ab lesen', 'to read off', 'B2', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('durch lesen', 'to read through', 'B1', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('nach lesen', 'to read up on', 'B1', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('mit lesen', 'to read along', 'B1', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('aus lesen', 'to select', 'C1', 'lies', 'liest', 'las', 'gelesen', 'haben')
+sepfix('ab raten', 'to advise against', 'B1', 'rät', 'rät', 'riet', 'geraten', 'haben')
+sepfix('ab biegen', 'to turn off', 'A2', null, null, 'bog', 'gebogen', 'sein')
+sepfix('ein biegen', 'to turn in', 'A2', null, null, 'bog', 'gebogen', 'sein')
+sepfix('um biegen', 'to bend around', 'B2', null, null, 'bog', 'gebogen', 'sein')
+sepfix('heraus schießen', 'to shoot out', 'B1', null, 'schießt', 'schoss', 'geschossen', 'sein')
+sepfix('ab schießen', 'to shoot down', 'B2', null, 'schießt', 'schoss', 'geschossen', 'haben')
+sepfix('auf schießen', 'to shoot up', 'C1', null, 'schießt', 'schoss', 'geschossen', 'haben')
+sepfix('auf essen', 'to eat up', 'A2', 'iss', 'isst', 'aß', 'gegessen', 'haben')
+sepfix('aus trinken', 'to drink up', 'A2', null, null, 'trank', 'getrunken', 'haben')
+sepfix('mit trinken', 'to drink along', 'A2', null, null, 'trank', 'getrunken', 'haben')
+sepfix('mit singen', 'to sing along', 'A1', null, null, 'sang', 'gesungen', 'haben')
+sepfix('vor singen', 'to lead singing', 'B1', null, null, 'sang', 'gesungen', 'haben')
+sepfix('zusammen singen', 'to sing together', 'B1', null, null, 'sang', 'gesungen', 'haben')
+ALL.push(sep('zu hören', 'to listen', 'A1', null))
+ALL.push(sep('zu muten', 'to expect of', 'B2', null))
+ALL.push(sep('zu reden', 'to egg on', 'C1', null))
+ALL.push(sep('mit machen', 'to join in', 'A1', null))
+ALL.push(sep('mit arbeiten', 'to collaborate', 'B1', null))
+ALL.push(sep('mit hören', 'to listen in', 'A2', null))
+ALL.push(sep('mit lachen', 'to laugh along', 'A1', null))
+ALL.push(sep('mit fühlen', 'to sympathize', 'B1', null))
+ALL.push(sep('nach prüfen', 'to verify', 'B1', null))
+ALL.push(sep('nach rechnen', 'to recalculate', 'B1', null))
+ALL.push(sep('nach bestellen', 'to reorder', 'B1', null))
+ALL.push(sep('nach arbeiten', 'to work off', 'B1', null))
+ALL.push(sep('vor merken', 'to note', 'B1', null))
+ALL.push(sep('vor planen', 'to pre-plan', 'B1', null))
+ALL.push(sep('vor prüfen', 'to pre-check', 'B2', null))
+ALL.push(sep('vor rechnen', 'to calculate in advance', 'B1', null))
+ALL.push(sep('vor warnen', 'to warn in advance', 'B1', null))
+ALL.push(sep('vor zeigen', 'to show', 'A1', null))
+ALL.push(sep('weg stellen', 'to put away', 'A2', null))
+ALL.push(sep('weg sperren', 'to lock away', 'B2', null))
+ALL.push(sep('aus bessern', 'to mend', 'B1', null))
+ALL.push(sep('aus misten', 'to clear out', 'C1', null))
+ALL.push(sep('aus schimpfen', 'to scold', 'C1', null))
+ALL.push(sep('aus richten', 'to pass on (msg)', 'B1', null))
+ALL.push(sep('aus testen', 'to test out', 'A2', null))
+ALL.push(sep('an fassen', 'to grab', 'A2', null))
+ALL.push(sep('an fertigen', 'to manufacture', 'B1', null))
+ALL.push(sep('an fragen', 'to inquire', 'B2', null))
+ALL.push(sep('an kündigen', 'to announce', 'B1', null))
+ALL.push(sep('an spannen', 'to clamp', 'C1', null))
+ALL.push(sep('an spielen', 'to kick off', 'B1', null))
+ALL.push(sep('an spornen', 'to spur on', 'C1', null))
+ALL.push(sep('an tasten', 'to approach', 'C1', null))
+ALL.push(sep('an strengen', 'to exert', 'B1', null))
+ALL.push(sep('auf atmen', 'to breathe a sigh', 'B2', null))
+ALL.push(sep('auf bewahren', 'to keep safe', 'B1', null))
+ALL.push(sep('auf drehen', 'to turn up', 'A2', null))
+ALL.push(sep('auf falten', 'to unfold', 'B1', null))
+ALL.push(sep('auf frischen', 'to freshen up', 'B2', null))
+ALL.push(sep('auf füllen', 'to fill up', 'A2', null))
+ALL.push(sep('auf lösen', 'to dissolve', 'B1', null))
+ALL.push(sep('auf lockern', 'to loosen', 'B1', null))
+ALL.push(sep('auf munteren', 'to cheer up', 'B2', null))
+ALL.push(sep('auf raffen', 'to gather up', 'C1', null))
+ALL.push(sep('auf richten', 'to erect', 'B1', null))
+ALL.push(sep('auf sammeln', 'to collect', 'B1', null))
+ALL.push(sep('auf tanken', 'to fill up (gas)', 'A2', null))
+ALL.push(sep('auf tauen', 'to thaw', 'A2', null))
+ALL.push(sep('auf tischen', 'to serve up', 'C1', null))
+ALL.push(sep('auf wärmen', 'to reheat', 'B1', null))
+ALL.push(sep('auf wecken', 'to wake (tr.)', 'A2', null))
+ALL.push(sep('auf wickeln', 'to wrap up', 'B1', null))
+ALL.push(sep('auf wischen', 'to wipe up', 'B1', null))
+ALL.push(sep('auf zeichnen', 'to sketch', 'B1', null))
+ALL.push(sep('ab bestellen', 'to cancel', 'B1', null))
+ALL.push(sep('ab federn', 'to cushion', 'C2', null))
+ALL.push(sep('ab fragen', 'to quiz', 'B1', null))
+ALL.push(sep('ab hören', 'to listen off', 'B1', null))
+ALL.push(sep('ab kapseln', 'to isolate', 'C2', null))
+ALL.push(sep('ab kaufen', 'to buy up', 'B2', null))
+ALL.push(sep('ab klingen', 'to subside', 'C1', null))
+ALL.push(sep('ab knicken', 'to fold down', 'C1', null))
+ALL.push(sep('ab koppeln', 'to uncouple', 'C1', null))
+ALL.push(sep('ab kratzen', 'to scrape off', 'C1', null))
+ALL.push(sep('ab kürzen', 'to shorten', 'B1', null))
+ALL.push(sep('ab lehnen', 'to refuse', 'B1', null))
+ALL.push(sep('ab leiten', 'to divert', 'B2', null))
+ALL.push(sep('ab liefern', 'to deliver', 'B1', null))
+ALL.push(sep('ab montieren', 'to dismantle', 'B1', null))
+ALL.push(sep('ab nutzen', 'to use up', 'B1', null))
+ALL.push(sep('ab passen', 'to time right', 'C1', null))
+ALL.push(sep('ab prallen', 'to bounce off', 'C1', null))
+ALL.push(sep('ab quälen', 'to torment', 'C1', null))
+ALL.push(sep('ab rechnen', 'to settle accounts', 'B1', null))
+ALL.push(sep('ab sagen', 'to cancel', 'B1', null))
+ALL.push(sep('ab schalten', 'to switch off', 'A1', null))
+ALL.push(sep('ab schätzen', 'to estimate', 'B1', null))
+ALL.push(sep('ab schminken', 'to remove makeup', 'B1', null))
+ALL.push(sep('ab schrauben', 'to unscrew', 'B1', null))
+ALL.push(sep('ab sichern', 'to secure', 'B1', null))
+ALL.push(sep('ab specken', 'to slim down', 'C1', null))
+ALL.push(sep('ab sperren', 'to lock', 'B1', null))
+ALL.push(sep('ab spielen', 'to play off', 'B1', null))
+ALL.push(sep('ab stauben', 'to dust', 'B1', null))
+ALL.push(sep('ab stecken', 'to mark out', 'B1', null))
+ALL.push(sep('ab stellen', 'to turn off', 'B1', null))
+ALL.push(sep('ab stempeln', 'to stamp', 'B1', null))
+ALL.push(sep('ab stützen', 'to brace', 'C1', null))
+ALL.push(sep('ab tasten', 'to palpate', 'C2', null))
+ALL.push(sep('ab tauchen', 'to submerge', 'B2', null))
+ALL.push(sep('ab teilen', 'to divide', 'B1', null))
+ALL.push(sep('ab tippen', 'to type up', 'B2', null))
+ALL.push(sep('ab trennen', 'to separate', 'B1', null))
+ALL.push(sep('ab wälzen', 'to roll off', 'C1', null))
+ALL.push(sep('ab wandern', 'to migrate off', 'C1', null))
+ALL.push(sep('ab wechseln', 'to alternate', 'C1', null))
+ALL.push(sep('ab wehren', 'to fend off', 'B2', null))
+ALL.push(sep('ab wickeln', 'to unwind', 'B1', null))
+ALL.push(sep('ab wischen', 'to wipe off', 'B1', null))
+ALL.push(sep('ab zahlen', 'to pay off', 'B1', null))
+ALL.push(sep('ab zeichnen', 'to initial', 'C1', null))
+ALL.push(sep('ab zählen', 'to count', 'A1', null))
+ALL.push(sep('ab zweigen', 'to branch off', 'C1', null))
+ALL.push(sep('ein weichen', 'to soak', 'B2', null))
+ALL.push(sep('ein planen', 'to schedule', 'B1', null))
+ALL.push(sep('ein räumen', 'to clear into', 'B1', null))
+ALL.push(sep('aus räumen', 'to clear out', 'B1', null))
+ALL.push(sep('um räumen', 'to rearrange', 'B1', null))
+ALL.push(sep('ein pflanzen', 'to plant', 'B1', null))
+ALL.push(sep('aus pflanzen', 'to plant out', 'C1', null))
+ALL.push(sep('ein weihen', 'to initiate into', 'C2', null))
+ALL.push(sep('ein willigen', 'to consent', 'B2', null))
 
+ALL.push(
+  refl(
+    'sich erholen',
+    'to recover',
+    'A1',
+    {
+      ich: 'erhole mich',
+      du: 'erholst dich',
+      er: 'erholt sich',
+      wir: 'erholen uns',
+      ihr: 'erholt euch',
+      sie: 'erholen sich',
+    },
+    {
+      ich: 'erholte mich',
+      du: 'erholtest dich',
+      er: 'erholte sich',
+      wir: 'erholten uns',
+      ihr: 'erholtet euch',
+      sie: 'erholten sich',
+    },
+    'erholt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich ärgern',
+    'to be annoyed',
+    'A1',
+    {
+      ich: 'ärgere mich',
+      du: 'ärgerst dich',
+      er: 'ärgert sich',
+      wir: 'ärgern uns',
+      ihr: 'ärgert euch',
+      sie: 'ärgern sich',
+    },
+    {
+      ich: 'ärgerte mich',
+      du: 'ärgertest dich',
+      er: 'ärgerte sich',
+      wir: 'ärgerten uns',
+      ihr: 'ärgertet euch',
+      sie: 'ärgerten sich',
+    },
+    'geärgert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich kümmern',
+    'to take care',
+    'A2',
+    {
+      ich: 'kümmere mich',
+      du: 'kümmerst dich',
+      er: 'kümmert sich',
+      wir: 'kümmern uns',
+      ihr: 'kümmert euch',
+      sie: 'kümmern sich',
+    },
+    {
+      ich: 'kümmerte mich',
+      du: 'kümmertest dich',
+      er: 'kümmerte sich',
+      wir: 'kümmerten uns',
+      ihr: 'kümmertet euch',
+      sie: 'kümmerten sich',
+    },
+    'gekümmert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich wundern',
+    'to be amazed',
+    'A2',
+    {
+      ich: 'wundere mich',
+      du: 'wunderst dich',
+      er: 'wundert sich',
+      wir: 'wundern uns',
+      ihr: 'wundert euch',
+      sie: 'wundern sich',
+    },
+    {
+      ich: 'wunderte mich',
+      du: 'wundertest dich',
+      er: 'wunderte sich',
+      wir: 'wunderten uns',
+      ihr: 'wundertet euch',
+      sie: 'wunderten sich',
+    },
+    'gewundert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich weigern',
+    'to refuse',
+    'B1',
+    {
+      ich: 'weigere mich',
+      du: 'weigerst dich',
+      er: 'weigert sich',
+      wir: 'weigern uns',
+      ihr: 'weigert euch',
+      sie: 'weigern sich',
+    },
+    {
+      ich: 'weigerte mich',
+      du: 'weigertest dich',
+      er: 'weigerte sich',
+      wir: 'weigerten uns',
+      ihr: 'weigertet euch',
+      sie: 'weigerten sich',
+    },
+    'geweigert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich nähern',
+    'to approach',
+    'B1',
+    {
+      ich: 'nähere mich',
+      du: 'näherst dich',
+      er: 'nähert sich',
+      wir: 'nähern uns',
+      ihr: 'nähert euch',
+      sie: 'nähern sich',
+    },
+    {
+      ich: 'näherte mich',
+      du: 'nähertest dich',
+      er: 'näherte sich',
+      wir: 'näherten uns',
+      ihr: 'nähertet euch',
+      sie: 'näherten sich',
+    },
+    'genähert',
+  ),
+)
+ALL.push(
+  refl(
+    'sich melden',
+    'to report (oneself)',
+    'A2',
+    {
+      ich: 'melde mich',
+      du: 'meldest dich',
+      er: 'meldet sich',
+      wir: 'melden uns',
+      ihr: 'meldet euch',
+      sie: 'melden sich',
+    },
+    {
+      ich: 'meldete mich',
+      du: 'meldetest dich',
+      er: 'meldete sich',
+      wir: 'meldeten uns',
+      ihr: 'meldetet euch',
+      sie: 'meldeten sich',
+    },
+    'gemeldet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich setzen',
+    'to sit down',
+    'A1',
+    {
+      ich: 'setze mich',
+      du: 'setzt dich',
+      er: 'setzt sich',
+      wir: 'setzen uns',
+      ihr: 'setzt euch',
+      sie: 'setzen sich',
+    },
+    {
+      ich: 'setzte mich',
+      du: 'setztest dich',
+      er: 'setzte sich',
+      wir: 'setzten uns',
+      ihr: 'setztet euch',
+      sie: 'setzten sich',
+    },
+    'gesetzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bücken',
+    'to bend down',
+    'B1',
+    {
+      ich: 'bücke mich',
+      du: 'bückst dich',
+      er: 'bückt sich',
+      wir: 'bücken uns',
+      ihr: 'bückt euch',
+      sie: 'bücken sich',
+    },
+    {
+      ich: 'bückte mich',
+      du: 'bücktest dich',
+      er: 'bückte sich',
+      wir: 'bückten uns',
+      ihr: 'bücktet euch',
+      sie: 'bückten sich',
+    },
+    'gebückt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich lehnen',
+    'to lean',
+    'B1',
+    {
+      ich: 'lehne mich',
+      du: 'lehnst dich',
+      er: 'lehnt sich',
+      wir: 'lehnen uns',
+      ihr: 'lehnt euch',
+      sie: 'lehnen sich',
+    },
+    {
+      ich: 'lehnte mich',
+      du: 'lehntest dich',
+      er: 'lehnte sich',
+      wir: 'lehnten uns',
+      ihr: 'lehntet euch',
+      sie: 'lehnten sich',
+    },
+    'gelehnt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich sorgen',
+    'to worry',
+    'A2',
+    {
+      ich: 'sorge mich',
+      du: 'sorgst dich',
+      er: 'sorgt sich',
+      wir: 'sorgen uns',
+      ihr: 'sorgt euch',
+      sie: 'sorgen sich',
+    },
+    {
+      ich: 'sorgte mich',
+      du: 'sorgtest dich',
+      er: 'sorgte sich',
+      wir: 'sorgten uns',
+      ihr: 'sorgtet euch',
+      sie: 'sorgten sich',
+    },
+    'gesorgt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich strecken',
+    'to stretch',
+    'B1',
+    {
+      ich: 'strecke mich',
+      du: 'streckst dich',
+      er: 'streckt sich',
+      wir: 'strecken uns',
+      ihr: 'streckt euch',
+      sie: 'strecken sich',
+    },
+    {
+      ich: 'streckte mich',
+      du: 'strecktest dich',
+      er: 'streckte sich',
+      wir: 'streckten uns',
+      ihr: 'strecktet euch',
+      sie: 'streckten sich',
+    },
+    'gestreckt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bedanken',
+    'to give thanks',
+    'A1',
+    {
+      ich: 'bedanke mich',
+      du: 'bedankst dich',
+      er: 'bedankt sich',
+      wir: 'bedanken uns',
+      ihr: 'bedankt euch',
+      sie: 'bedanken sich',
+    },
+    {
+      ich: 'bedankte mich',
+      du: 'bedanktest dich',
+      er: 'bedankte sich',
+      wir: 'bedankten uns',
+      ihr: 'bedanktet euch',
+      sie: 'bedankten sich',
+    },
+    'bedankt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich anpassen',
+    'to adapt',
+    'B1',
+    {
+      ich: 'passe mich an',
+      du: 'passt dich an',
+      er: 'passt sich an',
+      wir: 'passen uns an',
+      ihr: 'passt euch an',
+      sie: 'passen sich an',
+    },
+    {
+      ich: 'passte mich an',
+      du: 'passtest dich an',
+      er: 'passte sich an',
+      wir: 'passten uns an',
+      ihr: 'passtet euch an',
+      sie: 'passten sich an',
+    },
+    'angepasst',
+  ),
+)
+ALL.push(
+  refl(
+    'sich hinsetzen',
+    'to sit down',
+    'A1',
+    {
+      ich: 'setze mich hin',
+      du: 'setzt dich hin',
+      er: 'setzt sich hin',
+      wir: 'setzen uns hin',
+      ihr: 'setzt euch hin',
+      sie: 'setzen sich hin',
+    },
+    {
+      ich: 'setzte mich hin',
+      du: 'setztest dich hin',
+      er: 'setzte sich hin',
+      wir: 'setzten uns hin',
+      ihr: 'setztet euch hin',
+      sie: 'setzten sich hin',
+    },
+    'hingesetzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich hinlegen',
+    'to lie down',
+    'A1',
+    {
+      ich: 'lege mich hin',
+      du: 'legst dich hin',
+      er: 'legt sich hin',
+      wir: 'legen uns hin',
+      ihr: 'legt euch hin',
+      sie: 'legen sich hin',
+    },
+    {
+      ich: 'legte mich hin',
+      du: 'legtest dich hin',
+      er: 'legte sich hin',
+      wir: 'legten uns hin',
+      ihr: 'legtet euch hin',
+      sie: 'legten sich hin',
+    },
+    'hingelegt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich ergeben',
+    'to surrender',
+    'B2',
+    {
+      ich: 'ergebe mich',
+      du: 'ergibst dich',
+      er: 'ergibt sich',
+      wir: 'ergeben uns',
+      ihr: 'ergebt euch',
+      sie: 'ergeben sich',
+    },
+    {
+      ich: 'ergab mich',
+      du: 'ergabst dich',
+      er: 'ergab sich',
+      wir: 'ergaben uns',
+      ihr: 'ergabt euch',
+      sie: 'ergaben sich',
+    },
+    'ergeben',
+  ),
+)
+ALL.push(
+  refl(
+    'sich besinnen',
+    'to reflect',
+    'C2',
+    {
+      ich: 'besinne mich',
+      du: 'besinnst dich',
+      er: 'besinnt sich',
+      wir: 'besinnen uns',
+      ihr: 'besinnt euch',
+      sie: 'besinnen sich',
+    },
+    {
+      ich: 'besann mich',
+      du: 'besannst dich',
+      er: 'besann sich',
+      wir: 'besannen uns',
+      ihr: 'besanntet euch',
+      sie: 'besannen sich',
+    },
+    'besonnen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich betrinken',
+    'to get drunk',
+    'B2',
+    {
+      ich: 'betrinke mich',
+      du: 'betrinkst dich',
+      er: 'betrinkt sich',
+      wir: 'betrinken uns',
+      ihr: 'betrinkt euch',
+      sie: 'betrinken sich',
+    },
+    {
+      ich: 'betrank mich',
+      du: 'betrankst dich',
+      er: 'betrank sich',
+      wir: 'betranken uns',
+      ihr: 'betrankt euch',
+      sie: 'betranken sich',
+    },
+    'betrunken',
+  ),
+)
+ALL.push(
+  refl(
+    'sich erschrecken',
+    'to be startled',
+    'B1',
+    {
+      ich: 'erschrecke mich',
+      du: 'erschrickst dich',
+      er: 'erschrickt sich',
+      wir: 'erschrecken uns',
+      ihr: 'erschreckt euch',
+      sie: 'erschrecken sich',
+    },
+    {
+      ich: 'erschrak mich',
+      du: 'erschrakst dich',
+      er: 'erschrak sich',
+      wir: 'erschraken uns',
+      ihr: 'erschreckt euch',
+      sie: 'erschraken sich',
+    },
+    'erschrocken',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verletzen',
+    'to get hurt',
+    'A2',
+    {
+      ich: 'verletze mich',
+      du: 'verletzt dich',
+      er: 'verletzt sich',
+      wir: 'verletzen uns',
+      ihr: 'verletzt euch',
+      sie: 'verletzen sich',
+    },
+    {
+      ich: 'verletzte mich',
+      du: 'verletztest dich',
+      er: 'verletzte sich',
+      wir: 'verletzten uns',
+      ihr: 'verletztet euch',
+      sie: 'verletzten sich',
+    },
+    'verletzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verbiegen',
+    'to bend (oneself)',
+    'C1',
+    {
+      ich: 'verbiege mich',
+      du: 'verbiegst dich',
+      er: 'verbiegt sich',
+      wir: 'verbiegen uns',
+      ihr: 'verbiegt euch',
+      sie: 'verbiegen sich',
+    },
+    {
+      ich: 'verbog mich',
+      du: 'verbogst dich',
+      er: 'verbog sich',
+      wir: 'verbogen uns',
+      ihr: 'verbogt euch',
+      sie: 'verbogen sich',
+    },
+    'verbogen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich aufsetzen',
+    'to sit up',
+    'B1',
+    {
+      ich: 'setze mich auf',
+      du: 'setzt dich auf',
+      er: 'setzt sich auf',
+      wir: 'setzen uns auf',
+      ihr: 'setzt euch auf',
+      sie: 'setzen sich auf',
+    },
+    {
+      ich: 'setzte mich auf',
+      du: 'setztest dich auf',
+      er: 'setzte sich auf',
+      wir: 'setzten uns auf',
+      ihr: 'setztet euch auf',
+      sie: 'setzten sich auf',
+    },
+    'aufgesetzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich ausziehen',
+    'to undress',
+    'A2',
+    {
+      ich: 'ziehe mich aus',
+      du: 'ziehst dich aus',
+      er: 'zieht sich aus',
+      wir: 'ziehen uns aus',
+      ihr: 'zieht euch aus',
+      sie: 'ziehen sich aus',
+    },
+    {
+      ich: 'zog mich aus',
+      du: 'zogst dich aus',
+      er: 'zog sich aus',
+      wir: 'zogen uns aus',
+      ihr: 'zogt euch aus',
+      sie: 'zogen sich aus',
+    },
+    'ausgezogen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich ausloggen',
+    'to log out',
+    'A2',
+    {
+      ich: 'logge mich aus',
+      du: 'loggst dich aus',
+      er: 'loggt sich aus',
+      wir: 'loggen uns aus',
+      ihr: 'loggt euch aus',
+      sie: 'loggen sich aus',
+    },
+    {
+      ich: 'loggte mich aus',
+      du: 'loggtest dich aus',
+      er: 'loggte sich aus',
+      wir: 'loggten uns aus',
+      ihr: 'loggtet euch aus',
+      sie: 'loggten sich aus',
+    },
+    'ausgeloggt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich befinden',
+    'to find oneself',
+    'B2',
+    {
+      ich: 'befinde mich',
+      du: 'befindest dich',
+      er: 'befindet sich',
+      wir: 'befinden uns',
+      ihr: 'befindet euch',
+      sie: 'befinden sich',
+    },
+    {
+      ich: 'befand mich',
+      du: 'befandst dich',
+      er: 'befand sich',
+      wir: 'befanden uns',
+      ihr: 'befandt euch',
+      sie: 'befanden sich',
+    },
+    'befunden',
+  ),
+)
+ALL.push(
+  refl(
+    'sich benehmen',
+    'to behave',
+    'B1',
+    {
+      ich: 'benimme mich',
+      du: 'benimmst dich',
+      er: 'benimmt sich',
+      wir: 'benehmen uns',
+      ihr: 'benehmt euch',
+      sie: 'benehmen sich',
+    },
+    {
+      ich: 'benahm mich',
+      du: 'benahmst dich',
+      er: 'benahm sich',
+      wir: 'benahmen uns',
+      ihr: 'benahmt euch',
+      sie: 'benahmen sich',
+    },
+    'benommen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich entschließen',
+    'to decide',
+    'B2',
+    {
+      ich: 'entschließe mich',
+      du: 'entschließt dich',
+      er: 'entschließt sich',
+      wir: 'entschließen uns',
+      ihr: 'entschließt euch',
+      sie: 'entschließen sich',
+    },
+    {
+      ich: 'entschloss mich',
+      du: 'entschlossest dich',
+      er: 'entschloss sich',
+      wir: 'entschlossen uns',
+      ihr: 'entschlosst euch',
+      sie: 'entschlossen sich',
+    },
+    'entschlossen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einfinden',
+    'to show up',
+    'C2',
+    {
+      ich: 'finde mich ein',
+      du: 'findest dich ein',
+      er: 'findet sich ein',
+      wir: 'finden uns ein',
+      ihr: 'findet euch ein',
+      sie: 'finden sich ein',
+    },
+    {
+      ich: 'fand mich ein',
+      du: 'fandest dich ein',
+      er: 'fand sich ein',
+      wir: 'fanden uns ein',
+      ihr: 'fandet euch ein',
+      sie: 'fanden sich ein',
+    },
+    'eingefunden',
+  ),
+)
+ALL.push(
+  refl(
+    'sich zurückziehen',
+    'to withdraw',
+    'B1',
+    {
+      ich: 'ziehe mich zurück',
+      du: 'ziehst dich zurück',
+      er: 'zieht sich zurück',
+      wir: 'ziehen uns zurück',
+      ihr: 'zieht euch zurück',
+      sie: 'ziehen sich zurück',
+    },
+    {
+      ich: 'zog mich zurück',
+      du: 'zogst dich zurück',
+      er: 'zog sich zurück',
+      wir: 'zogen uns zurück',
+      ihr: 'zogt euch zurück',
+      sie: 'zogen sich zurück',
+    },
+    'zurückgezogen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich bedienen',
+    'to serve oneself',
+    'B2',
+    {
+      ich: 'bediene mich',
+      du: 'bedienst dich',
+      er: 'bedient sich',
+      wir: 'bedienen uns',
+      ihr: 'bedient euch',
+      sie: 'bedienen sich',
+    },
+    {
+      ich: 'bediente mich',
+      du: 'bedientest dich',
+      er: 'bediente sich',
+      wir: 'bedienten uns',
+      ihr: 'bedientet euch',
+      sie: 'bedienten sich',
+    },
+    'bedient',
+  ),
+)
+ALL.push(
+  refl(
+    'sich eignen',
+    'to be suited',
+    'B2',
+    {
+      ich: 'eigne mich',
+      du: 'eignest dich',
+      er: 'eignet sich',
+      wir: 'eignen uns',
+      ihr: 'eignet euch',
+      sie: 'eignen sich',
+    },
+    {
+      ich: 'eignete mich',
+      du: 'eignetest dich',
+      er: 'eignete sich',
+      wir: 'eigneten uns',
+      ihr: 'eignetet euch',
+      sie: 'eigneten sich',
+    },
+    'geeignet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich vornehmen',
+    'to plan (dat.)',
+    'B1',
+    {
+      ich: 'nehme mir vor',
+      du: 'nimmst dir vor',
+      er: 'nimmt sich vor',
+      wir: 'nehmen uns vor',
+      ihr: 'nehmt euch vor',
+      sie: 'nehmen sich vor',
+    },
+    {
+      ich: 'nahm mir vor',
+      du: 'nahmst dir vor',
+      er: 'nahm sich vor',
+      wir: 'nahmen uns vor',
+      ihr: 'nahmt euch vor',
+      sie: 'nahmen sich vor',
+    },
+    'vorgenommen',
+  ),
+)
+ALL.push(
+  refl(
+    'sich weiterbilden',
+    'to keep learning',
+    'B1',
+    {
+      ich: 'bilde mich weiter',
+      du: 'bildest dich weiter',
+      er: 'bildet sich weiter',
+      wir: 'bilden uns weiter',
+      ihr: 'bildet euch weiter',
+      sie: 'bilden sich weiter',
+    },
+    {
+      ich: 'bildete mich weiter',
+      du: 'bildetest dich weiter',
+      er: 'bildete sich weiter',
+      wir: 'bildeten uns weiter',
+      ihr: 'bildetet euch weiter',
+      sie: 'bildeten sich weiter',
+    },
+    'weitergebildet',
+  ),
+)
 
-
-
-ALL.push(refl("sich erholen","to recover","A1",{ich:"erhole mich",du:"erholst dich",er:"erholt sich",wir:"erholen uns",ihr:"erholt euch",sie:"erholen sich"},{ich:"erholte mich",du:"erholtest dich",er:"erholte sich",wir:"erholten uns",ihr:"erholtet euch",sie:"erholten sich"},"erholt"));
-ALL.push(refl("sich ärgern","to be annoyed","A1",{ich:"ärgere mich",du:"ärgerst dich",er:"ärgert sich",wir:"ärgern uns",ihr:"ärgert euch",sie:"ärgern sich"},{ich:"ärgerte mich",du:"ärgertest dich",er:"ärgerte sich",wir:"ärgerten uns",ihr:"ärgertet euch",sie:"ärgerten sich"},"geärgert"));
-ALL.push(refl("sich kümmern","to take care","A2",{ich:"kümmere mich",du:"kümmerst dich",er:"kümmert sich",wir:"kümmern uns",ihr:"kümmert euch",sie:"kümmern sich"},{ich:"kümmerte mich",du:"kümmertest dich",er:"kümmerte sich",wir:"kümmerten uns",ihr:"kümmertet euch",sie:"kümmerten sich"},"gekümmert"));
-ALL.push(refl("sich wundern","to be amazed","A2",{ich:"wundere mich",du:"wunderst dich",er:"wundert sich",wir:"wundern uns",ihr:"wundert euch",sie:"wundern sich"},{ich:"wunderte mich",du:"wundertest dich",er:"wunderte sich",wir:"wunderten uns",ihr:"wundertet euch",sie:"wunderten sich"},"gewundert"));
-ALL.push(refl("sich weigern","to refuse","B1",{ich:"weigere mich",du:"weigerst dich",er:"weigert sich",wir:"weigern uns",ihr:"weigert euch",sie:"weigern sich"},{ich:"weigerte mich",du:"weigertest dich",er:"weigerte sich",wir:"weigerten uns",ihr:"weigertet euch",sie:"weigerten sich"},"geweigert"));
-ALL.push(refl("sich nähern","to approach","B1",{ich:"nähere mich",du:"näherst dich",er:"nähert sich",wir:"nähern uns",ihr:"nähert euch",sie:"nähern sich"},{ich:"näherte mich",du:"nähertest dich",er:"näherte sich",wir:"näherten uns",ihr:"nähertet euch",sie:"näherten sich"},"genähert"));
-ALL.push(refl("sich melden","to report (oneself)","A2",{ich:"melde mich",du:"meldest dich",er:"meldet sich",wir:"melden uns",ihr:"meldet euch",sie:"melden sich"},{ich:"meldete mich",du:"meldetest dich",er:"meldete sich",wir:"meldeten uns",ihr:"meldetet euch",sie:"meldeten sich"},"gemeldet"));
-ALL.push(refl("sich setzen","to sit down","A1",{ich:"setze mich",du:"setzt dich",er:"setzt sich",wir:"setzen uns",ihr:"setzt euch",sie:"setzen sich"},{ich:"setzte mich",du:"setztest dich",er:"setzte sich",wir:"setzten uns",ihr:"setztet euch",sie:"setzten sich"},"gesetzt"));
-ALL.push(refl("sich bücken","to bend down","B1",{ich:"bücke mich",du:"bückst dich",er:"bückt sich",wir:"bücken uns",ihr:"bückt euch",sie:"bücken sich"},{ich:"bückte mich",du:"bücktest dich",er:"bückte sich",wir:"bückten uns",ihr:"bücktet euch",sie:"bückten sich"},"gebückt"));
-ALL.push(refl("sich lehnen","to lean","B1",{ich:"lehne mich",du:"lehnst dich",er:"lehnt sich",wir:"lehnen uns",ihr:"lehnt euch",sie:"lehnen sich"},{ich:"lehnte mich",du:"lehntest dich",er:"lehnte sich",wir:"lehnten uns",ihr:"lehntet euch",sie:"lehnten sich"},"gelehnt"));
-ALL.push(refl("sich sorgen","to worry","A2",{ich:"sorge mich",du:"sorgst dich",er:"sorgt sich",wir:"sorgen uns",ihr:"sorgt euch",sie:"sorgen sich"},{ich:"sorgte mich",du:"sorgtest dich",er:"sorgte sich",wir:"sorgten uns",ihr:"sorgtet euch",sie:"sorgten sich"},"gesorgt"));
-ALL.push(refl("sich strecken","to stretch","B1",{ich:"strecke mich",du:"streckst dich",er:"streckt sich",wir:"strecken uns",ihr:"streckt euch",sie:"strecken sich"},{ich:"streckte mich",du:"strecktest dich",er:"streckte sich",wir:"streckten uns",ihr:"strecktet euch",sie:"streckten sich"},"gestreckt"));
-ALL.push(refl("sich bedanken","to give thanks","A1",{ich:"bedanke mich",du:"bedankst dich",er:"bedankt sich",wir:"bedanken uns",ihr:"bedankt euch",sie:"bedanken sich"},{ich:"bedankte mich",du:"bedanktest dich",er:"bedankte sich",wir:"bedankten uns",ihr:"bedanktet euch",sie:"bedankten sich"},"bedankt"));
-ALL.push(refl("sich anpassen","to adapt","B1",{ich:"passe mich an",du:"passt dich an",er:"passt sich an",wir:"passen uns an",ihr:"passt euch an",sie:"passen sich an"},{ich:"passte mich an",du:"passtest dich an",er:"passte sich an",wir:"passten uns an",ihr:"passtet euch an",sie:"passten sich an"},"angepasst"));
-ALL.push(refl("sich hinsetzen","to sit down","A1",{ich:"setze mich hin",du:"setzt dich hin",er:"setzt sich hin",wir:"setzen uns hin",ihr:"setzt euch hin",sie:"setzen sich hin"},{ich:"setzte mich hin",du:"setztest dich hin",er:"setzte sich hin",wir:"setzten uns hin",ihr:"setztet euch hin",sie:"setzten sich hin"},"hingesetzt"));
-ALL.push(refl("sich hinlegen","to lie down","A1",{ich:"lege mich hin",du:"legst dich hin",er:"legt sich hin",wir:"legen uns hin",ihr:"legt euch hin",sie:"legen sich hin"},{ich:"legte mich hin",du:"legtest dich hin",er:"legte sich hin",wir:"legten uns hin",ihr:"legtet euch hin",sie:"legten sich hin"},"hingelegt"));
-ALL.push(refl("sich ergeben","to surrender","B2",{ich:"ergebe mich",du:"ergibst dich",er:"ergibt sich",wir:"ergeben uns",ihr:"ergebt euch",sie:"ergeben sich"},{ich:"ergab mich",du:"ergabst dich",er:"ergab sich",wir:"ergaben uns",ihr:"ergabt euch",sie:"ergaben sich"},"ergeben"));
-ALL.push(refl("sich besinnen","to reflect","C2",{ich:"besinne mich",du:"besinnst dich",er:"besinnt sich",wir:"besinnen uns",ihr:"besinnt euch",sie:"besinnen sich"},{ich:"besann mich",du:"besannst dich",er:"besann sich",wir:"besannen uns",ihr:"besanntet euch",sie:"besannen sich"},"besonnen"));
-ALL.push(refl("sich betrinken","to get drunk","B2",{ich:"betrinke mich",du:"betrinkst dich",er:"betrinkt sich",wir:"betrinken uns",ihr:"betrinkt euch",sie:"betrinken sich"},{ich:"betrank mich",du:"betrankst dich",er:"betrank sich",wir:"betranken uns",ihr:"betrankt euch",sie:"betranken sich"},"betrunken"));
-ALL.push(refl("sich erschrecken","to be startled","B1",{ich:"erschrecke mich",du:"erschrickst dich",er:"erschrickt sich",wir:"erschrecken uns",ihr:"erschreckt euch",sie:"erschrecken sich"},{ich:"erschrak mich",du:"erschrakst dich",er:"erschrak sich",wir:"erschraken uns",ihr:"erschreckt euch",sie:"erschraken sich"},"erschrocken"));
-ALL.push(refl("sich verletzen","to get hurt","A2",{ich:"verletze mich",du:"verletzt dich",er:"verletzt sich",wir:"verletzen uns",ihr:"verletzt euch",sie:"verletzen sich"},{ich:"verletzte mich",du:"verletztest dich",er:"verletzte sich",wir:"verletzten uns",ihr:"verletztet euch",sie:"verletzten sich"},"verletzt"));
-ALL.push(refl("sich verbiegen","to bend (oneself)","C1",{ich:"verbiege mich",du:"verbiegst dich",er:"verbiegt sich",wir:"verbiegen uns",ihr:"verbiegt euch",sie:"verbiegen sich"},{ich:"verbog mich",du:"verbogst dich",er:"verbog sich",wir:"verbogen uns",ihr:"verbogt euch",sie:"verbogen sich"},"verbogen"));
-ALL.push(refl("sich aufsetzen","to sit up","B1",{ich:"setze mich auf",du:"setzt dich auf",er:"setzt sich auf",wir:"setzen uns auf",ihr:"setzt euch auf",sie:"setzen sich auf"},{ich:"setzte mich auf",du:"setztest dich auf",er:"setzte sich auf",wir:"setzten uns auf",ihr:"setztet euch auf",sie:"setzten sich auf"},"aufgesetzt"));
-ALL.push(refl("sich ausziehen","to undress","A2",{ich:"ziehe mich aus",du:"ziehst dich aus",er:"zieht sich aus",wir:"ziehen uns aus",ihr:"zieht euch aus",sie:"ziehen sich aus"},{ich:"zog mich aus",du:"zogst dich aus",er:"zog sich aus",wir:"zogen uns aus",ihr:"zogt euch aus",sie:"zogen sich aus"},"ausgezogen"));
-ALL.push(refl("sich ausloggen","to log out","A2",{ich:"logge mich aus",du:"loggst dich aus",er:"loggt sich aus",wir:"loggen uns aus",ihr:"loggt euch aus",sie:"loggen sich aus"},{ich:"loggte mich aus",du:"loggtest dich aus",er:"loggte sich aus",wir:"loggten uns aus",ihr:"loggtet euch aus",sie:"loggten sich aus"},"ausgeloggt"));
-ALL.push(refl("sich befinden","to find oneself","B2",{ich:"befinde mich",du:"befindest dich",er:"befindet sich",wir:"befinden uns",ihr:"befindet euch",sie:"befinden sich"},{ich:"befand mich",du:"befandst dich",er:"befand sich",wir:"befanden uns",ihr:"befandt euch",sie:"befanden sich"},"befunden"));
-ALL.push(refl("sich benehmen","to behave","B1",{ich:"benimme mich",du:"benimmst dich",er:"benimmt sich",wir:"benehmen uns",ihr:"benehmt euch",sie:"benehmen sich"},{ich:"benahm mich",du:"benahmst dich",er:"benahm sich",wir:"benahmen uns",ihr:"benahmt euch",sie:"benahmen sich"},"benommen"));
-ALL.push(refl("sich entschließen","to decide","B2",{ich:"entschließe mich",du:"entschließt dich",er:"entschließt sich",wir:"entschließen uns",ihr:"entschließt euch",sie:"entschließen sich"},{ich:"entschloss mich",du:"entschlossest dich",er:"entschloss sich",wir:"entschlossen uns",ihr:"entschlosst euch",sie:"entschlossen sich"},"entschlossen"));
-ALL.push(refl("sich einfinden","to show up","C2",{ich:"finde mich ein",du:"findest dich ein",er:"findet sich ein",wir:"finden uns ein",ihr:"findet euch ein",sie:"finden sich ein"},{ich:"fand mich ein",du:"fandest dich ein",er:"fand sich ein",wir:"fanden uns ein",ihr:"fandet euch ein",sie:"fanden sich ein"},"eingefunden"));
-ALL.push(refl("sich zurückziehen","to withdraw","B1",{ich:"ziehe mich zurück",du:"ziehst dich zurück",er:"zieht sich zurück",wir:"ziehen uns zurück",ihr:"zieht euch zurück",sie:"ziehen sich zurück"},{ich:"zog mich zurück",du:"zogst dich zurück",er:"zog sich zurück",wir:"zogen uns zurück",ihr:"zogt euch zurück",sie:"zogen sich zurück"},"zurückgezogen"));
-ALL.push(refl("sich bedienen","to serve oneself","B2",{ich:"bediene mich",du:"bedienst dich",er:"bedient sich",wir:"bedienen uns",ihr:"bedient euch",sie:"bedienen sich"},{ich:"bediente mich",du:"bedientest dich",er:"bediente sich",wir:"bedienten uns",ihr:"bedientet euch",sie:"bedienten sich"},"bedient"));
-ALL.push(refl("sich eignen","to be suited","B2",{ich:"eigne mich",du:"eignest dich",er:"eignet sich",wir:"eignen uns",ihr:"eignet euch",sie:"eignen sich"},{ich:"eignete mich",du:"eignetest dich",er:"eignete sich",wir:"eigneten uns",ihr:"eignetet euch",sie:"eigneten sich"},"geeignet"));
-ALL.push(refl("sich vornehmen","to plan (dat.)","B1",{ich:"nehme mir vor",du:"nimmst dir vor",er:"nimmt sich vor",wir:"nehmen uns vor",ihr:"nehmt euch vor",sie:"nehmen sich vor"},{ich:"nahm mir vor",du:"nahmst dir vor",er:"nahm sich vor",wir:"nahmen uns vor",ihr:"nahmt euch vor",sie:"nahmen sich vor"},"vorgenommen"));
-ALL.push(refl("sich weiterbilden","to keep learning","B1",{ich:"bilde mich weiter",du:"bildest dich weiter",er:"bildet sich weiter",wir:"bilden uns weiter",ihr:"bildet euch weiter",sie:"bilden sich weiter"},{ich:"bildete mich weiter",du:"bildetest dich weiter",er:"bildete sich weiter",wir:"bildeten uns weiter",ihr:"bildetet euch weiter",sie:"bildeten sich weiter"},"weitergebildet"));
-
-fix("verfahren","to lose one's way","B1",{ich:"verfahre",du:"verfährst",er:"verfährt",wir:"verfahren",ihr:"verfahrt",sie:"verfahren"},{ich:"verfuhr",du:"verfuhrst",er:"verfuhr",wir:"verfuhren",ihr:"verfuhrt",sie:"verfuhren"},"verfahren","haben");
-fix("vergehen","to pass","B2",{ich:"vergehe",du:"vergehst",er:"vergeht",wir:"vergehen",ihr:"vergeht",sie:"vergehen"},{ich:"verging",du:"vergingst",er:"verging",wir:"vergingen",ihr:"vergingt",sie:"vergingen"},"vergangen","sein");
-fix("entgehen","to escape (sth.)","B2",{ich:"entgehe",du:"entgehst",er:"entgeht",wir:"entgehen",ihr:"entgeht",sie:"entgehen"},{ich:"entging",du:"entgingst",er:"entging",wir:"entgingen",ihr:"entgingt",sie:"entgingen"},"entgangen","sein");
-fix("vergeben","to forgive","B1",{ich:"vergebe",du:"vergibst",er:"vergibt",wir:"vergeben",ihr:"vergebt",sie:"vergeben"},{ich:"vergab",du:"vergabst",er:"vergab",wir:"vergaben",ihr:"vergabt",sie:"vergaben"},"vergeben","haben");
-fix("messen","to measure","B1",{ich:"messe",du:"misst",er:"misst",wir:"messen",ihr:"messt",sie:"messen"},{ich:"maß",du:"maßest",er:"maß",wir:"maßen",ihr:"maßt",sie:"maßen"},"gemessen","haben");
-fix("schmelzen","to melt","B1",{ich:"schmelze",du:"schmilzt",er:"schmilzt",wir:"schmelzen",ihr:"schmelzt",sie:"schmelzen"},{ich:"schmolz",du:"schmolzest",er:"schmolz",wir:"schmolzen",ihr:"schmolzt",sie:"schmolzen"},"geschmolzen","haben");
+fix(
+  'verfahren',
+  "to lose one's way",
+  'B1',
+  {
+    ich: 'verfahre',
+    du: 'verfährst',
+    er: 'verfährt',
+    wir: 'verfahren',
+    ihr: 'verfahrt',
+    sie: 'verfahren',
+  },
+  {
+    ich: 'verfuhr',
+    du: 'verfuhrst',
+    er: 'verfuhr',
+    wir: 'verfuhren',
+    ihr: 'verfuhrt',
+    sie: 'verfuhren',
+  },
+  'verfahren',
+  'haben',
+)
+fix(
+  'vergehen',
+  'to pass',
+  'B2',
+  {
+    ich: 'vergehe',
+    du: 'vergehst',
+    er: 'vergeht',
+    wir: 'vergehen',
+    ihr: 'vergeht',
+    sie: 'vergehen',
+  },
+  {
+    ich: 'verging',
+    du: 'vergingst',
+    er: 'verging',
+    wir: 'vergingen',
+    ihr: 'vergingt',
+    sie: 'vergingen',
+  },
+  'vergangen',
+  'sein',
+)
+fix(
+  'entgehen',
+  'to escape (sth.)',
+  'B2',
+  {
+    ich: 'entgehe',
+    du: 'entgehst',
+    er: 'entgeht',
+    wir: 'entgehen',
+    ihr: 'entgeht',
+    sie: 'entgehen',
+  },
+  {
+    ich: 'entging',
+    du: 'entgingst',
+    er: 'entging',
+    wir: 'entgingen',
+    ihr: 'entgingt',
+    sie: 'entgingen',
+  },
+  'entgangen',
+  'sein',
+)
+fix(
+  'vergeben',
+  'to forgive',
+  'B1',
+  {
+    ich: 'vergebe',
+    du: 'vergibst',
+    er: 'vergibt',
+    wir: 'vergeben',
+    ihr: 'vergebt',
+    sie: 'vergeben',
+  },
+  { ich: 'vergab', du: 'vergabst', er: 'vergab', wir: 'vergaben', ihr: 'vergabt', sie: 'vergaben' },
+  'vergeben',
+  'haben',
+)
+fix(
+  'messen',
+  'to measure',
+  'B1',
+  { ich: 'messe', du: 'misst', er: 'misst', wir: 'messen', ihr: 'messt', sie: 'messen' },
+  { ich: 'maß', du: 'maßest', er: 'maß', wir: 'maßen', ihr: 'maßt', sie: 'maßen' },
+  'gemessen',
+  'haben',
+)
+fix(
+  'schmelzen',
+  'to melt',
+  'B1',
+  {
+    ich: 'schmelze',
+    du: 'schmilzt',
+    er: 'schmilzt',
+    wir: 'schmelzen',
+    ihr: 'schmelzt',
+    sie: 'schmelzen',
+  },
+  {
+    ich: 'schmolz',
+    du: 'schmolzest',
+    er: 'schmolz',
+    wir: 'schmolzen',
+    ihr: 'schmolzt',
+    sie: 'schmolzen',
+  },
+  'geschmolzen',
+  'haben',
+)
 
 // ===== TOP-UP: strong combos, insep strong, reflexives, everyday =====
-sepfix("klar kommen","to get by","A2",null,null,"kam","gekommen","sein");
-sepfix("zurecht kommen","to cope","B1",null,null,"kam","gekommen","sein");
-sepfix("zurecht finden","to find one's way","B1",null,null,"fand","gefunden","haben");
-sepfix("weg kommen","to get away","B2",null,null,"kam","gekommen","sein");
-sepfix("herum kommen","to get around","B1",null,null,"kam","gekommen","sein");
-sepfix("durch kommen","to get through","B1",null,null,"kam","gekommen","sein");
-sepfix("hinter kommen","to find out","B2",null,null,"kam","gekommen","sein");
-sepfix("übrig bleiben","to be left over","B1",null,null,"blieb","geblieben","sein");
-sepfix("schief gehen","to go wrong","C1",null,null,"ging","gegangen","sein");
-sepfix("fest halten","to hold on","B1","hält","hält","hielt","gehalten","haben");
-sepfix("fest stehen","to be certain","B1",null,null,"stand","gestanden","haben");
-sepfix("um schreiben","to rewrite","B1",null,null,"schrieb","geschrieben","haben");
-sepfix("an fechten","to contest","B2","ficht","ficht","focht","gefochten","haben");
-sepfix("durch denken","to think through","C1",null,null,"dachte","gedacht","haben");
-sepfix("über reden","to talk over","B1",null,null,"redete","geredet","haben");
-sepfix("wieder geben","to return/give back","B1","gib","gibt","gab","gegeben","haben");
-sepfix("aus setzen","to postpone (fig.)","B1",null,null,"setzte","gesetzt","haben");
-sepfix("zu sprechen","to accredit","C2","sprich","spricht","sprach","gesprochen","haben");
-sepfix("vor sehen","to provide for","B1","sieh","sieht","sah","gesehen","haben");
-sepfix("hinter bringen","to bring behind","C2",null,null,"brachte","gebracht","haben");
-fix("begreifen","to grasp","B1",{ich:"begreife",du:"begreifst",er:"begreift",wir:"begreifen",ihr:"begreift",sie:"begreifen"},{ich:"begriff",du:"begriffst",er:"begriff",wir:"begriffen",ihr:"begrifft",sie:"begriffen"},"begriffen","haben");
-fix("erwerben","to acquire","B1",{ich:"erwerbe",du:"erwirbst",er:"erwirbt",wir:"erwerben",ihr:"erwerbt",sie:"erwerben"},{ich:"erwarb",du:"erwarbst",er:"erwarb",wir:"erwarben",ihr:"erwarbt",sie:"erwarben"},"erworben","haben");
-fix("erliegen","to succumb","B2",{ich:"erliege",du:"erliegst",er:"erliegt",wir:"erliegen",ihr:"erliegt",sie:"erliegen"},{ich:"erlag",du:"erlagst",er:"erlag",wir:"erlagen",ihr:"erlagt",sie:"erlagen"},"erlegen","haben");
-fix("erstreiten","to win through court","C1",{ich:"erstreite",du:"erstreitest",er:"erstreitet",wir:"erstreiten",ihr:"erstreitet",sie:"erstreiten"},{ich:"erstritt",du:"erstrittst",er:"erstritt",wir:"erstritten",ihr:"erstrittet",sie:"erstritten"},"erstritten","haben");
-fix("verbieten","to forbid","B1",{ich:"verbiete",du:"verbietest",er:"verbietet",wir:"verbieten",ihr:"verbietet",sie:"verbieten"},{ich:"verbot",du:"verbotest",er:"verbot",wir:"verboten",ihr:"verbotet",sie:"verboten"},"verboten","haben");
-fix("vergleichen","to compare","B1",{ich:"vergleiche",du:"vergleichst",er:"vergleicht",wir:"vergleichen",ihr:"vergleicht",sie:"vergleichen"},{ich:"verglich",du:"verglichst",er:"verglich",wir:"verglichen",ihr:"verglicht",sie:"verglichen"},"verglichen","haben");
-fix("verbringen","to spend (time)","B1",{ich:"verbringe",du:"verbringst",er:"verbringt",wir:"verbringen",ihr:"verbringt",sie:"verbringen"},{ich:"verbrachte",du:"verbrachtest",er:"verbrachte",wir:"verbrachten",ihr:"verbrachtet",sie:"verbrachten"},"verbracht","haben");
-fix("vermeiden","to avoid","B1",{ich:"vermeide",du:"vermeidest",er:"vermeidet",wir:"vermeiden",ihr:"vermeidet",sie:"vermeiden"},{ich:"vermied",du:"vermiedest",er:"vermied",wir:"vermieden",ihr:"vermiedet",sie:"vermieden"},"vermieden","haben");
-fix("erscheinen","to appear","B1",{ich:"erscheine",du:"erscheinst",er:"erscheint",wir:"erscheinen",ihr:"erscheint",sie:"erscheinen"},{ich:"erschien",du:"erschienst",er:"erschien",wir:"erschienen",ihr:"erschient",sie:"erschienen"},"erschienen","sein");
-fix("hintergehen","to betray","B2",{ich:"hintergehe",du:"hintergehst",er:"hintergeht",wir:"hintergehen",ihr:"hintergeht",sie:"hintergehen"},{ich:"hinterging",du:"hintergingst",er:"hinterging",wir:"hintergingen",ihr:"hintergingt",sie:"hintergingen"},"hintergangen","haben");
-fix("überdenken","to reconsider","B2",{ich:"überdenke",du:"überdenkst",er:"überdenkt",wir:"überdenken",ihr:"überdenkt",sie:"überdenken"},{ich:"überdachte",du:"überdachtest",er:"überdachte",wir:"überdachten",ihr:"überdachtet",sie:"überdachten"},"überdacht","haben");
-ALL.push(refl("sich auskennen","to know one's way","B1",{ich:"kenne mich aus",du:"kennst dich aus",er:"kennt sich aus",wir:"kennen uns aus",ihr:"kennt euch aus",sie:"kennen sich aus"},{ich:"kannte mich aus",du:"kanntest dich aus",er:"kannte sich aus",wir:"kannten uns aus",ihr:"kanntet euch aus",sie:"kannten sich aus"},"ausgekannt"));
-ALL.push(refl("sich abfinden","to come to terms","B2",{ich:"finde mich ab",du:"findest dich ab",er:"findet sich ab",wir:"finden uns ab",ihr:"findet euch ab",sie:"finden sich ab"},{ich:"fand mich ab",du:"fandest dich ab",er:"fand sich ab",wir:"fanden uns ab",ihr:"fandet euch ab",sie:"fanden sich ab"},"abgefunden"));
-ALL.push(refl("sich einmischen","to interfere","B1",{ich:"mische mich ein",du:"mischst dich ein",er:"mischt sich ein",wir:"mischen uns ein",ihr:"mischt euch ein",sie:"mischen sich ein"},{ich:"mischte mich ein",du:"mischtest dich ein",er:"mischte sich ein",wir:"mischten uns ein",ihr:"mischtet euch ein",sie:"mischten sich ein"},"eingemischt"));
-ALL.push(refl("sich einsetzen","to advocate","B2",{ich:"setze mich ein",du:"setzt dich ein",er:"setzt sich ein",wir:"setzen uns ein",ihr:"setzt euch ein",sie:"setzen sich ein"},{ich:"setzte mich ein",du:"setztest dich ein",er:"setzte sich ein",wir:"setzten uns ein",ihr:"setztet euch ein",sie:"setzten sich ein"},"eingesetzt"));
-ALL.push(refl("sich herausreden","to talk one's way out","B1",{ich:"rede mich heraus",du:"redest dich heraus",er:"redet sich heraus",wir:"reden uns heraus",ihr:"redet euch heraus",sie:"reden sich heraus"},{ich:"redete mich heraus",du:"redetest dich heraus",er:"redete sich heraus",wir:"redeten uns heraus",ihr:"redetet euch heraus",sie:"redeten sich heraus"},"herausgeredet"));
-ALL.push(refl("sich einschätzen","to assess oneself","B1",{ich:"schätze mich ein",du:"schätzt dich ein",er:"schätzt sich ein",wir:"schätzen uns ein",ihr:"schätzt euch ein",sie:"schätzen sich ein"},{ich:"schätzte mich ein",du:"schätztest dich ein",er:"schätzte sich ein",wir:"schätzten uns ein",ihr:"schätztet euch ein",sie:"schätzten sich ein"},"eingeschätzt"));
-ALL.push(refl("sich einleben","to settle in","B1",{ich:"lebe mich ein",du:"lebst dich ein",er:"lebt sich ein",wir:"leben uns ein",ihr:"lebt euch ein",sie:"leben sich ein"},{ich:"lebte mich ein",du:"lebtest dich ein",er:"lebte sich ein",wir:"lebten uns ein",ihr:"lebtet euch ein",sie:"lebten sich ein"},"eingelebt"));
-ALL.push(refl("sich einarbeiten","to get into","B1",{ich:"arbeite mich ein",du:"arbeitest dich ein",er:"arbeitet sich ein",wir:"arbeiten uns ein",ihr:"arbeitet euch ein",sie:"arbeiten sich ein"},{ich:"arbeitete mich ein",du:"arbeitetest dich ein",er:"arbeitete sich ein",wir:"arbeiteten uns ein",ihr:"arbeitetet euch ein",sie:"arbeiteten sich ein"},"eingearbeitet"));
-ALL.push(refl("sich einstellen","to adjust","B1",{ich:"stelle mich ein",du:"stellst dich ein",er:"stellt sich ein",wir:"stellen uns ein",ihr:"stellt euch ein",sie:"stellen sich ein"},{ich:"stellte mich ein",du:"stelltest dich ein",er:"stellte sich ein",wir:"stellten uns ein",ihr:"stelltet euch ein",sie:"stellten sich ein"},"eingestellt"));
-ALL.push(refl("sich hineinversetzen","to empathize","B2",{ich:"versetze mich hinein",du:"versetzt dich hinein",er:"versetzt sich hinein",wir:"versetzen uns hinein",ihr:"versetzt euch hinein",sie:"versetzen sich hinein"},{ich:"versetzte mich hinein",du:"versetztest dich hinein",er:"versetzte sich hinein",wir:"versetzten uns hinein",ihr:"versetztet euch hinein",sie:"versetzten sich hinein"},"hineinversetzt"));
-ALL.push(refl("sich verausgaben","to overexert","C1",{ich:"verausgabe mich",du:"verausgabst dich",er:"verausgabt sich",wir:"verausgaben uns",ihr:"verausgabt euch",sie:"verausgaben sich"},{ich:"verausgabte mich",du:"verausgabtest dich",er:"verausgabte sich",wir:"verausgabten uns",ihr:"verausgabtet euch",sie:"verausgabten sich"},"verausgabt"));
-ALL.push(refl("sich verrennen","to rush into","C1",{ich:"verrenne mich",du:"verrennst dich",er:"verrennt sich",wir:"verrennen uns",ihr:"verrennt euch",sie:"verrennen sich"},{ich:"verrannte mich",du:"verranntest dich",er:"verrannte sich",wir:"verrannten uns",ihr:"verranntet euch",sie:"verrannten sich"},"verrennt"));
-ALL.push(sep("aus handeln","to negotiate","B1","ausgehandelt"));
-ALL.push(sep("ein üben","to practice","B1",null));
-ALL.push(sep("bei legen","to enclose","B2","beigelegt"));
-ALL.push(sep("nieder legen","to put down","B2","niedergelegt"));
-ALL.push(sep("fest legen","to stipulate","B1","festgelegt"));
-ALL.push(sep("vor spülen","to pre-rinse","B1",null));
-ALL.push(sep("ab tropfen","to drip dry","B1",null));
-ALL.push(sep("weiter denken","to keep thinking","B1",null));
-ALL.push(sep("um formulieren","to rephrase","B1","umformuliert"));
-ALL.push(sep("durch schauen","to see through","B1","durchgeschaut"));
-ALL.push(reg("buddeln","to dig (colloq.)","A2"));
-ALL.push(reg("naschen","to nibble sweets","A2"));
-ALL.push(reg("knabbern","to nibble","B2"));
-ALL.push(reg("schmatzen","to smack one's lips","C2"));
-ALL.push(reg("schlürfen","to slurp","B2"));
-ALL.push(reg("futtern","to chow down","C1"));
-ALL.push(reg("mampfen","to munch","C1"));
-ALL.push(reg("knuspern","to nibble (crisp)","C1"));
-ALL.push(reg("trödeln","to dawdle","B2"));
-ALL.push(reg("faulenzen","to laze","B2"));
-ALL.push(reg("sausen","to whiz","B1"));
-ALL.push(reg("brausen","to rush","C1"));
-ALL.push(reg("flitzen","to dash","C1"));
-ALL.push(reg("stürmen","to storm","B1"));
-ALL.push(reg("eilen","to hurry","B1"));
-ALL.push(reg("tänzeln","to dance about","C1"));
-ALL.push(reg("hopsen","to hop","C1"));
-ALL.push(reg("watscheln","to waddle","C2"));
-ALL.push(reg("flanieren","to stroll","C2"));
-ALL.push(reg("rauschen","to rustle","B1"));
-ALL.push(reg("wehen","to wave (flag)","B1"));
-ALL.push(reg("blühen","to blossom","A2"));
-ALL.push(reg("duften","to smell sweet","A2"));
-ALL.push(reg("rieseln","to trickle","C2"));
-ALL.push(reg("sprudeln","to bubble","B2"));
-ALL.push(reg("plätschern","to lap","C2"));
-ALL.push(reg("gluckern","to gurgle","C2"));
-ALL.push(reg("säuseln","to whisper softly","C2"));
-ALL.push(reg("wuchern","to proliferate","C2"));
-ALL.push(reg("vergilben","to yellow","C2"));
-ALL.push(reg("verdorren","to wither","C2"));
-ALL.push(reg("verblühen","to fade","C1"));
-ALL.push(reg("polieren","to polish","B1"));
-ALL.push(reg("scheuern","to scrub","C1"));
-ALL.push(reg("flicken","to patch","B1"));
-ALL.push(reg("stopfen","to stuff","B1"));
-ALL.push(reg("entkalken","to descale","B1"));
-ALL.push(reg("entfetten","to degrease","B2"));
-ALL.push(reg("plappern","to babble","C1"));
-ALL.push(reg("rezitieren","to recite","B2"));
-ALL.push(reg("zitieren","to quote","B1"));
-ALL.push(reg("deklamieren","to declaim","C2"));
-ALL.push(reg("referieren","to report on","C2"));
-ALL.push(reg("paraphrasieren","to paraphrase","C2"));
-ALL.push(reg("konvertieren","to convert","B2"));
-ALL.push(reg("importieren","to import","B1"));
-ALL.push(reg("exportieren","to export","B1"));
-ALL.push(reg("migrieren","to migrate","B2"));
-ALL.push(reg("duplizieren","to duplicate","B2"));
-ALL.push(reg("klonen","to clone","C1"));
-ALL.push(reg("patchen","to patch","B1"));
-ALL.push(reg("verklagen","to sue","B1"));
-ALL.push(reg("verwahren","to keep safe","C2"));
-ALL.push(reg("hinterlegen","to deposit","B2"));
-ALL.push(reg("beurkunden","to notarize","C2"));
-ALL.push(reg("erwirtschaften","to generate","B2"));
-ALL.push(reg("bewirtschaften","to farm","C2"));
-ALL.push(reg("akquirieren","to acquire","C2"));
-ALL.push(reg("veranschlagen","to estimate","C2"));
-ALL.push(reg("offerieren","to offer (formal)","C2"));
-ALL.push(reg("pauken","to cram","C1"));
-ALL.push(reg("büffeln","to swot","C1"));
-ALL.push(reg("erlernen","to learn (skill)","B1"));
-ALL.push(reg("zähmen","to tame","C1"));
-ALL.push(reg("bezähmen","to subdue","B2"));
-ALL.push(reg("bändigen","to tame","C2"));
-ALL.push(reg("hätscheln","to pamper","C2"));
-ALL.push(reg("verhätscheln","to spoil","C2"));
-ALL.push(reg("plagen","to plague","B2"));
-ALL.push(reg("piesacken","to pester","C2"));
-ALL.push(reg("pupsen","to toot (baby)","C1"));
-ALL.push(reg("rülpsen","to burp","C1"));
-ALL.push(reg("schlottern","to shiver","C2"));
-ALL.push(reg("zagen","to falter","C2"));
-ALL.push(reg("lummeln","to loll","C2"));
-ALL.push(reg("ranken","to twine","C2"));
-ALL.push(reg("ehren","to honor","A2"));
-ALL.push(reg("rühmen","to extol","B2"));
-ALL.push(reg("verherrlichen","to glorify","C2"));
-ALL.push(reg("feiern","to celebrate","A1"));
-ALL.push(reg("jubeln","to cheer","A2"));
-ALL.push(reg("trauern","to mourn","B1"));
-ALL.push(reg("betrauern","to lament","B2"));
-ALL.push(reg("beweinen","to weep over","C1"));
-ALL.push(reg("bejammern","to bemoan","C2"));
-ALL.push(reg("jammern","to whine","B2"));
-ALL.push(reg("klagen","to complain","B1"));
-ALL.push(reg("schnaufen","to puff","C1"));
-ALL.push(reg("keuchen","to gasp","C2"));
-ALL.push(reg("hecheln","to pant","C2"));
-ALL.push(reg("pusten","to blow","A2"));
-ALL.push(reg("hauchen","to breathe softly","B2"));
-ALL.push(reg("lispeln","to lisp","C2"));
-ALL.push(reg("nuscheln","to mumble","C2"));
-ALL.push(reg("brabbeln","to mutter","C2"));
-ALL.push(reg("schwafeln","to blather","C2"));
-ALL.push(reg("labern","to blab","C2"));
-ALL.push(reg("prahlen","to boast","B1"));
-ALL.push(reg("protzen","to flaunt","C2"));
-ALL.push(reg("renommieren","to boast","C2"));
-ALL.push(reg("bluffen","to bluff","B2"));
-ALL.push(reg("täuschen","to deceive","B1"));
-ALL.push(reg("mogeln","to cheat","C1"));
-ALL.push(reg("überlisten","to outsmart","B2"));
-ALL.push(reg("überrumpeln","to ambush","C2"));
-ALL.push(reg("erforschen","to explore","B1"));
-ALL.push(reg("durchforschen","to comb through","C2"));
-ALL.push(reg("durchleuchten","to X-ray","C1"));
-ALL.push(reg("verspotten","to mock","B2"));
-ALL.push(reg("verwunden","to wound","B2"));
-ALL.push(reg("verzollen","to pay duty on","C2"));
-ALL.push(reg("verproben","to field-test","C2"));
-ALL.push(reg("vermarkten","to market","B2"));
-ALL.push(reg("kursieren","to circulate","C1"));
-ALL.push(reg("rankommen","to get close to","C1"));
-ALL.push(reg("herankommen","to approach","B2"));
-ALL.push(reg("dranhängen","to tag on","C2"));
-ALL.push(reg("auseinanderdividieren","to untangle","C2"));
-ALL.push(reg("ausloten","to sound out","C2"));
-ALL.push(reg("ergründen","to fathom","C2"));
-ALL.push(reg("eruieren","to ascertain","C2"));
-ALL.push(reg("verorten","to locate","C2"));
-ALL.push(reg("beheimaten","to base","C2"));
-sepfix("spazieren gehen","to go for a walk","A1",null,null,"ging","gegangen","sein");
-sepfix("baden gehen","to go swimming","A2",null,null,"ging","gegangen","sein");
-sepfix("einkaufen gehen","to go shopping","A1",null,null,"ging","gegangen","sein");
-sepfix("essen gehen","to go out to eat","A1",null,null,"ging","gegangen","sein");
-sepfix("schlafen gehen","to go to bed","A1",null,null,"ging","gegangen","sein");
+sepfix('klar kommen', 'to get by', 'A2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('zurecht kommen', 'to cope', 'B1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('zurecht finden', "to find one's way", 'B1', null, null, 'fand', 'gefunden', 'haben')
+sepfix('weg kommen', 'to get away', 'B2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('herum kommen', 'to get around', 'B1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('durch kommen', 'to get through', 'B1', null, null, 'kam', 'gekommen', 'sein')
+sepfix('hinter kommen', 'to find out', 'B2', null, null, 'kam', 'gekommen', 'sein')
+sepfix('übrig bleiben', 'to be left over', 'B1', null, null, 'blieb', 'geblieben', 'sein')
+sepfix('schief gehen', 'to go wrong', 'C1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('fest halten', 'to hold on', 'B1', 'hält', 'hält', 'hielt', 'gehalten', 'haben')
+sepfix('fest stehen', 'to be certain', 'B1', null, null, 'stand', 'gestanden', 'haben')
+sepfix('um schreiben', 'to rewrite', 'B1', null, null, 'schrieb', 'geschrieben', 'haben')
+sepfix('an fechten', 'to contest', 'B2', 'ficht', 'ficht', 'focht', 'gefochten', 'haben')
+sepfix('durch denken', 'to think through', 'C1', null, null, 'dachte', 'gedacht', 'haben')
+sepfix('über reden', 'to talk over', 'B1', null, null, 'redete', 'geredet', 'haben')
+sepfix('wieder geben', 'to return/give back', 'B1', 'gib', 'gibt', 'gab', 'gegeben', 'haben')
+sepfix('aus setzen', 'to postpone (fig.)', 'B1', null, null, 'setzte', 'gesetzt', 'haben')
+sepfix('zu sprechen', 'to accredit', 'C2', 'sprich', 'spricht', 'sprach', 'gesprochen', 'haben')
+sepfix('vor sehen', 'to provide for', 'B1', 'sieh', 'sieht', 'sah', 'gesehen', 'haben')
+sepfix('hinter bringen', 'to bring behind', 'C2', null, null, 'brachte', 'gebracht', 'haben')
+fix(
+  'begreifen',
+  'to grasp',
+  'B1',
+  {
+    ich: 'begreife',
+    du: 'begreifst',
+    er: 'begreift',
+    wir: 'begreifen',
+    ihr: 'begreift',
+    sie: 'begreifen',
+  },
+  {
+    ich: 'begriff',
+    du: 'begriffst',
+    er: 'begriff',
+    wir: 'begriffen',
+    ihr: 'begrifft',
+    sie: 'begriffen',
+  },
+  'begriffen',
+  'haben',
+)
+fix(
+  'erwerben',
+  'to acquire',
+  'B1',
+  {
+    ich: 'erwerbe',
+    du: 'erwirbst',
+    er: 'erwirbt',
+    wir: 'erwerben',
+    ihr: 'erwerbt',
+    sie: 'erwerben',
+  },
+  { ich: 'erwarb', du: 'erwarbst', er: 'erwarb', wir: 'erwarben', ihr: 'erwarbt', sie: 'erwarben' },
+  'erworben',
+  'haben',
+)
+fix(
+  'erliegen',
+  'to succumb',
+  'B2',
+  {
+    ich: 'erliege',
+    du: 'erliegst',
+    er: 'erliegt',
+    wir: 'erliegen',
+    ihr: 'erliegt',
+    sie: 'erliegen',
+  },
+  { ich: 'erlag', du: 'erlagst', er: 'erlag', wir: 'erlagen', ihr: 'erlagt', sie: 'erlagen' },
+  'erlegen',
+  'haben',
+)
+fix(
+  'erstreiten',
+  'to win through court',
+  'C1',
+  {
+    ich: 'erstreite',
+    du: 'erstreitest',
+    er: 'erstreitet',
+    wir: 'erstreiten',
+    ihr: 'erstreitet',
+    sie: 'erstreiten',
+  },
+  {
+    ich: 'erstritt',
+    du: 'erstrittst',
+    er: 'erstritt',
+    wir: 'erstritten',
+    ihr: 'erstrittet',
+    sie: 'erstritten',
+  },
+  'erstritten',
+  'haben',
+)
+fix(
+  'verbieten',
+  'to forbid',
+  'B1',
+  {
+    ich: 'verbiete',
+    du: 'verbietest',
+    er: 'verbietet',
+    wir: 'verbieten',
+    ihr: 'verbietet',
+    sie: 'verbieten',
+  },
+  {
+    ich: 'verbot',
+    du: 'verbotest',
+    er: 'verbot',
+    wir: 'verboten',
+    ihr: 'verbotet',
+    sie: 'verboten',
+  },
+  'verboten',
+  'haben',
+)
+fix(
+  'vergleichen',
+  'to compare',
+  'B1',
+  {
+    ich: 'vergleiche',
+    du: 'vergleichst',
+    er: 'vergleicht',
+    wir: 'vergleichen',
+    ihr: 'vergleicht',
+    sie: 'vergleichen',
+  },
+  {
+    ich: 'verglich',
+    du: 'verglichst',
+    er: 'verglich',
+    wir: 'verglichen',
+    ihr: 'verglicht',
+    sie: 'verglichen',
+  },
+  'verglichen',
+  'haben',
+)
+fix(
+  'verbringen',
+  'to spend (time)',
+  'B1',
+  {
+    ich: 'verbringe',
+    du: 'verbringst',
+    er: 'verbringt',
+    wir: 'verbringen',
+    ihr: 'verbringt',
+    sie: 'verbringen',
+  },
+  {
+    ich: 'verbrachte',
+    du: 'verbrachtest',
+    er: 'verbrachte',
+    wir: 'verbrachten',
+    ihr: 'verbrachtet',
+    sie: 'verbrachten',
+  },
+  'verbracht',
+  'haben',
+)
+fix(
+  'vermeiden',
+  'to avoid',
+  'B1',
+  {
+    ich: 'vermeide',
+    du: 'vermeidest',
+    er: 'vermeidet',
+    wir: 'vermeiden',
+    ihr: 'vermeidet',
+    sie: 'vermeiden',
+  },
+  {
+    ich: 'vermied',
+    du: 'vermiedest',
+    er: 'vermied',
+    wir: 'vermieden',
+    ihr: 'vermiedet',
+    sie: 'vermieden',
+  },
+  'vermieden',
+  'haben',
+)
+fix(
+  'erscheinen',
+  'to appear',
+  'B1',
+  {
+    ich: 'erscheine',
+    du: 'erscheinst',
+    er: 'erscheint',
+    wir: 'erscheinen',
+    ihr: 'erscheint',
+    sie: 'erscheinen',
+  },
+  {
+    ich: 'erschien',
+    du: 'erschienst',
+    er: 'erschien',
+    wir: 'erschienen',
+    ihr: 'erschient',
+    sie: 'erschienen',
+  },
+  'erschienen',
+  'sein',
+)
+fix(
+  'hintergehen',
+  'to betray',
+  'B2',
+  {
+    ich: 'hintergehe',
+    du: 'hintergehst',
+    er: 'hintergeht',
+    wir: 'hintergehen',
+    ihr: 'hintergeht',
+    sie: 'hintergehen',
+  },
+  {
+    ich: 'hinterging',
+    du: 'hintergingst',
+    er: 'hinterging',
+    wir: 'hintergingen',
+    ihr: 'hintergingt',
+    sie: 'hintergingen',
+  },
+  'hintergangen',
+  'haben',
+)
+fix(
+  'überdenken',
+  'to reconsider',
+  'B2',
+  {
+    ich: 'überdenke',
+    du: 'überdenkst',
+    er: 'überdenkt',
+    wir: 'überdenken',
+    ihr: 'überdenkt',
+    sie: 'überdenken',
+  },
+  {
+    ich: 'überdachte',
+    du: 'überdachtest',
+    er: 'überdachte',
+    wir: 'überdachten',
+    ihr: 'überdachtet',
+    sie: 'überdachten',
+  },
+  'überdacht',
+  'haben',
+)
+ALL.push(
+  refl(
+    'sich auskennen',
+    "to know one's way",
+    'B1',
+    {
+      ich: 'kenne mich aus',
+      du: 'kennst dich aus',
+      er: 'kennt sich aus',
+      wir: 'kennen uns aus',
+      ihr: 'kennt euch aus',
+      sie: 'kennen sich aus',
+    },
+    {
+      ich: 'kannte mich aus',
+      du: 'kanntest dich aus',
+      er: 'kannte sich aus',
+      wir: 'kannten uns aus',
+      ihr: 'kanntet euch aus',
+      sie: 'kannten sich aus',
+    },
+    'ausgekannt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich abfinden',
+    'to come to terms',
+    'B2',
+    {
+      ich: 'finde mich ab',
+      du: 'findest dich ab',
+      er: 'findet sich ab',
+      wir: 'finden uns ab',
+      ihr: 'findet euch ab',
+      sie: 'finden sich ab',
+    },
+    {
+      ich: 'fand mich ab',
+      du: 'fandest dich ab',
+      er: 'fand sich ab',
+      wir: 'fanden uns ab',
+      ihr: 'fandet euch ab',
+      sie: 'fanden sich ab',
+    },
+    'abgefunden',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einmischen',
+    'to interfere',
+    'B1',
+    {
+      ich: 'mische mich ein',
+      du: 'mischst dich ein',
+      er: 'mischt sich ein',
+      wir: 'mischen uns ein',
+      ihr: 'mischt euch ein',
+      sie: 'mischen sich ein',
+    },
+    {
+      ich: 'mischte mich ein',
+      du: 'mischtest dich ein',
+      er: 'mischte sich ein',
+      wir: 'mischten uns ein',
+      ihr: 'mischtet euch ein',
+      sie: 'mischten sich ein',
+    },
+    'eingemischt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einsetzen',
+    'to advocate',
+    'B2',
+    {
+      ich: 'setze mich ein',
+      du: 'setzt dich ein',
+      er: 'setzt sich ein',
+      wir: 'setzen uns ein',
+      ihr: 'setzt euch ein',
+      sie: 'setzen sich ein',
+    },
+    {
+      ich: 'setzte mich ein',
+      du: 'setztest dich ein',
+      er: 'setzte sich ein',
+      wir: 'setzten uns ein',
+      ihr: 'setztet euch ein',
+      sie: 'setzten sich ein',
+    },
+    'eingesetzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich herausreden',
+    "to talk one's way out",
+    'B1',
+    {
+      ich: 'rede mich heraus',
+      du: 'redest dich heraus',
+      er: 'redet sich heraus',
+      wir: 'reden uns heraus',
+      ihr: 'redet euch heraus',
+      sie: 'reden sich heraus',
+    },
+    {
+      ich: 'redete mich heraus',
+      du: 'redetest dich heraus',
+      er: 'redete sich heraus',
+      wir: 'redeten uns heraus',
+      ihr: 'redetet euch heraus',
+      sie: 'redeten sich heraus',
+    },
+    'herausgeredet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einschätzen',
+    'to assess oneself',
+    'B1',
+    {
+      ich: 'schätze mich ein',
+      du: 'schätzt dich ein',
+      er: 'schätzt sich ein',
+      wir: 'schätzen uns ein',
+      ihr: 'schätzt euch ein',
+      sie: 'schätzen sich ein',
+    },
+    {
+      ich: 'schätzte mich ein',
+      du: 'schätztest dich ein',
+      er: 'schätzte sich ein',
+      wir: 'schätzten uns ein',
+      ihr: 'schätztet euch ein',
+      sie: 'schätzten sich ein',
+    },
+    'eingeschätzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einleben',
+    'to settle in',
+    'B1',
+    {
+      ich: 'lebe mich ein',
+      du: 'lebst dich ein',
+      er: 'lebt sich ein',
+      wir: 'leben uns ein',
+      ihr: 'lebt euch ein',
+      sie: 'leben sich ein',
+    },
+    {
+      ich: 'lebte mich ein',
+      du: 'lebtest dich ein',
+      er: 'lebte sich ein',
+      wir: 'lebten uns ein',
+      ihr: 'lebtet euch ein',
+      sie: 'lebten sich ein',
+    },
+    'eingelebt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einarbeiten',
+    'to get into',
+    'B1',
+    {
+      ich: 'arbeite mich ein',
+      du: 'arbeitest dich ein',
+      er: 'arbeitet sich ein',
+      wir: 'arbeiten uns ein',
+      ihr: 'arbeitet euch ein',
+      sie: 'arbeiten sich ein',
+    },
+    {
+      ich: 'arbeitete mich ein',
+      du: 'arbeitetest dich ein',
+      er: 'arbeitete sich ein',
+      wir: 'arbeiteten uns ein',
+      ihr: 'arbeitetet euch ein',
+      sie: 'arbeiteten sich ein',
+    },
+    'eingearbeitet',
+  ),
+)
+ALL.push(
+  refl(
+    'sich einstellen',
+    'to adjust',
+    'B1',
+    {
+      ich: 'stelle mich ein',
+      du: 'stellst dich ein',
+      er: 'stellt sich ein',
+      wir: 'stellen uns ein',
+      ihr: 'stellt euch ein',
+      sie: 'stellen sich ein',
+    },
+    {
+      ich: 'stellte mich ein',
+      du: 'stelltest dich ein',
+      er: 'stellte sich ein',
+      wir: 'stellten uns ein',
+      ihr: 'stelltet euch ein',
+      sie: 'stellten sich ein',
+    },
+    'eingestellt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich hineinversetzen',
+    'to empathize',
+    'B2',
+    {
+      ich: 'versetze mich hinein',
+      du: 'versetzt dich hinein',
+      er: 'versetzt sich hinein',
+      wir: 'versetzen uns hinein',
+      ihr: 'versetzt euch hinein',
+      sie: 'versetzen sich hinein',
+    },
+    {
+      ich: 'versetzte mich hinein',
+      du: 'versetztest dich hinein',
+      er: 'versetzte sich hinein',
+      wir: 'versetzten uns hinein',
+      ihr: 'versetztet euch hinein',
+      sie: 'versetzten sich hinein',
+    },
+    'hineinversetzt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verausgaben',
+    'to overexert',
+    'C1',
+    {
+      ich: 'verausgabe mich',
+      du: 'verausgabst dich',
+      er: 'verausgabt sich',
+      wir: 'verausgaben uns',
+      ihr: 'verausgabt euch',
+      sie: 'verausgaben sich',
+    },
+    {
+      ich: 'verausgabte mich',
+      du: 'verausgabtest dich',
+      er: 'verausgabte sich',
+      wir: 'verausgabten uns',
+      ihr: 'verausgabtet euch',
+      sie: 'verausgabten sich',
+    },
+    'verausgabt',
+  ),
+)
+ALL.push(
+  refl(
+    'sich verrennen',
+    'to rush into',
+    'C1',
+    {
+      ich: 'verrenne mich',
+      du: 'verrennst dich',
+      er: 'verrennt sich',
+      wir: 'verrennen uns',
+      ihr: 'verrennt euch',
+      sie: 'verrennen sich',
+    },
+    {
+      ich: 'verrannte mich',
+      du: 'verranntest dich',
+      er: 'verrannte sich',
+      wir: 'verrannten uns',
+      ihr: 'verranntet euch',
+      sie: 'verrannten sich',
+    },
+    'verrennt',
+  ),
+)
+ALL.push(sep('aus handeln', 'to negotiate', 'B1', 'ausgehandelt'))
+ALL.push(sep('ein üben', 'to practice', 'B1', null))
+ALL.push(sep('bei legen', 'to enclose', 'B2', 'beigelegt'))
+ALL.push(sep('nieder legen', 'to put down', 'B2', 'niedergelegt'))
+ALL.push(sep('fest legen', 'to stipulate', 'B1', 'festgelegt'))
+ALL.push(sep('vor spülen', 'to pre-rinse', 'B1', null))
+ALL.push(sep('ab tropfen', 'to drip dry', 'B1', null))
+ALL.push(sep('weiter denken', 'to keep thinking', 'B1', null))
+ALL.push(sep('um formulieren', 'to rephrase', 'B1', 'umformuliert'))
+ALL.push(sep('durch schauen', 'to see through', 'B1', 'durchgeschaut'))
+ALL.push(reg('buddeln', 'to dig (colloq.)', 'A2'))
+ALL.push(reg('naschen', 'to nibble sweets', 'A2'))
+ALL.push(reg('knabbern', 'to nibble', 'B2'))
+ALL.push(reg('schmatzen', "to smack one's lips", 'C2'))
+ALL.push(reg('schlürfen', 'to slurp', 'B2'))
+ALL.push(reg('futtern', 'to chow down', 'C1'))
+ALL.push(reg('mampfen', 'to munch', 'C1'))
+ALL.push(reg('knuspern', 'to nibble (crisp)', 'C1'))
+ALL.push(reg('trödeln', 'to dawdle', 'B2'))
+ALL.push(reg('faulenzen', 'to laze', 'B2'))
+ALL.push(reg('sausen', 'to whiz', 'B1'))
+ALL.push(reg('brausen', 'to rush', 'C1'))
+ALL.push(reg('flitzen', 'to dash', 'C1'))
+ALL.push(reg('stürmen', 'to storm', 'B1'))
+ALL.push(reg('eilen', 'to hurry', 'B1'))
+ALL.push(reg('tänzeln', 'to dance about', 'C1'))
+ALL.push(reg('hopsen', 'to hop', 'C1'))
+ALL.push(reg('watscheln', 'to waddle', 'C2'))
+ALL.push(reg('flanieren', 'to stroll', 'C2'))
+ALL.push(reg('rauschen', 'to rustle', 'B1'))
+ALL.push(reg('wehen', 'to wave (flag)', 'B1'))
+ALL.push(reg('blühen', 'to blossom', 'A2'))
+ALL.push(reg('duften', 'to smell sweet', 'A2'))
+ALL.push(reg('rieseln', 'to trickle', 'C2'))
+ALL.push(reg('sprudeln', 'to bubble', 'B2'))
+ALL.push(reg('plätschern', 'to lap', 'C2'))
+ALL.push(reg('gluckern', 'to gurgle', 'C2'))
+ALL.push(reg('säuseln', 'to whisper softly', 'C2'))
+ALL.push(reg('wuchern', 'to proliferate', 'C2'))
+ALL.push(reg('vergilben', 'to yellow', 'C2'))
+ALL.push(reg('verdorren', 'to wither', 'C2'))
+ALL.push(reg('verblühen', 'to fade', 'C1'))
+ALL.push(reg('polieren', 'to polish', 'B1'))
+ALL.push(reg('scheuern', 'to scrub', 'C1'))
+ALL.push(reg('flicken', 'to patch', 'B1'))
+ALL.push(reg('stopfen', 'to stuff', 'B1'))
+ALL.push(reg('entkalken', 'to descale', 'B1'))
+ALL.push(reg('entfetten', 'to degrease', 'B2'))
+ALL.push(reg('plappern', 'to babble', 'C1'))
+ALL.push(reg('rezitieren', 'to recite', 'B2'))
+ALL.push(reg('zitieren', 'to quote', 'B1'))
+ALL.push(reg('deklamieren', 'to declaim', 'C2'))
+ALL.push(reg('referieren', 'to report on', 'C2'))
+ALL.push(reg('paraphrasieren', 'to paraphrase', 'C2'))
+ALL.push(reg('konvertieren', 'to convert', 'B2'))
+ALL.push(reg('importieren', 'to import', 'B1'))
+ALL.push(reg('exportieren', 'to export', 'B1'))
+ALL.push(reg('migrieren', 'to migrate', 'B2'))
+ALL.push(reg('duplizieren', 'to duplicate', 'B2'))
+ALL.push(reg('klonen', 'to clone', 'C1'))
+ALL.push(reg('patchen', 'to patch', 'B1'))
+ALL.push(reg('verklagen', 'to sue', 'B1'))
+ALL.push(reg('verwahren', 'to keep safe', 'C2'))
+ALL.push(reg('hinterlegen', 'to deposit', 'B2'))
+ALL.push(reg('beurkunden', 'to notarize', 'C2'))
+ALL.push(reg('erwirtschaften', 'to generate', 'B2'))
+ALL.push(reg('bewirtschaften', 'to farm', 'C2'))
+ALL.push(reg('akquirieren', 'to acquire', 'C2'))
+ALL.push(reg('veranschlagen', 'to estimate', 'C2'))
+ALL.push(reg('offerieren', 'to offer (formal)', 'C2'))
+ALL.push(reg('pauken', 'to cram', 'C1'))
+ALL.push(reg('büffeln', 'to swot', 'C1'))
+ALL.push(reg('erlernen', 'to learn (skill)', 'B1'))
+ALL.push(reg('zähmen', 'to tame', 'C1'))
+ALL.push(reg('bezähmen', 'to subdue', 'B2'))
+ALL.push(reg('bändigen', 'to tame', 'C2'))
+ALL.push(reg('hätscheln', 'to pamper', 'C2'))
+ALL.push(reg('verhätscheln', 'to spoil', 'C2'))
+ALL.push(reg('plagen', 'to plague', 'B2'))
+ALL.push(reg('piesacken', 'to pester', 'C2'))
+ALL.push(reg('pupsen', 'to toot (baby)', 'C1'))
+ALL.push(reg('rülpsen', 'to burp', 'C1'))
+ALL.push(reg('schlottern', 'to shiver', 'C2'))
+ALL.push(reg('zagen', 'to falter', 'C2'))
+ALL.push(reg('lummeln', 'to loll', 'C2'))
+ALL.push(reg('ranken', 'to twine', 'C2'))
+ALL.push(reg('ehren', 'to honor', 'A2'))
+ALL.push(reg('rühmen', 'to extol', 'B2'))
+ALL.push(reg('verherrlichen', 'to glorify', 'C2'))
+ALL.push(reg('feiern', 'to celebrate', 'A1'))
+ALL.push(reg('jubeln', 'to cheer', 'A2'))
+ALL.push(reg('trauern', 'to mourn', 'B1'))
+ALL.push(reg('betrauern', 'to lament', 'B2'))
+ALL.push(reg('beweinen', 'to weep over', 'C1'))
+ALL.push(reg('bejammern', 'to bemoan', 'C2'))
+ALL.push(reg('jammern', 'to whine', 'B2'))
+ALL.push(reg('klagen', 'to complain', 'B1'))
+ALL.push(reg('schnaufen', 'to puff', 'C1'))
+ALL.push(reg('keuchen', 'to gasp', 'C2'))
+ALL.push(reg('hecheln', 'to pant', 'C2'))
+ALL.push(reg('pusten', 'to blow', 'A2'))
+ALL.push(reg('hauchen', 'to breathe softly', 'B2'))
+ALL.push(reg('lispeln', 'to lisp', 'C2'))
+ALL.push(reg('nuscheln', 'to mumble', 'C2'))
+ALL.push(reg('brabbeln', 'to mutter', 'C2'))
+ALL.push(reg('schwafeln', 'to blather', 'C2'))
+ALL.push(reg('labern', 'to blab', 'C2'))
+ALL.push(reg('prahlen', 'to boast', 'B1'))
+ALL.push(reg('protzen', 'to flaunt', 'C2'))
+ALL.push(reg('renommieren', 'to boast', 'C2'))
+ALL.push(reg('bluffen', 'to bluff', 'B2'))
+ALL.push(reg('täuschen', 'to deceive', 'B1'))
+ALL.push(reg('mogeln', 'to cheat', 'C1'))
+ALL.push(reg('überlisten', 'to outsmart', 'B2'))
+ALL.push(reg('überrumpeln', 'to ambush', 'C2'))
+ALL.push(reg('erforschen', 'to explore', 'B1'))
+ALL.push(reg('durchforschen', 'to comb through', 'C2'))
+ALL.push(reg('durchleuchten', 'to X-ray', 'C1'))
+ALL.push(reg('verspotten', 'to mock', 'B2'))
+ALL.push(reg('verwunden', 'to wound', 'B2'))
+ALL.push(reg('verzollen', 'to pay duty on', 'C2'))
+ALL.push(reg('verproben', 'to field-test', 'C2'))
+ALL.push(reg('vermarkten', 'to market', 'B2'))
+ALL.push(reg('kursieren', 'to circulate', 'C1'))
+ALL.push(reg('rankommen', 'to get close to', 'C1'))
+ALL.push(reg('herankommen', 'to approach', 'B2'))
+ALL.push(reg('dranhängen', 'to tag on', 'C2'))
+ALL.push(reg('auseinanderdividieren', 'to untangle', 'C2'))
+ALL.push(reg('ausloten', 'to sound out', 'C2'))
+ALL.push(reg('ergründen', 'to fathom', 'C2'))
+ALL.push(reg('eruieren', 'to ascertain', 'C2'))
+ALL.push(reg('verorten', 'to locate', 'C2'))
+ALL.push(reg('beheimaten', 'to base', 'C2'))
+sepfix('spazieren gehen', 'to go for a walk', 'A1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('baden gehen', 'to go swimming', 'A2', null, null, 'ging', 'gegangen', 'sein')
+sepfix('einkaufen gehen', 'to go shopping', 'A1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('essen gehen', 'to go out to eat', 'A1', null, null, 'ging', 'gegangen', 'sein')
+sepfix('schlafen gehen', 'to go to bed', 'A1', null, null, 'ging', 'gegangen', 'sein')
 // ---- Reclassify weak prefixed verbs as inseparable; Partizip II loses ge- ----
-ALL.forEach(v => {
-  if (v.type === "regular" && /^(be|ver|er|ent|zer|miss|ge)/.test(v.inf) && !v.inf.includes(" ")) {
-    v.type = "inseparable";
-    const stem = v.inf.replace(/en$/, "");
-    const e = /(t|d|n|m)$/.test(stem) ? "e" : "";
-    v.partizip = stem + e + "t";
+ALL.forEach((v) => {
+  if (v.type === 'regular' && /^(be|ver|er|ent|zer|miss|ge)/.test(v.inf) && !v.inf.includes(' ')) {
+    v.type = 'inseparable'
+    const stem = v.inf.replace(/en$/, '')
+    const e = /(t|d|n|m)$/.test(stem) ? 'e' : ''
+    v.partizip = stem + e + 't'
   }
-});
+})
 
 // ---- Dedup: keep first occurrence (first = fix()-corrected entry) ----
-const seenInf = new Set();
+const seenInf = new Set()
 for (let i = 0; i < ALL.length; i++) {
-  if (seenInf.has(ALL[i].inf)) { ALL.splice(i, 1); i--; }
-  else seenInf.add(ALL[i].inf);
+  if (seenInf.has(ALL[i].inf)) {
+    ALL.splice(i, 1)
+    i--
+  } else seenInf.add(ALL[i].inf)
 }
 const TYPE_INFO = {
-  regular: { name: "Regelmäßig", color: "#16a34a" },
-  strong: { name: "Stark", color: "#ea580c" },
-  irregular: { name: "Unregelmäßig", color: "#dc2626" },
-  modal: { name: "Modal", color: "#7c3aed" },
-  separable: { name: "Trennbar", color: "#0891b2" },
-  inseparable: { name: "Untrennbar", color: "#0d9488" },
-  reflexive: { name: "Reflexiv", color: "#be185d" },
-};
+  regular: { name: 'Regelmäßig', color: '#16a34a' },
+  strong: { name: 'Stark', color: '#ea580c' },
+  irregular: { name: 'Unregelmäßig', color: '#dc2626' },
+  modal: { name: 'Modal', color: '#7c3aed' },
+  separable: { name: 'Trennbar', color: '#0891b2' },
+  inseparable: { name: 'Untrennbar', color: '#0d9488' },
+  reflexive: { name: 'Reflexiv', color: '#be185d' },
+}
 
-export { VERBS, LEVELS, TYPE_INFO };
+export { VERBS, LEVELS, TYPE_INFO }

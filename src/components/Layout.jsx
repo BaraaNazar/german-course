@@ -14,7 +14,7 @@ export default function Layout() {
   return (
     <>
       <Navbar />
-      <main className="mx-auto w-full max-w-[960px] px-4 pb-20 pt-6">
+      <main className="mx-auto w-full max-w-[960px] px-4 pt-6 pb-20">
         <ErrorBoundary>
           <Outlet />
         </ErrorBoundary>
@@ -61,9 +61,15 @@ function Navbar() {
           className="nav-scroll -mx-1 flex items-center gap-0.5 overflow-x-auto px-1 py-0.5"
           aria-label="Main navigation"
         >
-          <NavLink to="/" end className={linkClass}>Home</NavLink>
-          <NavLink to="/konjugation" className={linkClass}>Konjugation</NavLink>
-          <NavLink to="/vocab" className={linkClass}>Vocab</NavLink>
+          <NavLink to="/" end className={linkClass}>
+            Home
+          </NavLink>
+          <NavLink to="/konjugation" className={linkClass}>
+            Konjugation
+          </NavLink>
+          <NavLink to="/vocab" className={linkClass}>
+            Vocab
+          </NavLink>
           {/* staticUrl() makes these absolute — plain relative hrefs would
               break whenever the navbar renders on a sub-route. */}
           <a href={staticUrl('hybrid/index.html')} className={`${staticLink} hidden sm:block`}>
@@ -89,8 +95,12 @@ function Navbar() {
             </>
           ) : (
             <>
-              <NavLink to="/login" className="btn btn-ghost btn-sm no-underline shrink-0">Login</NavLink>
-              <NavLink to="/signup" className="btn btn-primary btn-sm no-underline shrink-0">Sign Up</NavLink>
+              <NavLink to="/login" className="btn btn-ghost btn-sm shrink-0 no-underline">
+                Login
+              </NavLink>
+              <NavLink to="/signup" className="btn btn-primary btn-sm shrink-0 no-underline">
+                Sign Up
+              </NavLink>
             </>
           )}
         </nav>

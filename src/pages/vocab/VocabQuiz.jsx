@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { WORDS } from '../../data/vocab'
 import { useVocabProgress } from '../../context/ProgressContext'
 
@@ -9,9 +9,7 @@ import { useVocabProgress } from '../../context/ProgressContext'
  * answer, never equal to it, deduplicated).
  */
 export default function VocabQuiz({ progress }) {
-  const [round, setRound] = useState(0)
   const [questions, setQuestions] = useState([])
-  const [count, setCount] = useState(10)
   const [index, setIndex] = useState(0)
   const [score, setScore] = useState(0)
   const [answered, setAnswered] = useState(null)
@@ -19,12 +17,10 @@ export default function VocabQuiz({ progress }) {
   const { markWordKnown, recordQuiz } = useVocabProgress()
 
   function start(n) {
-    setCount(n)
     setQuestions(buildQuiz(n))
     setIndex(0)
     setScore(0)
     setAnswered(null)
-    setRound(r => r + 1)
   }
 
   function answer(i) {
@@ -33,7 +29,7 @@ export default function VocabQuiz({ progress }) {
     const ok = i === q.answer
     setAnswered({ picked: i, ok })
     if (ok) {
-      setScore(s => s + 1)
+      setScore((s) => s + 1)
       markWordKnown(q.word[0], true)
     }
   }
@@ -41,11 +37,11 @@ export default function VocabQuiz({ progress }) {
   function next() {
     if (index + 1 >= questions.length) {
       // Persist the final score once, when the quiz actually ends.
-      recordQuiz(Math.round(score / questions.length * 100))
+      recordQuiz(Math.round((score / questions.length) * 100))
       setAnswered(null)
       setIndex(index + 1)
     } else {
-      setIndex(i => i + 1)
+      setIndex((i) => i + 1)
       setAnswered(null)
     }
   }
@@ -57,13 +53,23 @@ export default function VocabQuiz({ progress }) {
         <h2>🧠 Vocabulary Quiz</h2>
         <p className="text-muted">Test your knowledge with multiple-choice questions</p>
         <div className="mt-4 flex flex-wrap justify-center gap-3">
-          <button className="btn btn-primary" onClick={() => start(10)}>Quick · 10</button>
-          <button className="btn btn-good" onClick={() => start(25)}>Standard · 25</button>
-          <button className="btn btn-dark" onClick={() => start(50)}>Marathon · 50</button>
+          <button className="btn btn-primary" onClick={() => start(10)}>
+            Quick · 10
+          </button>
+          <button className="btn btn-good" onClick={() => start(25)}>
+            Standard · 25
+          </button>
+          <button className="btn btn-dark" onClick={() => start(50)}>
+            Marathon · 50
+          </button>
         </div>
         {progress.scores.length > 0 && (
           <div className="mt-5 text-sm">
-            <b>Recent scores:</b> {progress.scores.slice(-5).map(s => `${s}%`).join(', ')}
+            <b>Recent scores:</b>{' '}
+            {progress.scores
+              .slice(-5)
+              .map((s) => `${s}%`)
+              .join(', ')}
           </div>
         )}
       </div>
@@ -72,14 +78,20 @@ export default function VocabQuiz({ progress }) {
 
   /* ---------- results ---------- */
   if (index >= questions.length) {
-    const pct = Math.round(score / questions.length * 100)
+    const pct = Math.round((score / questions.length) * 100)
     return (
       <div className="card results-hero">
-        <div className="stars">{pct >= 90 ? '★★★' : pct >= 70 ? '★★☆' : pct >= 50 ? '★☆☆' : '☆☆☆'}</div>
+        <div className="stars">
+          {pct >= 90 ? '★★★' : pct >= 70 ? '★★☆' : pct >= 50 ? '★☆☆' : '☆☆☆'}
+        </div>
         <div className="results-score">{pct}%</div>
-        <p className="text-muted">Quiz complete! {score}/{questions.length} correct</p>
+        <p className="text-muted">
+          Quiz complete! {score}/{questions.length} correct
+        </p>
         <div className="mt-4 flex justify-center gap-3">
-          <button className="btn btn-primary" onClick={() => setQuestions([])}>New Quiz</button>
+          <button className="btn btn-primary" onClick={() => setQuestions([])}>
+            New Quiz
+          </button>
         </div>
       </div>
     )
@@ -121,15 +133,20 @@ export default function VocabQuiz({ progress }) {
         <>
           <div className={`feedback mt-3.5 ${answered.ok ? 'ok' : 'bad'}`}>
             <div className="fb-title">{answered.ok ? '✓ Correct!' : '✗ Not quite.'}</div>
-            <div className="mt-1">{q.word[0]} = {q.word[1]}</div>
+            <div className="mt-1">
+              {q.word[0]} = {q.word[1]}
+            </div>
             {q.word[3] && (
               <div className="mt-2 rounded-[10px] bg-surface-2 px-3.5 py-2 text-sm text-muted">
-                “{q.word[3]}”<br /><span className="text-xs">{q.word[4]}</span>
+                “{q.word[3]}”<br />
+                <span className="text-xs">{q.word[4]}</span>
               </div>
             )}
           </div>
           <div className="mt-3.5 flex justify-center">
-            <button className="btn btn-primary btn-sm" onClick={next}>Next →</button>
+            <button className="btn btn-primary btn-sm" onClick={next}>
+              Next →
+            </button>
           </div>
         </>
       )}
@@ -150,8 +167,8 @@ function buildQuiz(n) {
     // are all plausible members of one language.
     const answer = germanToEnglish ? word[1] : word[0]
     const distract = pool
-      .map(x => (germanToEnglish ? x[1] : x[0]))
-      .filter(f => f && f !== answer)
+      .map((x) => (germanToEnglish ? x[1] : x[0]))
+      .filter((f) => f && f !== answer)
       .filter((f, idx, arr) => arr.indexOf(f) === idx) // dedupe
       .sort(() => Math.random() - 0.5)
       .slice(0, 3)

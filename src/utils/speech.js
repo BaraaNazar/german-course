@@ -20,8 +20,8 @@ function resolveGermanVoice() {
   if (!('speechSynthesis' in window)) return
   const voices = window.speechSynthesis.getVoices()
   cachedGermanVoice =
-    voices.find(v => v.lang.startsWith('de') && v.localService) ??
-    voices.find(v => v.lang.startsWith('de')) ??
+    voices.find((v) => v.lang.startsWith('de') && v.localService) ??
+    voices.find((v) => v.lang.startsWith('de')) ??
     null
 }
 
@@ -32,7 +32,10 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 
 export function speakGerman(text) {
   // Stop whatever is currently playing.
-  if (currentAudio) { currentAudio.pause(); currentAudio = null }
+  if (currentAudio) {
+    currentAudio.pause()
+    currentAudio = null
+  }
   if ('speechSynthesis' in window) window.speechSynthesis.cancel()
 
   const url =
@@ -41,8 +44,11 @@ export function speakGerman(text) {
 
   const audio = new Audio(url)
   audio.volume = 1.0
-  audio.play()
-    .then(() => { currentAudio = audio })
+  audio
+    .play()
+    .then(() => {
+      currentAudio = audio
+    })
     .catch(() => {
       // Endpoint failed → system voice fallback.
       if (!('speechSynthesis' in window)) return

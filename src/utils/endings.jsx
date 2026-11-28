@@ -12,8 +12,8 @@ import { useMemo } from 'react'
 const ENDINGS = [
   { suffix: 'st', className: 'end-st' },
   { suffix: 'en', className: 'end-en' },
-  { suffix: 'e',  className: 'end-e'  },
-  { suffix: 't',  className: 'end-t'  },
+  { suffix: 'e', className: 'end-e' },
+  { suffix: 't', className: 'end-t' },
 ]
 
 /**

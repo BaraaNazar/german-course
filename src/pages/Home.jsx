@@ -39,58 +39,98 @@ export default function Home() {
       </div>
 
       <div className="mb-5 grid grid-cols-2 gap-2.5 md:grid-cols-4">
-        {stats.map(s => <StatCard key={s.lbl} {...s} />)}
+        {stats.map((s) => (
+          <StatCard key={s.lbl} {...s} />
+        ))}
       </div>
 
       {(vocab.known.length > 0 || conj.known.length > 0) && (
         <div className="card mb-5">
-          <h3 className="mb-3 text-[15px] font-extrabold uppercase tracking-wider text-muted">
+          <h3 className="mb-3 text-[15px] font-extrabold tracking-wider text-muted uppercase">
             Your Progress
           </h3>
           <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
             <StatCard num={vocab.known.length} lbl="Words Known" />
             <StatCard num={conj.known.length} lbl="Verbs Mastered" />
             <StatCard num={vocab.scores.length + conj.scores.length} lbl="Quizzes Taken" />
-            <StatCard num={`${Math.round(vocab.known.length / WORDS.length * 100)}%`} lbl="Vocab Progress" />
+            <StatCard
+              num={`${Math.round((vocab.known.length / WORDS.length) * 100)}%`}
+              lbl="Vocab Progress"
+            />
           </div>
         </div>
       )}
 
       <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-[repeat(auto-fit,minmax(280px,1fr))]">
         <TrackCard
-          to={staticUrl('hybrid/index.html')} icon="⚡" title="Hybrid" badge="Recommended"
+          to={staticUrl('hybrid/index.html')}
+          icon="⚡"
+          title="Hybrid"
+          badge="Recommended"
           desc="Audio + instant-feedback exercises + bilingual grammar with Mermaid diagrams. The complete package."
-          tags={[['Interactive', 'primary'], ['498 lessons', 'muted']]}
+          tags={[
+            ['Interactive', 'primary'],
+            ['498 lessons', 'muted'],
+          ]}
         />
         <TrackCard
-          to="/vocab" icon="🧠" title="Vocab Trainer" reactRoute
+          to="/vocab"
+          icon="🧠"
+          title="Vocab Trainer"
+          reactRoute
           desc={`${WORDS.length.toLocaleString()} words with flashcards, MCQ quizzes, and ${STORIES.length} reading comprehension stories.`}
-          tags={[['Flashcards', 'primary'], [`${WORDS.length.toLocaleString()} words`, 'muted']]}
+          tags={[
+            ['Flashcards', 'primary'],
+            [`${WORDS.length.toLocaleString()} words`, 'muted'],
+          ]}
         />
         <TrackCard
-          to="/konjugation" icon="🔀" title="Konjugation" reactRoute
+          to="/konjugation"
+          icon="🔀"
+          title="Konjugation"
+          reactRoute
           desc={`${VERBS.length} verbs across all 7 types. Präsens, Präteritum, Perfekt with color-coded endings. MCQ + type-in quizzes.`}
-          tags={[['Interactive', 'primary'], [`${VERBS.length} verbs`, 'muted']]}
+          tags={[
+            ['Interactive', 'primary'],
+            [`${VERBS.length} verbs`, 'muted'],
+          ]}
         />
         <TrackCard
-          to={staticUrl('textkurs/index.html')} icon="📖" title="Textkurs"
+          to={staticUrl('textkurs/index.html')}
+          icon="📖"
+          title="Textkurs"
           desc="Print-friendly text lessons. Bilingual A1–A2, increasingly German B1+. Works fully offline."
-          tags={[['Text-based', 'gold'], ['498 lessons', 'muted']]}
+          tags={[
+            ['Text-based', 'gold'],
+            ['498 lessons', 'muted'],
+          ]}
         />
         <TrackCard
-          to={staticUrl('kursraum/index.html')} icon="🏛️" title="Kursraum"
+          to={staticUrl('kursraum/index.html')}
+          icon="🏛️"
+          title="Kursraum"
           desc="Interactive browser lessons with audio, quizzes, and flashcards. German-first from B1."
-          tags={[['Interactive', 'primary'], ['498 lessons', 'muted']]}
+          tags={[
+            ['Interactive', 'primary'],
+            ['498 lessons', 'muted'],
+          ]}
         />
         <TrackCard
-          to={staticUrl('pimsleur/index.html')} icon="🎧" title="Pimsleur-Style"
+          to={staticUrl('pimsleur/index.html')}
+          icon="🎧"
+          title="Pimsleur-Style"
           desc="Audio-first, anticipation-driven. Max 5 new words per lesson. Grammar absorbed through patterns."
-          tags={[['Audio-first', 'dark'], ['5 lessons', 'muted']]}
+          tags={[
+            ['Audio-first', 'dark'],
+            ['5 lessons', 'muted'],
+          ]}
         />
       </div>
 
       <div className="card">
-        <h3 className="mb-3 text-[15px] font-extrabold uppercase tracking-wider text-muted">Quick Links</h3>
+        <h3 className="mb-3 text-[15px] font-extrabold tracking-wider text-muted uppercase">
+          Quick Links
+        </h3>
         <div className="flex flex-wrap gap-2">
           <QuickLink href={staticUrl('about.html')}>🎯 About</QuickLink>
           <QuickLink href={staticUrl('resources.html')}>📚 Resources</QuickLink>
@@ -108,7 +148,9 @@ function StatCard({ num, lbl }) {
   return (
     <div className="rounded-xl border border-line bg-surface p-3 text-center">
       <div className="text-[22px] font-black text-primary">{num}</div>
-      <div className="mt-0.5 text-[10.5px] font-bold uppercase tracking-wider text-muted">{lbl}</div>
+      <div className="mt-0.5 text-[10.5px] font-bold tracking-wider text-muted uppercase">
+        {lbl}
+      </div>
     </div>
   )
 }
@@ -134,14 +176,16 @@ function TrackCard({ to, icon, title, badge, desc, tags, reactRoute }) {
           {icon}
         </span>
         <h2 className="m-0 flex-1 text-[17px] leading-tight font-extrabold">
-          {title}{' '}
-          {badge && <span className="text-[13px] font-normal text-muted">{badge}</span>}
+          {title} {badge && <span className="text-[13px] font-normal text-muted">{badge}</span>}
         </h2>
       </div>
       <p className="mb-3.5 flex-1 text-[13.5px] leading-relaxed text-muted">{desc}</p>
       <div className="mt-auto flex flex-wrap items-center gap-1.5">
         {tags.map(([label, cls]) => (
-          <span key={label} className={`rounded-md px-2.5 py-[3px] text-[11px] font-extrabold tracking-wide uppercase whitespace-nowrap ${TAG_STYLES[cls]}`}>
+          <span
+            key={label}
+            className={`rounded-md px-2.5 py-[3px] text-[11px] font-extrabold tracking-wide whitespace-nowrap uppercase ${TAG_STYLES[cls]}`}
+          >
             {label}
           </span>
         ))}
@@ -150,15 +194,27 @@ function TrackCard({ to, icon, title, badge, desc, tags, reactRoute }) {
   )
   const cls =
     'relative flex flex-col overflow-hidden rounded-2xl border-[1.5px] border-line bg-surface p-[22px] no-underline text-ink shadow-1 transition-colors hover:border-primary'
-  return reactRoute
-    ? <Link className={cls} to={to}>{inner}</Link>
-    : <a className={cls} href={to}>{inner}</a>
+  return reactRoute ? (
+    <Link className={cls} to={to}>
+      {inner}
+    </Link>
+  ) : (
+    <a className={cls} href={to}>
+      {inner}
+    </a>
+  )
 }
 
 function QuickLink({ href, to, children }) {
   const cls =
     'inline-flex items-center gap-1.5 rounded-[10px] border border-line bg-surface-2 px-4 py-2 text-[13.5px] font-bold text-ink no-underline transition-all hover:border-primary hover:text-primary'
-  return href
-    ? <a href={href} className={cls}>{children}</a>
-    : <Link to={to} className={cls}>{children}</Link>
+  return href ? (
+    <a href={href} className={cls}>
+      {children}
+    </a>
+  ) : (
+    <Link to={to} className={cls}>
+      {children}
+    </Link>
+  )
 }

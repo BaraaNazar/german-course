@@ -17,7 +17,9 @@ export default function ResetPassword() {
   const token = params.get('token') ?? ''
   const navigate = useNavigate()
 
-  const [phase, setPhase] = useState('checking') // checking | invalid | ready
+  // No token in the URL = someone typed the address by hand — start
+  // directly at the error screen (derived state, no effect needed).
+  const [phase, setPhase] = useState(token ? 'checking' : 'invalid')
   const [expired, setExpired] = useState(false)
 
   const [password, setPassword] = useState('')
@@ -27,18 +29,17 @@ export default function ResetPassword() {
 
   useEffect(() => {
     let cancelled = false
-    authService.validateResetToken(token).then(result => {
+    authService.validateResetToken(token).then((result) => {
       if (cancelled) return
       if (result.valid) setPhase('ready')
-      else { setExpired(result.expired); setPhase('invalid') }
+      else {
+        setExpired(result.expired)
+        setPhase('invalid')
+      }
     })
-    return () => { cancelled = true }
-  }, [token])
-
-  // A missing token means someone typed the URL without a link —
-  // treat it as invalid rather than crashing on a null check later.
-  useEffect(() => {
-    if (!token) { setPhase('invalid') }
+    return () => {
+      cancelled = true
+    }
   }, [token])
 
   async function handleSubmit(e) {
@@ -62,7 +63,11 @@ export default function ResetPassword() {
         state: { message: 'Password updated — please log in with your new password.' },
       })
     } catch (err) {
-      setError(err instanceof authService.AuthError ? err.message : 'Something went wrong. Please try again.')
+      setError(
+        err instanceof authService.AuthError
+          ? err.message
+          : 'Something went wrong. Please try again.',
+      )
       // An invalid/expired token at submit time → swap to the error screen.
       if (err?.code === 'RESET_INVALID' || err?.code === 'RESET_EXPIRED') {
         setExpired(err.code === 'RESET_EXPIRED')
@@ -75,7 +80,12 @@ export default function ResetPassword() {
 
   if (phase === 'checking') {
     return (
-      <AuthShell emoji="⏳" title="Checking your link…" subtitle="Verifying the reset token" note={false}>
+      <AuthShell
+        emoji="⏳"
+        title="Checking your link…"
+        subtitle="Verifying the reset token"
+        note={false}
+      >
         <div className="card center text-center text-muted">Validating…</div>
       </AuthShell>
     )
@@ -86,16 +96,20 @@ export default function ResetPassword() {
       <AuthShell
         emoji="⚠️"
         title={expired ? 'Link expired' : 'Link not valid'}
-        subtitle={expired
-          ? 'Reset links are only valid for 15 minutes.'
-          : 'This reset link was already used or never existed.'}
+        subtitle={
+          expired
+            ? 'Reset links are only valid for 15 minutes.'
+            : 'This reset link was already used or never existed.'
+        }
       >
         <div className="card text-center">
           <Link to="/forgot-password" className="btn btn-primary btn-lg w-full">
             Request a new link
           </Link>
           <p className="m-0 mt-4">
-            <Link to="/login" className="text-sm font-bold text-primary">← Back to login</Link>
+            <Link to="/login" className="text-sm font-bold text-primary">
+              ← Back to login
+            </Link>
           </p>
         </div>
       </AuthShell>
@@ -114,7 +128,10 @@ export default function ResetPassword() {
           <input
             type="password"
             value={password}
-            onChange={e => { setPassword(e.target.value); setError('') }}
+            onChange={(e) => {
+              setPassword(e.target.value)
+              setError('')
+            }}
             placeholder="At least 6 characters"
             autoComplete="new-password"
             autoFocus
@@ -125,7 +142,10 @@ export default function ResetPassword() {
           <input
             type="password"
             value={confirm}
-            onChange={e => { setConfirm(e.target.value); setError('') }}
+            onChange={(e) => {
+              setConfirm(e.target.value)
+              setError('')
+            }}
             placeholder="Repeat the new password"
             autoComplete="new-password"
           />
@@ -143,7 +163,10 @@ export default function ResetPassword() {
       </form>
 
       <p className="mt-4 text-center text-sm">
-        Changed your mind? <Link to="/login" className="font-bold text-primary">Log in</Link>
+        Changed your mind?{' '}
+        <Link to="/login" className="font-bold text-primary">
+          Log in
+        </Link>
       </p>
     </AuthShell>
   )

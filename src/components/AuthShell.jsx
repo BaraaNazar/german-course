@@ -16,9 +16,8 @@ export default function AuthShell({ emoji, title, subtitle, children, note = tru
 
       {note && (
         <p className="mt-3.5 rounded-[10px] border border-gold-line bg-gold-soft px-3.5 py-2.5 text-[12.5px] leading-relaxed text-muted">
-          ℹ️ Demo mode: accounts live in this browser (localStorage). When the
-          backend goes online, existing accounts will be migrated — your
-          learning progress is saved locally either way.
+          ℹ️ Demo mode: accounts live in this browser (localStorage). When the backend goes online,
+          existing accounts will be migrated — your learning progress is saved locally either way.
         </p>
       )}
     </div>

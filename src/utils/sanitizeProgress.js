@@ -45,20 +45,19 @@ export function sanitizeVocab(doc) {
 
 /* ---------- coercion helpers ---------- */
 
-const isPlainObject = v => typeof v === 'object' && v !== null && !Array.isArray(v)
+const isPlainObject = (v) => typeof v === 'object' && v !== null && !Array.isArray(v)
 
-const stringArray = v => (Array.isArray(v) ? v.filter(x => typeof x === 'string') : [])
+const stringArray = (v) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : [])
 
-const numberArray = v =>
-  Array.isArray(v) ? v.filter(x => typeof x === 'number' && Number.isFinite(x)) : []
+const numberArray = (v) =>
+  Array.isArray(v) ? v.filter((x) => typeof x === 'number' && Number.isFinite(x)) : []
 
 /** { "A1": [80, 90], … } — per-key numeric arrays, corrupt keys dropped. */
-const numberArrayMap = v =>
-  mapValues(v, x => (Array.isArray(x) ? numberArray(x) : undefined))
+const numberArrayMap = (v) => mapValues(v, (x) => (Array.isArray(x) ? numberArray(x) : undefined))
 
 /** { "1": 25, … } — per-key numbers, invalid entries dropped. */
-const numberMap = v =>
-  mapValues(v, x => (typeof x === 'number' && Number.isFinite(x) ? x : undefined))
+const numberMap = (v) =>
+  mapValues(v, (x) => (typeof x === 'number' && Number.isFinite(x) ? x : undefined))
 
 function mapValues(v, sanitizeValue) {
   if (!isPlainObject(v)) return {}

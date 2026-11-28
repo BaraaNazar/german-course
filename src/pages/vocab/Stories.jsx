@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react'
 import { STORIES } from '../../data/stories'
 import { WORDS } from '../../data/vocab'
-import { useVocabProgress } from '../../context/ProgressContext'
-import SpeakButton from '../../components/SpeakButton'
+import { speakGerman } from '../../utils/speech'
 
 /**
  * Stories — reading comprehension: list → reader → MCQ test.
@@ -16,9 +15,9 @@ import SpeakButton from '../../components/SpeakButton'
  * paragraph is tokenized once at render time.
  */
 export default function Stories({ progress }) {
-  const [story, setStory] = useState(null)   // story being read
+  const [story, setStory] = useState(null) // story being read
   const [testing, setTesting] = useState(false) // comprehension test open?
-  const [answers, setAnswers] = useState({})   // { questionIndex: optionIndex }
+  const [answers, setAnswers] = useState({}) // { questionIndex: optionIndex }
   const [score, setScore] = useState(0)
 
   const knownSet = useMemo(() => new Set(progress.known), [progress.known])
@@ -38,8 +37,8 @@ export default function Stories({ progress }) {
         <div className="card">
           <h3 className="mt-0">📖 Reading Comprehension</h3>
           <p className="text-sm text-muted">
-            Read a short story, then test your understanding with multiple-choice questions.
-            Words from your vocabulary decks are highlighted.
+            Read a short story, then test your understanding with multiple-choice questions. Words
+            from your vocabulary decks are highlighted.
           </p>
         </div>
         {STORIES.map((s, i) => {
@@ -78,8 +77,8 @@ export default function Stories({ progress }) {
         onAnswer={(qi, oi) => {
           if (answers[qi] !== undefined) return // already answered
           const ok = oi === story.questions[qi].a
-          if (ok) setScore(s => s + 1)
-          setAnswers(a => ({ ...a, [qi]: oi }))
+          if (ok) setScore((s) => s + 1)
+          setAnswers((a) => ({ ...a, [qi]: oi }))
         }}
         onDone={() => setStory(null)}
       />
@@ -114,7 +113,9 @@ export default function Stories({ progress }) {
         <button className="btn btn-primary btn-lg" onClick={() => setTesting(true)}>
           📝 Take Comprehension Test
         </button>
-        <button className="btn btn-ghost" onClick={() => setStory(null)}>← Back to Stories</button>
+        <button className="btn btn-ghost" onClick={() => setStory(null)}>
+          ← Back to Stories
+        </button>
       </div>
     </>
   )
@@ -134,13 +135,12 @@ function isDialogue(p) {
  */
 const VOCAB_LOOKUP = [...WORDS]
   .sort((a, b) => b[0].length - a[0].length)
-  .map(w => ({ de: w[0], en: w[1] }))
+  .map((w) => ({ de: w[0], en: w[1] }))
 
-const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 // One alternation regex over all 5,000 phrases would be slow to build;
 // instead we scan the paragraph with a single word-boundary pass and
 // check the trailing window against a Map of phrases.
-const PHRASE_MAP = new Map(VOCAB_LOOKUP.map(v => [v.de.toLowerCase(), v.en]))
+const PHRASE_MAP = new Map(VOCAB_LOOKUP.map((v) => [v.de.toLowerCase(), v.en]))
 
 /**
  * Renders a paragraph, wrapping every vocabulary phrase in a <span>
@@ -163,9 +163,8 @@ function HighlightedParagraph({ text, knownSet }) {
             key={i}
             className={`hl ${t.known ? 'known' : ''}`}
             title={t.en}
-            onClick={() => {
-              // Click → pronounce. Visual hint handled by CSS hover.
-            }}
+            // Click a highlighted phrase to hear it pronounced.
+            onClick={() => speakGerman(t.text)}
           >
             {t.text}{' '}
           </span>
@@ -212,7 +211,9 @@ function StoryTest({ story, answers, score, onAnswer, onDone }) {
 
   return (
     <>
-      <div className="my-4 text-center text-lg font-extrabold">📝 {story.title} — Comprehension</div>
+      <div className="my-4 text-center text-lg font-extrabold">
+        📝 {story.title} — Comprehension
+      </div>
 
       {story.questions.map((q, qi) => {
         const picked = answers[qi]
@@ -255,13 +256,15 @@ function StoryTest({ story, answers, score, onAnswer, onDone }) {
       {answeredCount >= total && (
         <div className="card text-center">
           <b className="text-lg">
-            Story Score: {score}/{total} ({Math.round(score / total * 100)}%)
+            Story Score: {score}/{total} ({Math.round((score / total) * 100)}%)
           </b>
         </div>
       )}
 
       <div className="my-4 flex justify-center">
-        <button className="btn btn-primary" onClick={onDone}>Done</button>
+        <button className="btn btn-primary" onClick={onDone}>
+          Done
+        </button>
       </div>
     </>
   )

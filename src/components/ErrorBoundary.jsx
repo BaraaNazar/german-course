@@ -40,7 +40,7 @@ export default class ErrorBoundary extends Component {
         <p className="m-0 text-sm text-muted">
           Your learning progress is saved — nothing was lost.
         </p>
-        <p className="mx-auto mb-5 mt-2 max-w-[480px] font-mono text-xs break-words text-muted">
+        <p className="mx-auto mt-2 mb-5 max-w-[480px] font-mono text-xs break-words text-muted">
           {String(error?.message ?? error)}
         </p>
         <div className="flex flex-wrap justify-center gap-3">

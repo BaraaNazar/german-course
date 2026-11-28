@@ -45,8 +45,8 @@ export default function ForgotPassword() {
           {sent.resetPath ? (
             <>
               <p className="m-0 mb-4 text-sm text-muted">
-                <b>Demo shortcut:</b> there is no mail server in demo mode, so
-                your one-time link is right here (valid 15 minutes):
+                <b>Demo shortcut:</b> there is no mail server in demo mode, so your one-time link is
+                right here (valid 15 minutes):
               </p>
               <button
                 className="btn btn-primary btn-lg w-full"
@@ -57,8 +57,8 @@ export default function ForgotPassword() {
             </>
           ) : (
             <p className="m-0 text-sm text-muted">
-              Didn't get a link? Double-check the email address — the
-              message looks the same for unknown addresses on purpose.
+              Didn’t get a link? Double-check the email address — the message looks the same for
+              unknown addresses on purpose.
             </p>
           )}
           <p className="m-0 mt-4">
@@ -83,7 +83,10 @@ export default function ForgotPassword() {
           <input
             type="email"
             value={email}
-            onChange={e => { setEmail(e.target.value); setError('') }}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              setError('')
+            }}
             placeholder="you@example.com"
             autoComplete="email"
             autoFocus
@@ -102,7 +105,10 @@ export default function ForgotPassword() {
       </form>
 
       <p className="mt-4 text-center text-sm">
-        Remembered it? <Link to="/login" className="font-bold text-primary">Log in</Link>
+        Remembered it?{' '}
+        <Link to="/login" className="font-bold text-primary">
+          Log in
+        </Link>
       </p>
     </AuthShell>
   )

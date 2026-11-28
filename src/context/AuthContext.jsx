@@ -20,11 +20,20 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false
-    authService.fetchMe()
-      .then(me => { if (!cancelled) setUser(me) })
-      .catch(() => { if (!cancelled) setUser(null) }) // session restore is best-effort
-      .finally(() => { if (!cancelled) setInitializing(false) })
-    return () => { cancelled = true }
+    authService
+      .fetchMe()
+      .then((me) => {
+        if (!cancelled) setUser(me)
+      })
+      .catch(() => {
+        if (!cancelled) setUser(null)
+      }) // session restore is best-effort
+      .finally(() => {
+        if (!cancelled) setInitializing(false)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const value = useMemo(

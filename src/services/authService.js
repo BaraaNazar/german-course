@@ -23,14 +23,14 @@
  * - Sessions carry an expiry timestamp and are validated on every fetchMe().
  */
 
-const USERS_KEY = 'gc_users'      // demo "user database"
-const SESSION_KEY = 'gc_session'  // active session (token + expiry)
-const RESET_KEY = 'gc_reset'      // pending password-reset request
+const USERS_KEY = 'gc_users' // demo "user database"
+const SESSION_KEY = 'gc_session' // active session (token + expiry)
+const RESET_KEY = 'gc_reset' // pending password-reset request
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
-const RESET_TTL_MS = 15 * 60 * 1000             // 15 minutes (industry standard)
+const RESET_TTL_MS = 15 * 60 * 1000 // 15 minutes (industry standard)
 const FAKE_LATENCY_MS = 450 // mimic network round-trip so UI loading states are realistic
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
 /**
  * Demo-grade password transform.
@@ -42,12 +42,16 @@ function hash(password) {
   return btoa(unescape(encodeURIComponent(`gc::${password}`)))
 }
 
-const readJSON = key => {
-  try { return JSON.parse(window.localStorage.getItem(key) ?? 'null') } catch { return null }
+const readJSON = (key) => {
+  try {
+    return JSON.parse(window.localStorage.getItem(key) ?? 'null')
+  } catch {
+    return null
+  }
 }
 const writeJSON = (key, value) => window.localStorage.setItem(key, JSON.stringify(value))
 
-const isValidEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
 class AuthError extends Error {
   constructor(message, code) {
@@ -63,13 +67,19 @@ async function signUp({ name, email, password }) {
   name = (name ?? '').trim()
   email = (email ?? '').trim().toLowerCase()
 
-  if (name.length < 2) throw new AuthError('Please enter your name (at least 2 characters).', 'NAME_SHORT')
-  if (!isValidEmail(email)) throw new AuthError('Please enter a valid email address.', 'EMAIL_INVALID')
-  if (password.length < 6) throw new AuthError('Password must be at least 6 characters.', 'PASSWORD_SHORT')
+  if (name.length < 2)
+    throw new AuthError('Please enter your name (at least 2 characters).', 'NAME_SHORT')
+  if (!isValidEmail(email))
+    throw new AuthError('Please enter a valid email address.', 'EMAIL_INVALID')
+  if (password.length < 6)
+    throw new AuthError('Password must be at least 6 characters.', 'PASSWORD_SHORT')
 
   const users = readJSON(USERS_KEY) ?? []
-  if (users.some(u => u.email === email)) {
-    throw new AuthError('An account with this email already exists. Try logging in instead.', 'EMAIL_TAKEN')
+  if (users.some((u) => u.email === email)) {
+    throw new AuthError(
+      'An account with this email already exists. Try logging in instead.',
+      'EMAIL_TAKEN',
+    )
   }
 
   const user = {
@@ -90,7 +100,7 @@ async function signIn({ email, password }) {
 
   email = (email ?? '').trim().toLowerCase()
   const users = readJSON(US_KEY_SAFE()) ?? []
-  const user = users.find(u => u.email === email)
+  const user = users.find((u) => u.email === email)
 
   // Same generic message for "no such user" and "wrong password" so the
   // login form does not leak which emails are registered.
@@ -128,7 +138,7 @@ async function requestPasswordReset({ email }) {
 
   email = (email ?? '').trim().toLowerCase()
   const users = readJSON(USERS_KEY) ?? []
-  const user = users.find(u => u.email === email)
+  const user = users.find((u) => u.email === email)
 
   if (!user) return { sent: true, resetPath: null }
 
@@ -179,7 +189,7 @@ async function resetPassword({ token, password }) {
   }
 
   const users = readJSON(USERS_KEY) ?? []
-  const index = users.findIndex(u => u.id === reset.userId)
+  const index = users.findIndex((u) => u.id === reset.userId)
   if (index === -1) {
     throw new AuthError('This account no longer exists.', 'USER_GONE')
   }
@@ -206,7 +216,7 @@ async function fetchMe() {
     return null
   }
 
-  const user = (readJSON(US_KEY_SAFE()) ?? []).find(u => u.id === session.userId)
+  const user = (readJSON(US_KEY_SAFE()) ?? []).find((u) => u.id === session.userId)
   return user ? { id: user.id, name: user.name, email: user.email } : null
 }
 
@@ -226,7 +236,12 @@ function createSession(user) {
 }
 
 export const authService = {
-  signUp, signIn, signOut, fetchMe,
-  requestPasswordReset, validateResetToken, resetPassword,
+  signUp,
+  signIn,
+  signOut,
+  fetchMe,
+  requestPasswordReset,
+  validateResetToken,
+  resetPassword,
   AuthError,
 }

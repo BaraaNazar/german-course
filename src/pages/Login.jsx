@@ -34,8 +34,8 @@ function AuthForm({ mode }) {
   const [busy, setBusy] = useState(false)
 
   function update(field) {
-    return e => {
-      setForm(f => ({ ...f, [field]: e.target.value }))
+    return (e) => {
+      setForm((f) => ({ ...f, [field]: e.target.value }))
       setError('')
     }
   }
@@ -52,7 +52,11 @@ function AuthForm({ mode }) {
       navigate(location.state?.from ?? '/', { replace: true })
     } catch (err) {
       // authService throws AuthError with a human-readable message.
-      setError(err instanceof authService.AuthError ? err.message : 'Something went wrong. Please try again.')
+      setError(
+        err instanceof authService.AuthError
+          ? err.message
+          : 'Something went wrong. Please try again.',
+      )
     } finally {
       setBusy(false)
     }
@@ -62,9 +66,11 @@ function AuthForm({ mode }) {
     <AuthShell
       emoji={isLogin ? '🔑' : '🇩🇪'}
       title={isLogin ? 'Welcome back' : 'Create your account'}
-      subtitle={isLogin
-        ? 'Log in to keep your learning progress across visits.'
-        : 'Track your vocabulary and verb progress on this device.'}
+      subtitle={
+        isLogin
+          ? 'Log in to keep your learning progress across visits.'
+          : 'Track your vocabulary and verb progress on this device.'
+      }
     >
       {/* Banner shown right after a successful password reset. */}
       {location.state?.message && (
@@ -130,9 +136,19 @@ function AuthForm({ mode }) {
 
       <p className="mt-4 text-center text-sm">
         {isLogin ? (
-          <>New here? <Link to="/signup" className="font-bold text-primary">Create an account</Link></>
+          <>
+            New here?{' '}
+            <Link to="/signup" className="font-bold text-primary">
+              Create an account
+            </Link>
+          </>
         ) : (
-          <>Already have an account? <Link to="/login" className="font-bold text-primary">Log in</Link></>
+          <>
+            Already have an account?{' '}
+            <Link to="/login" className="font-bold text-primary">
+              Log in
+            </Link>
+          </>
         )}
       </p>
     </AuthShell>
