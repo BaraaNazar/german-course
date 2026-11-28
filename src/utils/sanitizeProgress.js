@@ -11,8 +11,8 @@
  * persisted documents — cheap for well-formed data, life-saving for
  * broken data. (The backend does the same job with Zod on the server.)
  *
- * Must be module-level functions (stable identity) — they are passed to
- * useLocalStorage, which captures them in its sync-listener closure.
+ * Must be module-level functions (stable identity) — the ProgressProvider
+ * captures them in its cross-tab listener closures.
  */
 
 export const EMPTY_CONJ = () => ({ known: [], scores: [], levelScores: {} })

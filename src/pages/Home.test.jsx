@@ -2,6 +2,7 @@ import { describe, test, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { AuthProvider } from '../context/AuthContext'
+import { ProgressProvider } from '../context/ProgressContext'
 import Home from './Home'
 
 /**
@@ -14,7 +15,9 @@ describe('Home page', () => {
     render(
       <MemoryRouter>
         <AuthProvider>
-          <Home />
+          <ProgressProvider>
+            <Home />
+          </ProgressProvider>
         </AuthProvider>
       </MemoryRouter>,
     )
@@ -31,7 +34,9 @@ describe('Home page', () => {
     render(
       <MemoryRouter>
         <AuthProvider>
-          <Home />
+          <ProgressProvider>
+            <Home />
+          </ProgressProvider>
         </AuthProvider>
       </MemoryRouter>,
     )

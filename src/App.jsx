@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
+import { ProgressProvider } from './context/ProgressContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
@@ -22,19 +23,22 @@ import VocabPage from './pages/vocab/VocabPage'
 export default function App() {
   return (
     <AuthProvider>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignupPage />} />
-          <Route path="konjugation" element={<ConjugationPage />} />
-          <Route path="vocab" element={<VocabPage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="profile" element={<Profile />} />
+      {/* ProgressProvider: single writer for both progress documents */}
+      <ProgressProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignupPage />} />
+            <Route path="konjugation" element={<ConjugationPage />} />
+            <Route path="vocab" element={<VocabPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="profile" element={<Profile />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </ProgressProvider>
     </AuthProvider>
   )
 }
