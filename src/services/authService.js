@@ -25,7 +25,9 @@
 
 const USERS_KEY = 'gc_users'      // demo "user database"
 const SESSION_KEY = 'gc_session'  // active session (token + expiry)
+const RESET_KEY = 'gc_reset'      // pending password-reset request
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
+const RESET_TTL_MS = 15 * 60 * 1000             // 15 minutes (industry standard)
 const FAKE_LATENCY_MS = 450 // mimic network round-trip so UI loading states are realistic
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -105,6 +107,90 @@ async function signOut() {
 }
 
 /**
+ * Password reset — step 1: request a reset link for an email.
+ *
+ * Mirrors POST /api/auth/forgot-password.
+ *
+ * Security behaviour (identical to a real backend):
+ * - The response is the SAME whether or not the email is registered, so
+ *   the endpoint can never be used to probe which accounts exist.
+ * - A one-time token is issued with a short expiry; a new request simply
+ *   replaces any pending one.
+ *
+ * Demo difference: a real backend emails the link and NEVER returns it
+ * to the client. Since demo mode has no mail server, the reset path is
+ * returned so the UI can offer it directly — the page labels it clearly.
+ *
+ * @returns {Promise<{sent: boolean, resetPath: string|null}>}
+ */
+async function requestPasswordReset({ email }) {
+  await delay(FAKE_LATENCY_MS)
+
+  email = (email ?? '').trim().toLowerCase()
+  const users = readJSON(USERS_KEY) ?? []
+  const user = users.find(u => u.email === email)
+
+  if (!user) return { sent: true, resetPath: null }
+
+  const token = crypto.randomUUID()
+  writeJSON(RESET_KEY, {
+    token,
+    userId: user.id,
+    expiresAt: Date.now() + RESET_TTL_MS,
+  })
+  return { sent: true, resetPath: `/reset-password?token=${encodeURIComponent(token)}` }
+}
+
+/**
+ * Password reset — link validation (GET /api/auth/reset-password?token=…).
+ * Used when the reset page loads so expired/invalid links fail BEFORE
+ * the user types a new password.
+ *
+ * @returns {Promise<{valid: boolean, expired: boolean}>}
+ */
+async function validateResetToken(token) {
+  await delay(FAKE_LATENCY_MS)
+  const reset = readJSON(RESET_KEY)
+  if (!reset || reset.token !== token) return { valid: false, expired: false }
+  if (Date.now() > reset.expiresAt) return { valid: false, expired: true }
+  return { valid: true, expired: false }
+}
+
+/**
+ * Password reset — step 2: set the new password.
+ * Mirrors POST /api/auth/reset-password { token, password }.
+ * The token is single-use and consumed even on failure paths that
+ * indicate reuse, so a leaked link cannot be replayed.
+ */
+async function resetPassword({ token, password }) {
+  await delay(FAKE_LATENCY_MS)
+
+  if (password.length < 6) {
+    throw new AuthError('Password must be at least 6 characters.', 'PASSWORD_SHORT')
+  }
+
+  const reset = readJSON(RESET_KEY)
+  if (!reset || reset.token !== token) {
+    throw new AuthError('This reset link is not valid. Please request a new one.', 'RESET_INVALID')
+  }
+  if (Date.now() > reset.expiresAt) {
+    window.localStorage.removeItem(RESET_KEY)
+    throw new AuthError('This reset link has expired. Please request a new one.', 'RESET_EXPIRED')
+  }
+
+  const users = readJSON(USERS_KEY) ?? []
+  const index = users.findIndex(u => u.id === reset.userId)
+  if (index === -1) {
+    throw new AuthError('This account no longer exists.', 'USER_GONE')
+  }
+
+  users[index] = { ...users[index], passwordHash: hash(password) }
+  writeJSON(USERS_KEY, users)
+  window.localStorage.removeItem(RESET_KEY) // single use
+  return true
+}
+
+/**
  * Session restore (called once on app start).
  * @returns {Promise<{id,name,email}|null>} the user, or null when no valid session
  */
@@ -139,4 +225,8 @@ function createSession(user) {
   return { id: user.id, name: user.name, email: user.email }
 }
 
-export const authService = { signUp, signIn, signOut, fetchMe, AuthError }
+export const authService = {
+  signUp, signIn, signOut, fetchMe,
+  requestPasswordReset, validateResetToken, resetPassword,
+  AuthError,
+}

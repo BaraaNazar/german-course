@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authService } from '../services/authService'
+import AuthShell from '../components/AuthShell'
 
 /**
  * Login — email + password form.
  * On success the user is sent to the page they originally wanted
  * (`state.from`, set by ProtectedRoute) or back to the home hub.
+ * A banner is shown after a successful password reset (`state.message`).
  */
 export default function Login() {
   return <AuthForm mode="login" />
@@ -57,18 +59,19 @@ function AuthForm({ mode }) {
   }
 
   return (
-    <div className="mx-auto mt-8 max-w-[420px]">
-      <div className="mb-6 text-center">
-        <div className="text-[40px]">{isLogin ? '🔑' : '🇩🇪'}</div>
-        <h1 className="mt-2 mb-1 text-2xl font-black">
-          {isLogin ? 'Welcome back' : 'Create your account'}
-        </h1>
-        <p className="m-0 text-sm text-muted">
-          {isLogin
-            ? 'Log in to keep your learning progress across visits.'
-            : 'Track your vocabulary and verb progress on this device.'}
-        </p>
-      </div>
+    <AuthShell
+      emoji={isLogin ? '🔑' : '🇩🇪'}
+      title={isLogin ? 'Welcome back' : 'Create your account'}
+      subtitle={isLogin
+        ? 'Log in to keep your learning progress across visits.'
+        : 'Track your vocabulary and verb progress on this device.'}
+    >
+      {/* Banner shown right after a successful password reset. */}
+      {location.state?.message && (
+        <div className="feedback ok mb-4">
+          <div className="fb-title">✓ {location.state.message}</div>
+        </div>
+      )}
 
       <form className="card" onSubmit={handleSubmit} noValidate>
         {!isLogin && (
@@ -106,6 +109,14 @@ function AuthForm({ mode }) {
           />
         </label>
 
+        {isLogin && (
+          <div className="-mt-2 mb-4 text-right">
+            <Link to="/forgot-password" className="text-sm font-bold text-primary">
+              Forgot password?
+            </Link>
+          </div>
+        )}
+
         {error && (
           <div className="feedback bad">
             <div className="fb-title">{error}</div>
@@ -124,12 +135,6 @@ function AuthForm({ mode }) {
           <>Already have an account? <Link to="/login" className="font-bold text-primary">Log in</Link></>
         )}
       </p>
-
-      <p className="mt-3.5 rounded-[10px] border border-gold-line bg-gold-soft px-3.5 py-2.5 text-[12.5px] leading-relaxed text-muted">
-        ℹ️ Demo mode: accounts live in this browser (localStorage). When the
-        backend goes online, existing accounts will be migrated — your
-        learning progress is saved locally either way.
-      </p>
-    </div>
+    </AuthShell>
   )
 }
